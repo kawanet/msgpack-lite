@@ -40,6 +40,30 @@ describe(TITLE, function() {
     }
   });
 
+  it("msgpack.encode(stream, stream)", function(done) {
+    var inputStream = new Stream.PassThrough({objectMode: true});
+    var outputStream = new Stream.PassThrough();
+    var count = 0;
+    outputStream.on("data", onData);
+
+    msgpack.encode(inputStream, outputStream);
+
+    inputStream.write(src[0]);
+    inputStream.write(src[1]);
+    inputStream.write(src[2]);
+    inputStream.end();
+
+    function onData(data) {
+      assert.deepEqual(data, encoded[count]);
+      data = msgpack.decode(data);
+      if (count === 0) assert.equal(data[0], "foo");
+      if (count === 1) assert.equal(data[0], "bar");
+      if (count === 2) assert.equal(data[0], "baz");
+      count++;
+      if (count === 3) done();
+    }
+  });
+
   it("msgpack.decode(buffer, stream)", function(done) {
     var outputStream = new Stream.PassThrough({objectMode: true});
     var count = 0;
@@ -56,13 +80,6 @@ describe(TITLE, function() {
       count++;
       if (count === 3) done();
     }
-  });
-
-  it("msgpack.decode(stream)", function() {
-    var inputStream = new Stream.PassThrough();
-    inputStream.end(encoded[0]);
-    var data = msgpack.decode(inputStream);
-    assert.equal(data[0], "foo");
   });
 
   it("msgpack.decode(stream, stream)", function(done) {
@@ -85,5 +102,19 @@ describe(TITLE, function() {
       count++;
       if (count === 3) done();
     }
+  });
+
+  it("msgpack.encode(stream)", function() {
+    var inputStream = new Stream.PassThrough({objectMode: true});
+    inputStream.end(src[0]);
+    var data = msgpack.encode(inputStream);
+    assert.deepEqual(data, encoded[0]);
+  });
+
+  it("msgpack.decode(stream)", function() {
+    var inputStream = new Stream.PassThrough();
+    inputStream.end(encoded[0]);
+    var data = msgpack.decode(inputStream);
+    assert.equal(data[0], "foo");
   });
 });
