@@ -41,7 +41,6 @@ describe(TITLE, function() {
     });
   });
 
-
   it("boolean", function() {
     [true, false].forEach(function(value) {
       var encoded = msgpack.encode(value);
