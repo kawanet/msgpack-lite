@@ -177,4 +177,17 @@ describe(TITLE, function() {
       assert.equal(decoded[length - 1], value[length - 1]);
     });
   });
+
+  it("buffer", function() {
+    pattern(2, 65537).forEach(function(length, idx) {
+      var value = new Buffer(length);
+      value.fill(idx);
+      assert.equal(value.length, length);
+      var encoded = msgpack.encode(value);
+      var decoded = msgpack.decode(encoded);
+      assert.equal(decoded.length, length);
+      assert.equal(decoded[0], value[0]);
+      assert.equal(decoded[length - 1], value[length - 1]);
+    });
+  });
 });
