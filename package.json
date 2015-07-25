@@ -11,7 +11,7 @@
     "url": "https://github.com/kawanet/msgpack-lite.git"
   },
   "bin": {
-    "msgpack-lite": "./bin/msgpack-lite"
+    "msgpack": "./bin/msgpack"
   },
   "author": "@kawanet",
   "license": "MIT",
