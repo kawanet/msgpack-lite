@@ -57,4 +57,33 @@ describe(TITLE, function() {
       if (count === 3) done();
     }
   });
+
+  it("msgpack.decode(stream)", function() {
+    var inputStream = new Stream.PassThrough();
+    inputStream.end(encoded[0]);
+    var data = msgpack.decode(inputStream);
+    assert.equal(data[0], "foo");
+  });
+
+  it("msgpack.decode(stream, stream)", function(done) {
+    var inputStream = new Stream.PassThrough();
+    var outputStream = new Stream.PassThrough({objectMode: true});
+    var count = 0;
+    outputStream.on("data", onData);
+
+    msgpack.decode(inputStream, outputStream);
+
+    inputStream.write(encoded[0]);
+    inputStream.write(encoded[1]);
+    inputStream.write(encoded[2]);
+    inputStream.end();
+
+    function onData(data) {
+      if (count === 0) assert.equal(data[0], "foo");
+      if (count === 1) assert.equal(data[0], "bar");
+      if (count === 2) assert.equal(data[0], "baz");
+      count++;
+      if (count === 3) done();
+    }
+  });
 });
