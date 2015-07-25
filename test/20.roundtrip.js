@@ -35,7 +35,6 @@ describe(TITLE, function() {
 
   it("null", function() {
     [null, undefined].forEach(function(value) {
-      // console.warn(value);
       var encoded = msgpack.encode(value);
       var decoded = msgpack.decode(encoded);
       assert.equal(decoded, value);
@@ -122,7 +121,7 @@ describe(TITLE, function() {
   });
 
   it("array (small)", function() {
-    pattern(0, 257).forEach(function(length) {
+    pattern(0, 257).forEach(function(length, idx) {
       var value = new Array(length);
       for (var i = 0; i < length; i++) {
         value[i] = String.fromCharCode(i);

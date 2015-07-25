@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 var msgpack_lite = require("../index");
-var msgpack5 = require("msgpack5")();
+// var msgpack5 = require("msgpack5")();
 var msgpack_node = require("msgpack");
 var msgpack_js = require("msgpack-js");
 var data = require("./example");
 
-var count = 1000;
+var count = 10000;
 
 var ret;
 ret = bench('JSON.stringify()                ', JSON.stringify, data);
@@ -25,9 +25,9 @@ ret = bench('require("msgpack-js").encode()  ', msgpack_js.encode, data);
 ret = bench('require("msgpack-js").decode()  ', msgpack_js.decode, ret);
 test(ret, data);
 
-ret = bench('require("msgpack5")().encode()  ', msgpack5.encode, data);
-ret = bench('require("msgpack5")().decode()  ', msgpack5.decode, ret);
-test(ret, data);
+// ret = bench('require("msgpack5")().encode()  ', msgpack5.encode, data);
+// ret = bench('require("msgpack5")().decode()  ', msgpack5.decode, ret);
+// test(ret, data);
 
 function bench(name, func, src) {
   var start = new Date() - 0;
