@@ -21,6 +21,7 @@
     "jsdoc": "^3.3.2",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
+    "msgpack-unpack": "^2.1.1",
     "msgpack5": "^3.0.0",
     "uglify-js": "^2.4.24"
   }
