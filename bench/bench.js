@@ -7,7 +7,7 @@ var msgpack_js_v5 = require("msgpack-js-v5");
 var msgpack5 = require("msgpack5")();
 var msgpack_unpack = require("msgpack-unpack");
 
-var data = require("./example");
+var data = require("../test/example");
 var packed = msgpack_lite.encode(data);
 var expected = JSON.stringify(data);
 
