@@ -4,7 +4,7 @@ SRC=./lib/browser.js
 LIB=./index.js ./lib/*.js
 TESTS=./test/*.js
 TESTS_BROWSER=./test/[12]?.*.js
-JSON=./*.json
+HINTS=./*.json ./bench/bench.js
 CLASS=msgpack
 DIST=./dist
 JSTEMP=./public/msgpack.browserify.js
@@ -38,6 +38,6 @@ mocha:
 	$(MOCHA) -R spec $(TESTS)
 
 jshint:
-	$(JSHINT) $(LIB) $(JSON) $(TESTS)
+	$(JSHINT) $(LIB) $(HINTS) $(TESTS)
 
 .PHONY: all clean test jshint mocha
