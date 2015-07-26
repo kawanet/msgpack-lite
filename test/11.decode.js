@@ -61,30 +61,45 @@ describe(TITLE, function() {
   // bin 16 -- 0xc5
   // bin 32 -- 0xc6
   it("c4-c6: bin 8/16/32", function() {
-    var bin8 = Buffer(1);
-    var bin16 = Buffer(256);
-    var bin32 = Buffer(65536);
-    assert.deepEqual(msgpack.decode(Buffer.concat([Buffer([0xc4, 1]), bin8])), bin8);
-    assert.deepEqual(msgpack.decode(Buffer.concat([Buffer([0xc5, 1, 0]), bin16])), bin16);
-    assert.deepEqual(msgpack.decode(Buffer.concat([Buffer([0xc6, 0, 1, 0, 0]), bin32])), bin32);
+    var bin, buf;
+
+    bin = Buffer(1);
+    buf = Buffer.concat([Buffer([0xc4, 1]), bin]);
+    assert.deepEqual(msgpack.decode(buf), bin);
+
+    bin = Buffer(256);
+    buf = Buffer.concat([Buffer([0xc5, 1, 0]), bin]);
+    assert.deepEqual(msgpack.decode(buf), bin);
+
+    bin = Buffer(65536);
+    buf = Buffer.concat([Buffer([0xc6, 0, 1, 0, 0]), bin]);
+    assert.deepEqual(msgpack.decode(buf), bin);
   });
 
   // ext 8 -- 0xc7
   // ext 16 -- 0xc8
   // ext 32 -- 0xc9
   it("c7-c9: ext 8/16/32", function() {
-    var ext8 = Buffer(1 + 1);
-    var ext16 = Buffer(1 + 256);
-    var ext32 = Buffer(1 + 65536);
-    assert.deepEqual(msgpack.decode(Buffer.concat([Buffer([0xc7, 1]), ext8])), ext8);
-    assert.deepEqual(msgpack.decode(Buffer.concat([Buffer([0xc8, 1, 0]), ext16])), ext16);
-    assert.deepEqual(msgpack.decode(Buffer.concat([Buffer([0xc9, 0, 1, 0, 0]), ext32])), ext32);
+    var ext, buf;
+
+    ext = Buffer(1 + 1);
+    buf = Buffer.concat([Buffer([0xc7, 1]), ext]);
+    assert.deepEqual(msgpack.decode(buf), ext);
+
+    ext = Buffer(1 + 256);
+    buf = Buffer.concat([Buffer([0xc8, 1, 0]), ext]);
+    assert.deepEqual(msgpack.decode(buf), ext);
+
+    ext = Buffer(1 + 65536);
+    buf = Buffer.concat([Buffer([0xc9, 0, 1, 0, 0]), ext]);
+    assert.deepEqual(msgpack.decode(buf), ext);
   });
 
   // float 32 -- 0xca
   // float 64 -- 0xcb
   it("ca-cb: float 32/64", function() {
-    var buf, msg;
+    var buf;
+
     buf = Buffer(5);
     buf.writeUInt8(0xCA, 0);
     buf.writeFloatBE(0.5, 1);
