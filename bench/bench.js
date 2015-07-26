@@ -3,6 +3,7 @@
 var msgpack_node = require("msgpack");
 var msgpack_lite = require("../index");
 var msgpack_js = require("msgpack-js");
+var msgpack_js_v5 = require("msgpack-js-v5");
 var msgpack5 = require("msgpack5")();
 var msgpack_unpack = require("msgpack-unpack");
 
@@ -25,6 +26,10 @@ test(ret, data);
 
 ret = bench('require("msgpack-lite").encode()  ', msgpack_lite.encode, data);
 ret = bench('require("msgpack-lite").decode()  ', msgpack_lite.decode, ret);
+test(ret, data);
+
+ret = bench('require("msgpack-js-v5").encode() ', msgpack_js_v5.encode, data);
+ret = bench('require("msgpack-js-v5").decode() ', msgpack_js_v5.decode, ret);
 test(ret, data);
 
 ret = bench('require("msgpack-js").encode()    ', msgpack_js.encode, data);
