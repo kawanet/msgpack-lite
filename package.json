@@ -17,7 +17,7 @@
   "license": "MIT",
   "homepage": "https://github.com/kawanet/msgpack-lite",
   "dependencies": {
-    "event-lite": "^0.0.4"
+    "event-lite": "^0.0.5"
   },
   "devDependencies": {
     "browserify": "^11.0.0",
