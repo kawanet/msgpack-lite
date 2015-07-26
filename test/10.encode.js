@@ -1,7 +1,10 @@
 #!/usr/bin/env mocha -R spec
 
 var assert = require("assert");
-var msgpack = require("../index");
+
+var msgpackJS = "../index";
+var isBrowser = ("undefined" !== typeof window);
+var msgpack = isBrowser && window.msgpack || require(msgpackJS);
 var TITLE = __filename.replace(/^.*\//, "") + ":";
 
 describe(TITLE, function() {
@@ -56,12 +59,18 @@ describe(TITLE, function() {
   // bin 16 -- 0xc5
   // bin 32 -- 0xc6
   it("c4-c6: bin 8/16/32", function() {
-    var bin8 = Buffer(1);
-    var bin16 = Buffer(256);
-    var bin32 = Buffer(65536);
-    assert.deepEqual(msgpack.encode(bin8), Buffer.concat([Buffer([0xc4, 1]), bin8]));
-    assert.deepEqual(msgpack.encode(bin16), Buffer.concat([Buffer([0xc5, 1, 0]), bin16]));
-    assert.deepEqual(msgpack.encode(bin32), Buffer.concat([Buffer([0xc6, 0, 1, 0, 0]), bin32]));
+    var bin;
+    bin = Buffer(1);
+    bin.fill(0);
+    assert.deepEqual(msgpack.encode(bin), Buffer.concat([Buffer([0xc4, 1]), bin]));
+
+    bin = Buffer(256);
+    bin.fill(0);
+    assert.deepEqual(msgpack.encode(bin), Buffer.concat([Buffer([0xc5, 1, 0]), bin]));
+
+    bin = Buffer(65536);
+    bin.fill(0);
+    assert.deepEqual(msgpack.encode(bin), Buffer.concat([Buffer([0xc6, 0, 1, 0, 0]), bin]));
   });
 
   // float 32 -- 0xca -- NOT SUPPORTED

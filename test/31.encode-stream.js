@@ -3,7 +3,9 @@
 var assert = require("assert");
 var Stream = require("stream");
 
-var msgpack = require("../index");
+var msgpackJS = "../index";
+var isBrowser = ("undefined" !== typeof window);
+var msgpack = isBrowser && window.msgpack || require(msgpackJS);
 var TITLE = __filename.replace(/^.*\//, "") + ":";
 
 var src = [
@@ -24,6 +26,7 @@ describe(TITLE, function() {
     var inputStream = new Stream.PassThrough({objectMode: true});
     var outputStream = new Stream.PassThrough();
     var count = 0;
+    
     outputStream.on("data", onData);
 
     var encoder = msgpack.createEncodeStream();

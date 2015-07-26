@@ -3,7 +3,9 @@
 var assert = require("assert");
 var Stream = require("stream");
 
-var msgpack = require("../index");
+var msgpackJS = "../index";
+var isBrowser = ("undefined" !== typeof window);
+var msgpack = isBrowser && window.msgpack || require(msgpackJS);
 var TITLE = __filename.replace(/^.*\//, "") + ":";
 
 var src = [
