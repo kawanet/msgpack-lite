@@ -22,101 +22,79 @@ var encoded = [
 
 describe(TITLE, function() {
 
-  it("msgpack.encode(object, stream)", function(done) {
-    var outputStream = new Stream.PassThrough();
+  it("msgpack.createEncodeStream()", function(done) {
     var count = 0;
-    outputStream.on("data", onData);
+    var encoder = msgpack.createEncodeStream();
 
-    msgpack.encode(src[0], outputStream);
-    msgpack.encode(src[1], outputStream);
-    msgpack.encode(src[2], outputStream);
+    encoder.on("data", onData);
+    encoder.write(src[0]);
+    encoder.write(src[1]);
+    encoder.write(src[2]);
+    encoder.end();
 
     function onData(data) {
-      assert.deepEqual(data, encoded[count]);
-      data = msgpack.decode(data);
-      if (count === 0) assert.equal(data[0], "foo");
-      if (count === 1) assert.equal(data[0], "bar");
-      if (count === 2) assert.equal(data[0], "baz");
-      count++;
+      assert.deepEqual(data, encoded[count++]);
       if (count === 3) done();
     }
   });
 
-  it("msgpack.encode(stream, stream)", function(done) {
-    var inputStream = new Stream.PassThrough({objectMode: true});
-    var outputStream = new Stream.PassThrough();
+  it("msgpack.createDecodeStream()", function(done) {
     var count = 0;
+    var decoder = msgpack.createDecodeStream();
+
+    decoder.on("data", onData);
+    decoder.write(encoded[0]);
+    decoder.write(encoded[1]);
+    decoder.write(encoded[2]);
+    decoder.end();
+
+    function onData(data) {
+      assert.deepEqual(data, src[count++]);
+      if (count === 3) done();
+    }
+  });
+
+  it("pipe(encoder).pipe(decoder)", function(done) {
+    var count = 0;
+    var inputStream = new Stream.PassThrough({objectMode: true});
+    var encoder = msgpack.createEncodeStream();
+    var passThrough = new Stream.PassThrough();
+    var decoder = msgpack.createDecodeStream();
+    var outputStream = new Stream.PassThrough({objectMode: true});
+
+    inputStream.pipe(encoder).pipe(passThrough).pipe(decoder).pipe(outputStream);
+
     outputStream.on("data", onData);
-
-    msgpack.encode(inputStream, outputStream);
-
     inputStream.write(src[0]);
     inputStream.write(src[1]);
     inputStream.write(src[2]);
     inputStream.end();
 
     function onData(data) {
-      assert.deepEqual(data, encoded[count]);
-      data = msgpack.decode(data);
-      if (count === 0) assert.equal(data[0], "foo");
-      if (count === 1) assert.equal(data[0], "bar");
-      if (count === 2) assert.equal(data[0], "baz");
-      count++;
+      assert.deepEqual(data, src[count++]);
       if (count === 3) done();
     }
   });
 
-  it("msgpack.decode(buffer, stream)", function(done) {
-    var outputStream = new Stream.PassThrough({objectMode: true});
+  it("pipe(decoder).pipe(encoder)", function(done) {
     var count = 0;
-    outputStream.on("data", onData);
-
-    msgpack.decode(encoded[0], outputStream);
-    msgpack.decode(encoded[1], outputStream);
-    msgpack.decode(encoded[2], outputStream);
-
-    function onData(data) {
-      if (count === 0) assert.equal(data[0], "foo");
-      if (count === 1) assert.equal(data[0], "bar");
-      if (count === 2) assert.equal(data[0], "baz");
-      count++;
-      if (count === 3) done();
-    }
-  });
-
-  it("msgpack.decode(stream, stream)", function(done) {
     var inputStream = new Stream.PassThrough();
-    var outputStream = new Stream.PassThrough({objectMode: true});
-    var count = 0;
+    var decoder = msgpack.createDecodeStream();
+    var passThrough = new Stream.PassThrough({objectMode: true});
+    var encoder = msgpack.createEncodeStream();
+    var outputStream = new Stream.PassThrough();
+
+    inputStream.pipe(decoder).pipe(passThrough).pipe(encoder).pipe(outputStream);
+
     outputStream.on("data", onData);
-
-    msgpack.decode(inputStream, outputStream);
-
     inputStream.write(encoded[0]);
     inputStream.write(encoded[1]);
     inputStream.write(encoded[2]);
     inputStream.end();
 
     function onData(data) {
-      if (count === 0) assert.equal(data[0], "foo");
-      if (count === 1) assert.equal(data[0], "bar");
-      if (count === 2) assert.equal(data[0], "baz");
-      count++;
+      assert.deepEqual(data, encoded[count++]);
       if (count === 3) done();
     }
-  });
-
-  it("msgpack.encode(stream)", function() {
-    var inputStream = new Stream.PassThrough({objectMode: true});
-    inputStream.end(src[0]);
-    var data = msgpack.encode(inputStream);
-    assert.deepEqual(data, encoded[0]);
-  });
-
-  it("msgpack.decode(stream)", function() {
-    var inputStream = new Stream.PassThrough();
-    inputStream.end(encoded[0]);
-    var data = msgpack.decode(inputStream);
-    assert.equal(data[0], "foo");
   });
 });
