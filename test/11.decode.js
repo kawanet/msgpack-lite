@@ -114,21 +114,39 @@ describe(TITLE, function() {
   // uint 8 -- 0xcc
   // uint 16 -- 0xcd
   // uint 32 -- 0xce
-  // uint 64 -- 0xcf -- NOT SUPPORTED
+  // uint 64 -- 0xcf
   it("cc-cf: uint 8/16/32/64", function() {
+    assert.deepEqual(msgpack.decode(Buffer([0xcc, 0x01])), 0x01);
     assert.deepEqual(msgpack.decode(Buffer([0xcc, 0xFF])), 0xFF);
+    assert.deepEqual(msgpack.decode(Buffer([0xcd, 0x00, 0x01])), 0x0001);
     assert.deepEqual(msgpack.decode(Buffer([0xcd, 0xFF, 0xFF])), 0xFFFF);
+    assert.deepEqual(msgpack.decode(Buffer([0xce, 0x00, 0x00, 0x00, 0x01])), 0x00000001);
     assert.deepEqual(msgpack.decode(Buffer([0xce, 0x7F, 0xFF, 0xFF, 0xFF])), 0x7FFFFFFF);
+    assert.deepEqual(msgpack.decode(Buffer([0xce, 0xFF, 0xFF, 0xFF, 0xFF])), 0xFFFFFFFF);
+    assert.deepEqual(msgpack.decode(Buffer([0xcf, 0, 0, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF])), 0x00000000FFFFFFFF);
+    assert.deepEqual(msgpack.decode(Buffer([0xcf, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF, 0, 0])), 0x0000FFFFFFFF0000);
+    assert.deepEqual(msgpack.decode(Buffer([0xcf, 0xFF, 0xFF, 0xFF, 0xFF, 0, 0, 0, 0])), 0xFFFFFFFF00000000);
   });
 
   // int 8 -- 0xd0
   // int 16 -- 0xd1
   // int 32 -- 0xd2
-  // int 64 -- 0xd3 -- NOT SUPPORTED
+  // int 64 -- 0xd3
   it("d0-d3: int 8/16/32/64", function() {
+    assert.deepEqual(msgpack.decode(Buffer([0xd0, 0x7F])), 0x7F);
     assert.deepEqual(msgpack.decode(Buffer([0xd0, 0x80])), -0x80);
+    assert.deepEqual(msgpack.decode(Buffer([0xd0, 0xFF])), -1);
+    assert.deepEqual(msgpack.decode(Buffer([0xd1, 0x7F, 0xFF])), 0x7FFF);
     assert.deepEqual(msgpack.decode(Buffer([0xd1, 0x80, 0x00])), -0x8000);
+    assert.deepEqual(msgpack.decode(Buffer([0xd1, 0xFF, 0xFF])), -1);
+    assert.deepEqual(msgpack.decode(Buffer([0xd2, 0x7F, 0xFF, 0xFF, 0xFF])), 0x7FFFFFFF);
     assert.deepEqual(msgpack.decode(Buffer([0xd2, 0x80, 0x00, 0x00, 0x00])), -0x80000000);
+    assert.deepEqual(msgpack.decode(Buffer([0xd2, 0xFF, 0xFF, 0xFF, 0xFF])), -1);
+    assert.deepEqual(msgpack.decode(Buffer([0xd3, 0, 0, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF])), 0x00000000FFFFFFFF);
+    assert.deepEqual(msgpack.decode(Buffer([0xd3, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF, 0, 0])), 0x0000FFFFFFFF0000);
+    assert.deepEqual(msgpack.decode(Buffer([0xd3, 0x7F, 0xFF, 0xFF, 0xFF, 0, 0, 0, 0])), 0x7FFFFFFF00000000);
+    assert.deepEqual(msgpack.decode(Buffer([0xd3, 0x80, 0, 0, 0, 0, 0, 0, 0])), -0x8000000000000000);
+    assert.deepEqual(msgpack.decode(Buffer([0xd3, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF])), -1);
   });
 
   // ext 1 -- 0xd4
