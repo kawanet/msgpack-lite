@@ -31,7 +31,7 @@ ret = bench('require("msgpack").unpack()       ', msgpack_node.unpack, ret);
 test(ret);
 
 ret = bench('require("msgpack-lite").encode()  ', msgpack_lite.encode, data);
-ret = bench('require("msgpack-lite").decode()  ', msgpack_lite.decode, ret);
+ret = bench('require("msgpack-lite").decode()  ', msgpack_lite.decode, packed);
 test(ret);
 
 ret = bench('require("msgpack-js-v5").encode() ', msgpack_js_v5.encode, data);

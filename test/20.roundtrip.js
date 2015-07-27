@@ -154,7 +154,7 @@ describe(TITLE, function() {
       var value = {};
       for (var i = 0; i < length; i++) {
         var key = String.fromCharCode(i);
-        value[key] = i;
+        value[key] = length;
       }
       assert.equal(Object.keys(value).length, length);
       var encoded = msgpack.encode(value);
@@ -169,7 +169,7 @@ describe(TITLE, function() {
     pattern(65536, 65537).forEach(function(length) {
       var value = {};
       for (var i = 0; i < length; i++) {
-        value[i] = null;
+        value[i] = length;
       }
       assert.equal(Object.keys(value).length, length);
       var encoded = msgpack.encode(value);
