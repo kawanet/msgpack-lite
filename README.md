@@ -2,7 +2,7 @@
 
 Fast Pure JavaScript MessagePack Encoder and Decoder
 
-### Basic Usage
+### Encoding and Decoding
 
 ```js
 var msgpack = require("msgpack-lite");
@@ -42,10 +42,22 @@ var decodeStream = msgpack.createDecodeStream();
 readStream.pipe(decodeStream).on("data", console.warn);
 ```
 
+### Command Line Interface
+
+A CLI tool bin/msgpack converts data stream from JSON to MessagePack and vice versa.
+
+```sh
+$ echo '{"foo": "bar"}' | ./bin/msgpack -Jm | od -tx1
+0000000    81  a3  66  6f  6f  a3  62  61  72
+
+$ echo '{"foo": "bar"}' | ./bin/msgpack -Jm | ./bin/msgpack -Mj
+{"foo":"bar"}
+```
+
 ### Installation
 
 ```sh
-npm install --save msgpack-lite
+$ npm install --save msgpack-lite
 ```
 
 ### Repository
