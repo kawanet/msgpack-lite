@@ -20,34 +20,38 @@ limit *= 1000;
 var grep;
 if (argv[0]) grep = argv.shift();
 
-var ret;
+var buf, obj;
 
-ret = bench('JSON.stringify()                  ', JSON.stringify, data);
-ret = bench('JSON.parse()                      ', JSON.parse, ret);
-test(ret);
+buf = bench('buf = Buffer(JSON.stringify(obj));          ', JSON_stringify, data);
+obj = bench('obj = JSON.parse(buf);                      ', JSON.parse, buf);
+test(obj);
 
-ret = bench('require("msgpack").pack()         ', msgpack_node.pack, data);
-ret = bench('require("msgpack").unpack()       ', msgpack_node.unpack, ret);
-test(ret);
+buf = bench('buf = require("msgpack").pack(obj);         ', msgpack_node.pack, data);
+obj = bench('obj = require("msgpack").unpack(buf);       ', msgpack_node.unpack, buf);
+test(obj);
 
-ret = bench('require("msgpack-lite").encode()  ', msgpack_lite.encode, data);
-ret = bench('require("msgpack-lite").decode()  ', msgpack_lite.decode, packed);
-test(ret);
+buf = bench('buf = require("msgpack-lite").encode(obj);  ', msgpack_lite.encode, data);
+obj = bench('obj = require("msgpack-lite").decode(buf);  ', msgpack_lite.decode, packed);
+test(obj);
 
-ret = bench('require("msgpack-js-v5").encode() ', msgpack_js_v5.encode, data);
-ret = bench('require("msgpack-js-v5").decode() ', msgpack_js_v5.decode, ret);
-test(ret);
+buf = bench('buf = require("msgpack-js-v5").encode(obj); ', msgpack_js_v5.encode, data);
+obj = bench('obj = require("msgpack-js-v5").decode(buf); ', msgpack_js_v5.decode, buf);
+test(obj);
 
-ret = bench('require("msgpack-js").encode()    ', msgpack_js.encode, data);
-ret = bench('require("msgpack-js").decode()    ', msgpack_js.decode, ret);
-test(ret);
+buf = bench('buf = require("msgpack-js").encode(obj);    ', msgpack_js.encode, data);
+obj = bench('obj = require("msgpack-js").decode(buf);    ', msgpack_js.decode, buf);
+test(obj);
 
-ret = bench('require("msgpack5")().encode()    ', msgpack5.encode, data);
-ret = bench('require("msgpack5")().decode()    ', msgpack5.decode, ret);
-test(ret);
+buf = bench('buf = require("msgpack5")().encode(obj);    ', msgpack5.encode, data);
+obj = bench('obj = require("msgpack5")().decode(buf);    ', msgpack5.decode, buf);
+test(obj);
 
-ret = bench('require("msgpack-unpack").decode()', msgpack_unpack, packed);
-test(ret);
+obj = bench('require("msgpack-unpack").decode()', msgpack_unpack, packed);
+test(obj);
+
+function JSON_stringify(src) {
+  return Buffer(JSON.stringify(src));
+}
 
 function bench(name, func, src) {
   if (grep && name.indexOf(grep) < 0) return SKIP;
