@@ -1,4 +1,4 @@
-# msgpack-lite
+# msgpack-lite [![Build Status](https://travis-ci.org/kawanet/msgpack-lite.svg?branch=master)](https://travis-ci.org/kawanet/msgpack-lite)
 
 Fast Pure JavaScript MessagePack Encoder and Decoder
 
