@@ -7,6 +7,13 @@ var msgpack_js_v5 = require("msgpack-js-v5");
 var msgpack5 = require("msgpack5")();
 var msgpack_unpack = require("msgpack-unpack");
 
+var msgpack_codec;
+try {
+  msgpack_codec = require("../vendor/msgpack.codec").msgpack;
+} catch (e) {
+  // ignore
+}
+
 var data = require("../test/example");
 var packed = msgpack_lite.encode(data);
 var expected = JSON.stringify(data);
@@ -17,16 +24,19 @@ var limit = 5;
 if (argv[0] - 0) limit = argv.shift() - 0;
 limit *= 1000;
 
+var COL1 = 59;
+var COL2 = 10 + (Math.log(limit) / Math.LN10) * 2;
+
 var grep;
 if (argv[0]) grep = argv.shift();
 
-console.log("operation                                   ", "|", "result            ", "|", "op/ms");
-console.log("--------------------------------------------", "|", "------------------", "|", "-----");
+console.log(pad("operation", COL1), "|", pad("result", COL2), "|", "op/ms");
+console.log(pad("", COL1, "-"), "|", pad("", COL2, "-"), "|", "-----");
 
 var buf, obj;
 
-buf = bench('buf = Buffer(JSON.stringify(obj));          ', JSON_stringify, data);
-obj = bench('obj = JSON.parse(buf);                      ', JSON.parse, buf);
+buf = bench('buf = Buffer(JSON.stringify(obj));                       ', JSON_stringify, data);
+obj = bench('obj = JSON.parse(buf);                                   ', JSON.parse, buf);
 test(obj);
 
 buf = bench('buf = require("msgpack").pack(obj);         ', msgpack_node.pack, data);
@@ -36,6 +46,12 @@ test(obj);
 buf = bench('buf = require("msgpack-lite").encode(obj);  ', msgpack_lite.encode, data);
 obj = bench('obj = require("msgpack-lite").decode(buf);  ', msgpack_lite.decode, packed);
 test(obj);
+
+if (msgpack_codec) {
+  buf = bench('buf = Buffer(require("./msgpack.codec").msgpack.pack(obj));', msgpack_codec_pack, data);
+  obj = bench('obj = require("./msgpack.codec").msgpack.unpack(buf);      ', msgpack_codec.unpack, buf);
+  test(obj);
+}
 
 buf = bench('buf = require("msgpack-js-v5").encode(obj); ', msgpack_js_v5.encode, data);
 obj = bench('obj = require("msgpack-js-v5").decode(buf); ', msgpack_js_v5.decode, buf);
@@ -56,6 +72,10 @@ function JSON_stringify(src) {
   return Buffer(JSON.stringify(src));
 }
 
+function msgpack_codec_pack(data) {
+  return Buffer(msgpack_codec.pack(data));
+}
+
 function bench(name, func, src) {
   if (grep && name.indexOf(grep) < 0) return SKIP;
   var ret, duration;
@@ -67,12 +87,20 @@ function bench(name, func, src) {
     if (duration >= limit) break;
     while ((++count) % 100) ret = func(src);
   }
+  name = pad(name, COL1);
   var score = Math.floor(count / duration * 100);
   var col = count + "op" + " / " + duration + "ms";
-  col += "                  ".substr(0, 18 - col.length);
+  col = pad(col, COL2);
   console.log(name, "|", col, "|", score);
   return ret;
 }
+
+function pad(str, len, chr) {
+  if (!chr) chr = " ";
+  while (str.length < len) str += chr;
+  return str;
+}
+
 
 function test(actual) {
   if (actual === SKIP) return;
