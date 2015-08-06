@@ -4,7 +4,7 @@ SRC=./lib/browser.js
 LIB=./index.js ./lib/*.js
 TESTS=./test/*.js
 TESTS_BROWSER=./test/[12]?.*.js
-HINTS=./*.json ./bench/bench.js ./test/*.json
+HINTS=$(LIB) $(TESTS) ./*.json ./test/*.json
 CLASS=msgpack
 DIST=./dist
 JSTEMP=./public/msgpack.browserify.js
@@ -35,11 +35,11 @@ $(TESTDEST): $(TESTS_BROWSER)
 
 test: jshint mocha bench
 
-mocha:
+mocha: $(MSGPACKCODEC)
 	$(MOCHA) -R spec $(TESTS)
 
 jshint:
-	$(JSHINT) $(LIB) $(HINTS) $(TESTS)
+	$(JSHINT) $(HINTS)
 
 vendor:
 	mkdir -p vendor
@@ -48,6 +48,6 @@ $(MSGPACKCODEC): vendor
 	wget -O vendor/msgpack.codec.js https://raw.githubusercontent.com/msgpack/msgpack-javascript/master/msgpack.codec.js
 
 bench: $(MSGPACKCODEC)
-	node bench/bench.js 10
+	node lib/benchmark.js 10
 
 .PHONY: all clean test jshint mocha bench

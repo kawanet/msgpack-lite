@@ -60,10 +60,6 @@ $ echo '{"foo": "bar"}' | ./bin/msgpack -Jm | ./bin/msgpack -Mj
 $ npm install --save msgpack-lite
 ```
 
-### Repository
-
-- https://github.com/kawanet/msgpack-lite
-
 ### Compatibility
 
 It is tested to have basic compatibility with other MessagePack modules below:
@@ -73,33 +69,39 @@ It is tested to have basic compatibility with other MessagePack modules below:
 - https://www.npmjs.com/package/msgpack-js-v5
 - https://www.npmjs.com/package/msgpack5
 - https://www.npmjs.com/package/msgpack-unpack
+- https://github.com/msgpack/msgpack-javascript (msgpack.codec)
 
 ### Speed Comparison
 
-A benchmark tool bench/bench.js is available to compare encoding/decoding speed.
+A benchmark tool lib/benchmark.js is available to compare encoding/decoding speed.
 
 ```txt
-$ bench/bench.js 5
-operation                                    | result             | op/ms
--------------------------------------------- | ------------------ | -----
-buf = Buffer(JSON.stringify(obj));           | 210300op / 5001ms  | 4205
-obj = JSON.parse(buf);                       | 232000op / 5000ms  | 4640
-buf = require("msgpack").pack(obj);          | 181000op / 5001ms  | 3619
-obj = require("msgpack").unpack(buf);        | 199400op / 5000ms  | 3988
-buf = require("msgpack-lite").encode(obj);   | 109900op / 5001ms  | 2197
-obj = require("msgpack-lite").decode(buf);   | 138600op / 5001ms  | 2771
-buf = require("msgpack-js-v5").encode(obj);  | 29700op / 5009ms   | 592
-obj = require("msgpack-js-v5").decode(buf);  | 94400op / 5001ms   | 1887
-buf = require("msgpack-js").encode(obj);     | 29500op / 5014ms   | 588
-obj = require("msgpack-js").decode(buf);     | 95100op / 5000ms   | 1902
-buf = require("msgpack5")().encode(obj);     | 4600op / 5024ms    | 91
-obj = require("msgpack5")().decode(buf);     | 18100op / 5019ms   | 360
-obj = require("msgpack-unpack").decode(buf); | 1600op / 5242ms    | 30
+$ node lib/benchmark.js 10
+operation                                                   | result             | op/ms
+----------------------------------------------------------- | ------------------ | -----
+buf = Buffer(JSON.stringify(obj));                          | 426100op / 10000ms | 4261
+obj = JSON.parse(buf);                                      | 473100op / 10001ms | 4730
+buf = require("msgpack").pack(obj);                         | 331600op / 10002ms | 3315
+obj = require("msgpack").unpack(buf);                       | 316800op / 10003ms | 3167
+buf = require("msgpack-lite").encode(obj);                  | 326100op / 10001ms | 3260
+obj = require("msgpack-lite").decode(buf);                  | 209300op / 10000ms | 2093
+buf = Buffer(require("./msgpack.codec").msgpack.pack(obj)); | 256800op / 10003ms | 2567
+obj = require("./msgpack.codec").msgpack.unpack(buf);       | 170400op / 10002ms | 1703
+buf = require("msgpack-js-v5").encode(obj);                 | 66300op / 10003ms  | 662
+obj = require("msgpack-js-v5").decode(buf);                 | 188000op / 10003ms | 1879
+buf = require("msgpack-js").encode(obj);                    | 63100op / 10004ms  | 630
+obj = require("msgpack-js").decode(buf);                    | 189200op / 10003ms | 1891
+buf = require("msgpack5")().encode(obj);                    | 8000op / 10008ms   | 79
+obj = require("msgpack5")().decode(buf);                    | 32700op / 10020ms  | 326
 ```
 
 The msgpack-lite is the fastest module on both encoding and decoding
 operations compared to the other pure JavaScript msgpack-* modules.
 Please note that node-gyp backed msgpack module is more fast still, however.
+
+### Repository
+
+- https://github.com/kawanet/msgpack-lite
 
 ### See Also
 
