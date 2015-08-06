@@ -16,7 +16,7 @@ BROWSERIFY=./node_modules/.bin/browserify
 MOCHA=./node_modules/.bin/mocha
 MSGPACKCODEC=vendor/msgpack.codec.js
 
-all: $(MSGPACKCODEC) test $(JSDEST) $(TESTDEST)
+all: test $(JSDEST) $(TESTDEST)
 
 clean:
 	rm -fr $(JSDEST) $(DOC_HTML)
@@ -33,7 +33,7 @@ $(JSDEST): $(JSTEMP) $(DIST)
 $(TESTDEST): $(TESTS_BROWSER)
 	$(BROWSERIFY) $(TESTS_BROWSER) -o $(TESTDEST) --debug
 
-test: jshint mocha
+test: jshint mocha bench
 
 mocha:
 	$(MOCHA) -R spec $(TESTS)
@@ -47,4 +47,7 @@ vendor:
 $(MSGPACKCODEC): vendor
 	wget -O vendor/msgpack.codec.js https://raw.githubusercontent.com/msgpack/msgpack-javascript/master/msgpack.codec.js
 
-.PHONY: all clean test jshint mocha
+bench: $(MSGPACKCODEC)
+	node bench/bench.js 10
+
+.PHONY: all clean test jshint mocha bench
