@@ -8,32 +8,46 @@ var TITLE = __filename.replace(/^.*\//, "") + ":";
 var data = require("./example.json");
 
 describe(TITLE, function() {
-  it("msgpack", function() {
-    var they = require("msgpack");
+  test("msgpack", function(they) {
     assert.deepEqual(they.unpack(msgpack.encode(data)), data);
     assert.deepEqual(msgpack.decode(Buffer(they.pack(data))), data);
   });
 
-  it("msgpack-js", function() {
-    var they = require("msgpack-js");
+  test("msgpack-js", function(they) {
     assert.deepEqual(they.decode(msgpack.encode(data)), data);
     assert.deepEqual(msgpack.decode(Buffer(they.encode(data))), data);
   });
 
-  it("msgpack-js-v5", function() {
-    var they = require("msgpack-js-v5");
+  test("msgpack-js-v5", function(they) {
     assert.deepEqual(they.decode(msgpack.encode(data)), data);
     assert.deepEqual(msgpack.decode(Buffer(they.encode(data))), data);
   });
 
-  it("msgpack5", function() {
-    var they = require("msgpack5")();
+  test("msgpack5", function(they) {
+    they = they();
     assert.deepEqual(they.decode(msgpack.encode(data)), data);
     assert.deepEqual(msgpack.decode(Buffer(they.encode(data))), data);
   });
 
-  it("msgpack-unpack", function() {
-    var they = require("msgpack-unpack");
+  test("msgpack-unpack", function(they) {
     assert.deepEqual(they(msgpack.encode(data)), data);
   });
+
+  test("../vendor/msgpack.codec", function(they) {
+    they = they.msgpack;
+    assert.deepEqual(they.unpack(msgpack.encode(data)), data);
+    assert.deepEqual(msgpack.decode(Buffer(they.pack(data))), data);
+  });
 });
+
+function test(name, func) {
+  var they;
+  var method = it;
+  try {
+    they = require(name);
+  } catch (e) {
+    method = it.skip;
+    name += ": " + e;
+  }
+  method(name, func.bind(null, they));
+}
