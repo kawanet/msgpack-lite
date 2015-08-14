@@ -1,6 +1,6 @@
 {
   "name": "msgpack-lite",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Fast Pure JavaScript MessagePack Encoder and Decoder",
   "main": "index.js",
   "scripts": {
@@ -17,8 +17,7 @@
   "license": "MIT",
   "homepage": "https://github.com/kawanet/msgpack-lite",
   "devDependencies": {
-    "browserify": "^11.0.0",
-    "jsdoc": "^3.3.2",
+    "browserify": "^11.0.1",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "msgpack": "^0.2.6",
