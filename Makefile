@@ -33,7 +33,7 @@ $(JSDEST): $(JSTEMP) $(DIST)
 $(TESTDEST): $(TESTS_BROWSER)
 	$(BROWSERIFY) $(TESTS_BROWSER) -o $(TESTDEST) --debug
 
-test: jshint mocha bench
+test: jshint mocha
 
 mocha: $(MSGPACKCODEC)
 	$(MOCHA) -R spec $(TESTS)
