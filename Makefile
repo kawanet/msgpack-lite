@@ -14,7 +14,6 @@ JSHINT=./node_modules/.bin/jshint
 UGLIFYJS=./node_modules/.bin/uglifyjs
 BROWSERIFY=./node_modules/.bin/browserify
 MOCHA=./node_modules/.bin/mocha
-MSGPACKCODEC=vendor/msgpack.codec.js
 
 all: test $(JSDEST) $(TESTDEST)
 
@@ -35,19 +34,13 @@ $(TESTDEST): $(TESTS_BROWSER)
 
 test: jshint mocha
 
-mocha: $(MSGPACKCODEC)
+mocha:
 	$(MOCHA) -R spec $(TESTS)
 
 jshint:
 	$(JSHINT) $(HINTS)
 
-vendor:
-	mkdir -p vendor
-
-$(MSGPACKCODEC): vendor
-	wget -O vendor/msgpack.codec.js https://raw.githubusercontent.com/msgpack/msgpack-javascript/master/msgpack.codec.js
-
-bench: $(MSGPACKCODEC)
+bench:
 	node lib/benchmark.js 10
 
 .PHONY: all clean test jshint mocha bench
