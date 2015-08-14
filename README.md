@@ -2,6 +2,8 @@
 
 Fast Pure JavaScript MessagePack Encoder and Decoder
 
+Online Demo: http://kawanet.github.io/msgpack-lite/
+
 ### Encoding and Decoding
 
 ```js
@@ -60,6 +62,21 @@ $ echo '{"foo": "bar"}' | ./bin/msgpack -Jm | ./bin/msgpack -Mj
 $ npm install --save msgpack-lite
 ```
 
+### Browser Build
+
+Browser version is also available. 28KB minified, 9KB gziped.
+
+```html
+<script src="https://rawgithub.com/kawanet/msgpack-lite/master/dist/msgpack.min.js"></script>
+<script>
+// encode from Object to MessagePack (Uint8Array)
+var buffer = msgpack.encode({foo: "bar"});
+
+// decode from MessagePack (Uint8Array) to Object 
+var array = new Uint8Array([0x81, 0xA3, 0x66, 0x6F, 0x6F, 0xA3, 0x62, 0x61, 0x72]);
+var data = msgpack.decode(array);
+</script>
+
 ### Compatibility
 
 It is tested to have basic compatibility with other MessagePack modules below:
@@ -76,28 +93,31 @@ It is tested to have basic compatibility with other MessagePack modules below:
 A benchmark tool lib/benchmark.js is available to compare encoding/decoding speed.
 
 ```txt
+$ node -v
+v0.10.40
 $ node lib/benchmark.js 10
-operation                                                   | result             | op/ms
------------------------------------------------------------ | ------------------ | -----
-buf = Buffer(JSON.stringify(obj));                          | 426100op / 10000ms | 4261
-obj = JSON.parse(buf);                                      | 473100op / 10001ms | 4730
-buf = require("msgpack").pack(obj);                         | 331600op / 10002ms | 3315
-obj = require("msgpack").unpack(buf);                       | 316800op / 10003ms | 3167
-buf = require("msgpack-lite").encode(obj);                  | 326100op / 10001ms | 3260
-obj = require("msgpack-lite").decode(buf);                  | 209300op / 10000ms | 2093
-buf = Buffer(require("./msgpack.codec").msgpack.pack(obj)); | 256800op / 10003ms | 2567
-obj = require("./msgpack.codec").msgpack.unpack(buf);       | 170400op / 10002ms | 1703
-buf = require("msgpack-js-v5").encode(obj);                 | 66300op / 10003ms  | 662
-obj = require("msgpack-js-v5").decode(buf);                 | 188000op / 10003ms | 1879
-buf = require("msgpack-js").encode(obj);                    | 63100op / 10004ms  | 630
-obj = require("msgpack-js").decode(buf);                    | 189200op / 10003ms | 1891
-buf = require("msgpack5")().encode(obj);                    | 8000op / 10008ms   | 79
-obj = require("msgpack5")().decode(buf);                    | 32700op / 10020ms  | 326
+operation                                                      | result             | op/ms
+-------------------------------------------------------------- | ------------------ | -----
+buf = Buffer(JSON.stringify(obj));                             | 227000op / 10001ms | 2269
+obj = JSON.parse(buf);                                         | 243900op / 10004ms | 2438
+buf = require("msgpack").pack(obj);                            | 179500op / 10005ms | 1794
+obj = require("msgpack").unpack(buf);                          | 233400op / 10011ms | 2331
+buf = require("msgpack-lite").encode(obj);                     | 201100op / 10007ms | 2009
+obj = require("msgpack-lite").decode(buf);                     | 148800op / 10000ms | 1488
+buf = Buffer(require("msgpack-javascript").msgpack.pack(obj)); | 138400op / 10004ms | 1383
+obj = require("msgpack-javascript").msgpack.unpack(buf);       | 103100op / 10000ms | 1031
+buf = require("msgpack-js-v5").encode(obj);                    | 29400op / 10030ms  | 293
+obj = require("msgpack-js-v5").decode(buf);                    | 104400op / 10012ms | 1042
+buf = require("msgpack-js").encode(obj);                       | 29800op / 10028ms  | 297
+obj = require("msgpack-js").decode(buf);                       | 105100op / 10003ms | 1050
+buf = require("msgpack5")().encode(obj);                       | 4500op / 10106ms   | 44
+obj = require("msgpack5")().decode(buf);                       | 19000op / 10018ms  | 189
+obj = require("msgpack-unpack").decode(buf);                   | 1600op / 10211ms   | 15
 ```
 
 The msgpack-lite is the fastest module on both encoding and decoding
 operations compared to the other pure JavaScript msgpack-* modules.
-Please note that node-gyp backed msgpack module is more fast still, however.
+It's even 12% faster than node-gyp backed msgpack module on encoding!
 
 ### Repository
 
