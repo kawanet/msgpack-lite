@@ -22,6 +22,7 @@
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "msgpack": "^0.2.6",
+    "msgpack-javascript": "git+https://github.com/kawanet/msgpack-javascript.git",
     "msgpack-js": "^0.3.0",
     "msgpack-js-v5": "^0.3.0-v5",
     "msgpack-unpack": "^2.1.1",
