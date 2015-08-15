@@ -2,18 +2,22 @@
 <head>
   <meta charset="utf-8">
   <title>msgpack-lite demo</title>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.rawgit.com/jquery/jquery/2.1.4/dist/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.css" rel="stylesheet">
+  <!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.10/es5-shim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js"></script>
+  <![endif]-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script src="https://rawgithub.com/kawanet/msgpack-lite/master/dist/msgpack.min.js"></script>
   <!--
-  <script src="../dist/msgpack.browserify.js"></script>
+  <script src="../public/msgpack.browserify.js"></script>
   <script src="../dist/msgpack.min.js"></script>
   -->
   <script>
     $(function() {
-      var $source = $("#source").on("change", encode);
-      var $buffer = $("#buffer").on("change", decode);
+      var $source = $("#source").on("change", encode).on("keyup", encode);
+      var $buffer = $("#buffer").on("change", decode).on("keyup", decode);
       var $encode = $("#encode").on("click", encode);
       var $decode = $("#decode").on("click", decode);
       var spacer = "  ";
