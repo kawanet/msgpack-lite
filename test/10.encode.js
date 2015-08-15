@@ -74,6 +74,7 @@ describe(TITLE, function() {
   });
 
   // float 32 -- 0xca -- NOT SUPPORTED
+  // float 64 -- 0xcb
   it("ca-cb: float 32/64", function() {
     assert.deepEqual(toArray(msgpack.encode(0.5)), [0xcb, 63, 224, 0, 0, 0, 0, 0, 0]);
   });
