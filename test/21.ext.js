@@ -8,9 +8,11 @@ var msgpackJS = "../index";
 var isBrowser = ("undefined" !== typeof window);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
 var TITLE = __filename.replace(/^.*\//, "") + ":";
+var FUNCTION_HAS_NAME = NOP.name;
 
 describe(TITLE, function() {
-  it("Boolean", function() {
+  var skip = FUNCTION_HAS_NAME ? it : it.skip;
+  skip("Boolean", function() {
     [true, false].forEach(function(value) {
       var source = new Boolean(value);
       assert.equal(source - 0, value - 0);
@@ -21,7 +23,7 @@ describe(TITLE, function() {
     });
   });
 
-  it("Date", function() {
+  skip("Date", function() {
     var source = new Date();
     var encoded = msgpack.encode(source);
     var decoded = msgpack.decode(encoded);
@@ -32,17 +34,20 @@ describe(TITLE, function() {
   var ERROR_TYPES = ["Error", "EvalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError"];
   ERROR_TYPES.forEach(function(name, idx) {
     var Class = global[name];
-    var message = "foo:" + idx;
-    var source = new Class(message);
-    var encoded = msgpack.encode(source);
-    var decoded = msgpack.decode(encoded);
-    assert.equal(decoded + "", source + "");
-    assert.equal(decoded.name, name);
-    assert.equal(decoded.message, message);
-    assert.ok(decoded instanceof Error);
+    var skip = FUNCTION_HAS_NAME && Class ? it : it.skip;
+    skip(name, function() {
+      var message = "foo:" + idx;
+      var source = new Class(message);
+      var encoded = msgpack.encode(source);
+      var decoded = msgpack.decode(encoded);
+      assert.equal(decoded + "", source + "");
+      assert.equal(decoded.name, name);
+      assert.equal(decoded.message, message);
+      assert.ok(decoded instanceof Error);
+    });
   });
 
-  it("RegExp", function() {
+  skip("RegExp", function() {
     var source = new RegExp("foo");
     var encoded = msgpack.encode(source);
     var decoded = msgpack.decode(encoded);
@@ -50,7 +55,7 @@ describe(TITLE, function() {
     assert.ok(decoded instanceof RegExp);
   });
 
-  it("RegExp //g", function() {
+  skip("RegExp //g", function() {
     var source = /bar/g;
     var encoded = msgpack.encode(source);
     var decoded = msgpack.decode(encoded);
@@ -58,7 +63,7 @@ describe(TITLE, function() {
     assert.ok(decoded instanceof RegExp);
   });
 
-  it("Number", function() {
+  skip("Number", function() {
     var source = new Number(123.456);
     var encoded = msgpack.encode(source);
     var decoded = msgpack.decode(encoded);
@@ -66,7 +71,7 @@ describe(TITLE, function() {
     assert.ok(decoded instanceof Number);
   });
 
-  it("String", function() {
+  skip("String", function() {
     var source = new String("qux");
     var encoded = msgpack.encode(source);
     var decoded = msgpack.decode(encoded);
@@ -89,3 +94,6 @@ describe(TITLE, function() {
     }
   });
 });
+
+function NOP() {
+}

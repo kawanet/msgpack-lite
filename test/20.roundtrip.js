@@ -138,6 +138,7 @@ describe(TITLE, function() {
   });
 
   it("array (large)", function() {
+    this.timeout(10000);
     pattern(0, 65537).forEach(function(length) {
       var value = new Array(length);
       assert.equal(value.length, length);
@@ -166,6 +167,7 @@ describe(TITLE, function() {
   });
 
   it("map (large)", function() {
+    this.timeout(10000);
     pattern(65536, 65537).forEach(function(length) {
       var value = {};
       for (var i = 0; i < length; i++) {

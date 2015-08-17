@@ -103,6 +103,7 @@ describe(TITLE, function() {
   // str 16 -- 0xda
   // str 32 -- 0xdb
   it("d9-db: str 8/16/32", function() {
+    this.timeout(10000);
     var str, src = "a";
     for (var i = 0; i < 17; i++) src += src;
 
