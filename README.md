@@ -122,6 +122,51 @@ The msgpack-lite is the fastest module on both encoding and decoding
 operations compared to the other pure JavaScript msgpack-* modules.
 It's even 12% faster than node-gyp backed msgpack module on encoding!
 
+### MessagePack Mapping Table
+
+The following table shows how JavaScript objects (value) will be mapped to 
+[MessagePack formats](https://github.com/msgpack/msgpack/blob/master/spec.md)
+and vice versa.
+
+Source Value|MessagePack Format|Value Decoded
+----|----|----
+null, undefined|nil format family|null (X1)
+Boolean (true, false)|bool format family|Boolean (true, false)
+Number (32bit int)|int format family|Number (int or double)
+Number (64bit double)|float format family|Number (double)
+String|str format family|String
+Buffer|bin format family|Buffer
+Array|array format family|Array
+Object (plain object)|map format family|Object
+Object (see below)|ext format family|Object (see below)
+
+Note that both `null` and `undefined` are mapped to nil `0xC1`.
+This means `undefined` value will be *upgraded* to `null` in other words.
+
+### Extension Types
+
+MessagePack specification allows 128 application-specific extension types. 
+The library uses the following types to enable objects round-trip conversion.
+
+Type|Class|Type Value Reference
+----|----|----
+0x01|Int8Array|kExternalInt8Array
+0x02|Uint8Array|kExternalUint8Array
+0x03|Int16Array|kExternalInt16Array
+0x04|Uint16Array|kExternalUint16Array
+0x05|Int32Array|kExternalInt32Array
+0x06|Uint32Array|kExternalUint32Array
+0x07|Float32Array|kExternalFloat32Array
+0x08|Float64Array|kExternalFloat64Array
+0x09|Uint8ClampedArray|kExternalUint8ClampedArray
+0x11|ArrayBuffer|
+0x14|DataView|
+0x44|Date|"D"
+0x45|Error|"E"
+0x4E|Number|"N"
+0x52|RegExp|"R"
+0x53|String|"S"
+
 ### Repository
 
 - https://github.com/kawanet/msgpack-lite
