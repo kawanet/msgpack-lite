@@ -1,6 +1,6 @@
 {
   "name": "msgpack-lite",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Fast Pure JavaScript MessagePack Encoder and Decoder",
   "main": "index.js",
   "scripts": {
