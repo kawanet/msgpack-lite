@@ -22,11 +22,11 @@ var TYPED_ARRAY = {
 };
 
 var ARRAY_BUFFER = {
-  "ArrayBuffer": [0, 1, 2, 253, 254, 255],
+  "ArrayBuffer": [0, 1, 2, 253, 254, 255]
 };
 
 var DATA_VIEW = {
-  "DataView": [0, 1, 2, 253, 254, 255],
+  "DataView": [0, 1, 2, 253, 254, 255]
 };
 
 describe(TITLE, function() {
