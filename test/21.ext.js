@@ -18,13 +18,16 @@ describe(TITLE, function() {
     assert.ok(decoded instanceof Date);
   });
 
-  it("Error", function() {
-    var source = new Error("baz");
+  var ERROR_TYPES = ["Error", "EvalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError"];
+  ERROR_TYPES.forEach(function(name, idx) {
+    var Class = global[name];
+    var message = "foo:" + idx;
+    var source = new Class(message);
     var encoded = msgpack.encode(source);
     var decoded = msgpack.decode(encoded);
     assert.equal(decoded + "", source + "");
-    assert.equal(decoded.name, source.name);
-    assert.equal(decoded.message, source.message);
+    assert.equal(decoded.name, name);
+    assert.equal(decoded.message, message);
     assert.ok(decoded instanceof Error);
   });
 
