@@ -1,5 +1,7 @@
 #!/usr/bin/env mocha -R spec
 
+/*jshint -W053 */
+
 var assert = require("assert");
 
 var msgpackJS = "../index";
@@ -14,6 +16,16 @@ describe(TITLE, function() {
     var decoded = msgpack.decode(encoded);
     assert.equal(decoded - 0, source - 0);
     assert.ok(decoded instanceof Date);
+  });
+
+  it("Error", function() {
+    var source = new Error("baz");
+    var encoded = msgpack.encode(source);
+    var decoded = msgpack.decode(encoded);
+    assert.equal(decoded + "", source + "");
+    assert.equal(decoded.name, source.name);
+    assert.equal(decoded.message, source.message);
+    assert.ok(decoded instanceof Error);
   });
 
   it("RegExp", function() {
@@ -31,4 +43,21 @@ describe(TITLE, function() {
     assert.equal(decoded + "", source + "");
     assert.ok(decoded instanceof RegExp);
   });
+
+  it("Number", function() {
+    var source = new Number(123.456);
+    var encoded = msgpack.encode(source);
+    var decoded = msgpack.decode(encoded);
+    assert.equal(decoded - 0, source - 0);
+    assert.ok(decoded instanceof Number);
+  });
+
+  it("String", function() {
+    var source = new String("qux");
+    var encoded = msgpack.encode(source);
+    var decoded = msgpack.decode(encoded);
+    assert.equal(decoded + "", source + "");
+    assert.ok(decoded instanceof String);
+  });
+
 });
