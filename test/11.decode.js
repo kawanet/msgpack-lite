@@ -83,14 +83,17 @@ describe(TITLE, function() {
     var ext, buf;
 
     ext = Buffer(1 + 1);
+    ext[0] = 0;
     buf = Buffer.concat([Buffer([0xc7, 1]), ext]);
     assert.deepEqual(msgpack.decode(buf), ext);
 
     ext = Buffer(1 + 256);
+    ext[0] = 0;
     buf = Buffer.concat([Buffer([0xc8, 1, 0]), ext]);
     assert.deepEqual(msgpack.decode(buf), ext);
 
     ext = Buffer(1 + 65536);
+    ext[0] = 0;
     buf = Buffer.concat([Buffer([0xc9, 0, 1, 0, 0]), ext]);
     assert.deepEqual(msgpack.decode(buf), ext);
   });
@@ -158,22 +161,27 @@ describe(TITLE, function() {
     var ext, buf;
 
     ext = Buffer(1 + 1);
+    ext[0] = 0;
     buf = Buffer.concat([Buffer([0xd4]), ext]);
     assert.deepEqual(msgpack.decode(buf), ext);
 
     ext = Buffer(1 + 2);
+    ext[0] = 0;
     buf = Buffer.concat([Buffer([0xd5]), ext]);
     assert.deepEqual(msgpack.decode(buf), ext);
 
     ext = Buffer(1 + 4);
+    ext[0] = 0;
     buf = Buffer.concat([Buffer([0xd6]), ext]);
     assert.deepEqual(msgpack.decode(buf), ext);
 
     ext = Buffer(1 + 8);
+    ext[0] = 0;
     buf = Buffer.concat([Buffer([0xd7]), ext]);
     assert.deepEqual(msgpack.decode(buf), ext);
 
     ext = Buffer(1 + 16);
+    ext[0] = 0;
     buf = Buffer.concat([Buffer([0xd8]), ext]);
     assert.deepEqual(msgpack.decode(buf), ext);
   });
