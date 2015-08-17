@@ -35,10 +35,12 @@
     "stream"
   ],
   "jshintConfig": {
+    "es3":true,
     "undef": true,
     "node": true,
     "mocha": true,
     "globals": {
+      "JSON": true,
       "window": true
     }
   }
