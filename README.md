@@ -148,31 +148,24 @@ This means `undefined` value will be *upgraded* to `null` in other words.
 MessagePack specification allows 128 application-specific extension types. 
 The library uses the following types to enable objects round-trip conversion.
 
-Type|Class|Type Value Reference
-----|----|----
-0x01|Int8Array|kExternalInt8Array
-0x02|Uint8Array|kExternalUint8Array
-0x03|Int16Array|kExternalInt16Array
-0x04|Uint16Array|kExternalUint16Array
-0x05|Int32Array|kExternalInt32Array
-0x06|Uint32Array|kExternalUint32Array
-0x07|Float32Array|kExternalFloat32Array
-0x08|Float64Array|kExternalFloat64Array
-0x09|Uint8ClampedArray|kExternalUint8ClampedArray
-0x0A|ArrayBuffer|
-0x0D|DataView|
-0x10|Error|
-0x11|EvalError|
-0x12|RangeError|
-0x13|ReferenceError|
-0x14|SyntaxError|
-0x15|TypeError|
-0x16|URIError|
-0x42|Boolean|"B"
-0x44|Date|"D"
-0x4E|Number|"N"
-0x52|RegExp|"R"
-0x53|String|"S"
+Type|Object|Type|Object
+----|----|----|----
+0x00||0x10|
+0x01|EvalError|0x11|Int8Array
+0x02|RangeError|0x12|Uint8Array
+0x03|ReferenceError|0x13|Int16Array
+0x04|SyntaxError|0x14|Uint16Array
+0x05|TypeError|0x15|Int32Array
+0x06|URIError|0x16|Uint32Array
+0x07||0x17|Float32Array
+0x08||0x18|Float64Array
+0x09||0x19|Uint8ClampedArray
+0x0A|RegExp|0x1A|ArrayBuffer
+0x0B|Boolean|0x1B|
+0x0C|String|0x1C|
+0x0D|Date|0x1D|DataView
+0x0E|Error|0x1E|
+0x0F|Number|0x1F|
 
 ### Repository
 
