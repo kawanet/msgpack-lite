@@ -74,4 +74,18 @@ describe(TITLE, function() {
     assert.ok(decoded instanceof String);
   });
 
+  it("ExtBuffer", function() {
+    for (var type = 32; type < 256; type++) {
+      // fixext 8 -- 0xd7
+      var header = new Buffer([0xd7, type]);
+      var content = new Buffer(8);
+      for (var i = 0; i < 8; i++) {
+        content[i] = (type + i) & 0x7F;
+      }
+      var source = Buffer.concat([header, content]);
+      var decoded = msgpack.decode(source);
+      var encoded = msgpack.encode(decoded);
+      assert.deepEqual(encoded, source);
+    }
+  });
 });

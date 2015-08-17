@@ -80,22 +80,22 @@ describe(TITLE, function() {
   // ext 16 -- 0xc8
   // ext 32 -- 0xc9
   it("c7-c9: ext 8/16/32", function() {
-    var ext, buf;
+    var ext, buf, act;
 
-    ext = Buffer(1 + 1);
-    ext[0] = 0;
-    buf = Buffer.concat([Buffer([0xc7, 1]), ext]);
-    assert.deepEqual(msgpack.decode(buf), ext);
+    ext = Buffer(1);
+    buf = Buffer.concat([Buffer([0xc7, 1, 0]), ext]);
+    act = msgpack.decode(buf);
+    assert.deepEqual(act.buffer, ext);
 
-    ext = Buffer(1 + 256);
-    ext[0] = 0;
-    buf = Buffer.concat([Buffer([0xc8, 1, 0]), ext]);
-    assert.deepEqual(msgpack.decode(buf), ext);
+    ext = Buffer(256);
+    buf = Buffer.concat([Buffer([0xc8, 1, 0, 0]), ext]);
+    act = msgpack.decode(buf);
+    assert.deepEqual(act.buffer, ext);
 
-    ext = Buffer(1 + 65536);
-    ext[0] = 0;
-    buf = Buffer.concat([Buffer([0xc9, 0, 1, 0, 0]), ext]);
-    assert.deepEqual(msgpack.decode(buf), ext);
+    ext = Buffer(65536);
+    buf = Buffer.concat([Buffer([0xc9, 0, 1, 0, 0, 0]), ext]);
+    act = msgpack.decode(buf);
+    assert.deepEqual(act.buffer, ext);
   });
 
   // float 32 -- 0xca
@@ -152,38 +152,38 @@ describe(TITLE, function() {
     assert.deepEqual(msgpack.decode(Buffer([0xd3, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF])), -1);
   });
 
-  // ext 1 -- 0xd4
-  // ext 2 -- 0xd5
-  // ext 4 -- 0xd6
-  // ext 8 -- 0xd7
-  // ext 16 -- 0xd8
-  it("d4-d8: ext 1/2/4/8/16", function() {
-    var ext, buf;
+  // fixext 1 -- 0xd4
+  // fixext 2 -- 0xd5
+  // fixext 4 -- 0xd6
+  // fixext 8 -- 0xd7
+  // fixext 16 -- 0xd8
+  it("d4-d8: fixext 1/2/4/8/16", function() {
+    var ext, buf, act;
 
-    ext = Buffer(1 + 1);
-    ext[0] = 0;
-    buf = Buffer.concat([Buffer([0xd4]), ext]);
-    assert.deepEqual(msgpack.decode(buf), ext);
+    ext = Buffer(1);
+    buf = Buffer.concat([Buffer([0xd4, 0]), ext]);
+    act = msgpack.decode(buf);
+    assert.deepEqual(act.buffer, ext);
 
-    ext = Buffer(1 + 2);
-    ext[0] = 0;
-    buf = Buffer.concat([Buffer([0xd5]), ext]);
-    assert.deepEqual(msgpack.decode(buf), ext);
+    ext = Buffer(2);
+    buf = Buffer.concat([Buffer([0xd5, 0]), ext]);
+    act = msgpack.decode(buf);
+    assert.deepEqual(act.buffer, ext);
 
-    ext = Buffer(1 + 4);
-    ext[0] = 0;
-    buf = Buffer.concat([Buffer([0xd6]), ext]);
-    assert.deepEqual(msgpack.decode(buf), ext);
+    ext = Buffer(4);
+    buf = Buffer.concat([Buffer([0xd6, 0]), ext]);
+    act = msgpack.decode(buf);
+    assert.deepEqual(act.buffer, ext);
 
-    ext = Buffer(1 + 8);
-    ext[0] = 0;
-    buf = Buffer.concat([Buffer([0xd7]), ext]);
-    assert.deepEqual(msgpack.decode(buf), ext);
+    ext = Buffer(8);
+    buf = Buffer.concat([Buffer([0xd7, 0]), ext]);
+    act = msgpack.decode(buf);
+    assert.deepEqual(act.buffer, ext);
 
-    ext = Buffer(1 + 16);
-    ext[0] = 0;
-    buf = Buffer.concat([Buffer([0xd8]), ext]);
-    assert.deepEqual(msgpack.decode(buf), ext);
+    ext = Buffer(16);
+    buf = Buffer.concat([Buffer([0xd8, 0]), ext]);
+    act = msgpack.decode(buf);
+    assert.deepEqual(act.buffer, ext);
   });
 
   // str 8 -- 0xd9
