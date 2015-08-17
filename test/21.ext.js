@@ -10,6 +10,17 @@ var msgpack = isBrowser && window.msgpack || require(msgpackJS);
 var TITLE = __filename.replace(/^.*\//, "") + ":";
 
 describe(TITLE, function() {
+  it("Boolean", function() {
+    [true, false].forEach(function(value) {
+      var source = new Boolean(value);
+      assert.equal(source - 0, value - 0);
+      var encoded = msgpack.encode(source);
+      var decoded = msgpack.decode(encoded);
+      assert.equal(decoded - 0, source - 0);
+      assert.ok(decoded instanceof Boolean);
+    });
+  });
+
   it("Date", function() {
     var source = new Date();
     var encoded = msgpack.encode(source);

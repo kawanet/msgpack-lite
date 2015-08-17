@@ -168,6 +168,7 @@ Type|Class|Type Value Reference
 0x14|SyntaxError|
 0x15|TypeError|
 0x16|URIError|
+0x42|Boolean|"B"
 0x44|Date|"D"
 0x4E|Number|"N"
 0x52|RegExp|"R"
