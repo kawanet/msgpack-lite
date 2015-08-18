@@ -40,7 +40,7 @@ var msgpack = require("msgpack-lite");
 var readStream = fs.createReadStream("test.msp");
 var decodeStream = msgpack.createDecodeStream();
 
-// show objects decoded
+// show multiple objects decoded from stream
 readStream.pipe(decodeStream).on("data", console.warn);
 ```
 
@@ -64,7 +64,7 @@ $ npm install --save msgpack-lite
 
 ### Browser Build
 
-Browser version is also available. 29KB minified, 9KB gziped.
+Browser version is also available. 33KB minified, 10KB gziped.
 
 ```html
 <script src="https://rawgithub.com/kawanet/msgpack-lite/master/dist/msgpack.min.js"></script>
@@ -80,15 +80,15 @@ var data = msgpack.decode(array);
 
 It works even on IE9 with [es5-shim ](https://github.com/es-shims/es5-shim).
 
-### Compatibility
+### Interoperability
 
-It is tested to have basic compatibility with other MessagePack modules below:
+It is tested to have basic compatibility with other Node.js MessagePack modules below:
 
-- https://www.npmjs.com/package/msgpack
-- https://www.npmjs.com/package/msgpack-js
-- https://www.npmjs.com/package/msgpack-js-v5
-- https://www.npmjs.com/package/msgpack5
-- https://www.npmjs.com/package/msgpack-unpack
+- https://www.npmjs.com/package/msgpack (0.2.6)
+- https://www.npmjs.com/package/msgpack-js (0.3.0)
+- https://www.npmjs.com/package/msgpack-js-v5 (0.3.0-v5)
+- https://www.npmjs.com/package/msgpack5 (3.1.0)
+- https://www.npmjs.com/package/msgpack-unpack (2.1.1)
 - https://github.com/msgpack/msgpack-javascript (msgpack.codec)
 
 ### Speed Comparison
@@ -120,7 +120,7 @@ obj = require("msgpack-unpack").decode(buf);                   | 1600op / 10245m
 
 The msgpack-lite is the fastest module on both encoding and decoding
 operations compared to the other pure JavaScript msgpack-* modules.
-It's even 12% faster than node-gyp backed msgpack module on encoding!
+It's even 12% faster than C++ node-gyp backed msgpack module on encoding!
 
 ### MessagePack Mapping Table
 
@@ -130,7 +130,7 @@ and vice versa.
 
 Source Value|MessagePack Format|Value Decoded
 ----|----|----
-null, undefined|nil format family|null (X1)
+null, undefined|nil format family|null
 Boolean (true, false)|bool format family|Boolean (true, false)
 Number (32bit int)|int format family|Number (int or double)
 Number (64bit double)|float format family|Number (double)
@@ -140,13 +140,14 @@ Array|array format family|Array
 Object (plain object)|map format family|Object
 Object (see below)|ext format family|Object (see below)
 
-Note that both `null` and `undefined` are mapped to nil `0xC1`.
+Note that both `null` and `undefined` are mapped to nil `0xC1` type.
 This means `undefined` value will be *upgraded* to `null` in other words.
 
 ### Extension Types
 
-MessagePack specification allows 128 application-specific extension types. 
-The library uses the following types to enable objects round-trip conversion.
+The MessagePack specification allows 128 application-specific extension types. 
+The library uses the following types to make round-trip conversion possible
+for JavaScript native objects.
 
 Type|Object|Type|Object
 ----|----|----|----
@@ -166,6 +167,8 @@ Type|Object|Type|Object
 0x0D|Date|0x1D|DataView
 0x0E|Error|0x1E|
 0x0F|Number|0x1F|
+
+Other extension types are mapped to internal ExtBuffer object.
 
 ### Repository
 
