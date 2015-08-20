@@ -7,6 +7,7 @@ var msgpackJS = "../index";
 var isBrowser = ("undefined" !== typeof window);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
 var TITLE = __filename.replace(/^.*\//, "") + ":";
+var example = require("./example.json");
 
 var src = [
   ["foo"],
@@ -95,6 +96,26 @@ describe(TITLE, function() {
     function onData(data) {
       assert.deepEqual(data, encoded[count++]);
       if (count === 3) done();
+    }
+  });
+
+  it("write()", function(done) {
+    var count = 0;
+    var buf = msgpack.encode(example);
+    var decoder = msgpack.createDecodeStream();
+    decoder.on("data", onData);
+
+    for (var i = 0; i < 3; i++) {
+      Array.prototype.forEach.call(buf, each);
+    }
+
+    function each(x) {
+      decoder.write(Buffer([x]));
+    }
+
+    function onData(data) {
+      assert.deepEqual(data, example);
+      if (++count === 3) done();
     }
   });
 });
