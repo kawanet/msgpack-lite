@@ -38,6 +38,7 @@
     "es3": true,
     "globals": {
       "JSON": true,
+      "Symbol": true,
       "window": true
     },
     "node": true,

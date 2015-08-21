@@ -44,8 +44,14 @@ describe(TITLE, function() {
   });
 
   // nil -- 0xc0
-  it("c0: nil", function() {
+  it("c0: nil (null)", function() {
     assert.deepEqual(toArray(msgpack.encode(null)), [0xc0]);
+  });
+  it("c0: nil (undefined)", function() {
+    assert.deepEqual(toArray(msgpack.encode(undefined)), [0xc0]);
+  });
+  it("c0: nil (Function)", function() {
+    assert.deepEqual(toArray(msgpack.encode(NOP)), [0xc0]);
   });
 
   // false -- 0xc2
@@ -133,4 +139,7 @@ function toArray(buffer) {
 
 function concat(buf) {
   return Array.prototype.concat.apply([], Array.prototype.map.call(arguments, toArray));
+}
+
+function NOP() {
 }
