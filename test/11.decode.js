@@ -61,6 +61,16 @@ describe(TITLE, function() {
     assert.deepEqual(msgpack.decode(Buffer([0xc0])), null);
   });
 
+  // (never used) -- 0xc1
+  it("c1: (never used)", function(done) {
+    try {
+      msgpack.decode(Buffer([0xc1]));
+      done("should throw");
+    } catch (e) {
+      done();
+    }
+  });
+
   // false -- 0xc2
   // true -- 0xc3
   it("c2-c3: boolean", function() {
