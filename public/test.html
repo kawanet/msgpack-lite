@@ -1,6 +1,7 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
   <title>msgpack-lite tests</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/mocha/2.2.5/mocha.css" rel="stylesheet"/>
 </head>
@@ -16,6 +17,35 @@
 <script src="./msgpack.browserify.js"></script>
 <script src="./test.browserify.js"></script>
 <script>mocha.checkLeaks();</script>
-<script>mocha.run();</script>
+<script>
+  onload = function() {
+    var failedTests = [];
+    var runner = mocha.run();
+    runner.on("end", function() {
+      window.mochaResults = runner.stats;
+      window.mochaResults.reports = failedTests;
+    });
+    runner.on("fail", logFailure);
+
+    function logFailure(test, err) {
+      failedTests.push({
+        name: test.title,
+        result: false,
+        message: err.message,
+        stack: err.stack,
+        titles: flattenTitles(test)
+      });
+    }
+
+    function flattenTitles(test) {
+      var titles = [];
+      while (test.parent.title) {
+        titles.push(test.parent.title);
+        test = test.parent;
+      }
+      return titles.reverse();
+    }
+  };
+</script>
 </body>
 </html>

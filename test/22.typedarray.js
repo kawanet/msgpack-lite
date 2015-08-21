@@ -3,7 +3,6 @@
 /*jshint -W053 */
 
 var assert = require("assert");
-
 var msgpackJS = "../index";
 var isBrowser = ("undefined" !== typeof window);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
@@ -36,6 +35,8 @@ describe(TITLE, function() {
     skip(name, function() {
       var sample = TYPED_ARRAY[name];
       var source = new Class(sample);
+      assert.ok(source instanceof Class);
+      assert.equal(source.length, sample.length);
       var encoded = msgpack.encode(source);
       var decoded = msgpack.decode(encoded);
       var actual = Array.prototype.slice.call(decoded);
@@ -50,6 +51,8 @@ describe(TITLE, function() {
     skip(name, function() {
       var sample = ARRAY_BUFFER[name];
       var source = (new Uint8Array(sample)).buffer;
+      assert.ok(source instanceof Class);
+      assert.equal(source.byteLength, sample.length);
       var encoded = msgpack.encode(source);
       var decoded = msgpack.decode(encoded);
       var actual = Array.prototype.slice.call(new Uint8Array(decoded));
@@ -64,6 +67,8 @@ describe(TITLE, function() {
     skip(name, function() {
       var sample = DATA_VIEW[name];
       var source = new DataView((new Uint8Array(sample)).buffer);
+      assert.ok(source instanceof Class);
+      assert.equal(source.byteLength, sample.length);
       var encoded = msgpack.encode(source);
       var decoded = msgpack.decode(encoded);
       var actual = Array.prototype.slice.call(new Uint8Array(decoded.buffer));

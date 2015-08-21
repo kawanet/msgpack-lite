@@ -1,7 +1,6 @@
 #!/usr/bin/env mocha -R spec
 
 var assert = require("assert");
-
 var msgpackJS = "../index";
 var isBrowser = ("undefined" !== typeof window);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
@@ -96,6 +95,7 @@ describe(TITLE, function() {
   });
 
   it("string (ASCII)", function() {
+    this.timeout(30000);
     pattern(0, 65537).forEach(function(length) {
       var value = STRING_ASCII.substr(0, length);
       var encoded = msgpack.encode(value);
@@ -105,6 +105,7 @@ describe(TITLE, function() {
   });
 
   it("string (GREEK)", function() {
+    this.timeout(30000);
     pattern(0, 65537).forEach(function(length) {
       var value = STRING_GREEK.substr(0, length);
       var encoded = msgpack.encode(value);
@@ -114,6 +115,7 @@ describe(TITLE, function() {
   });
 
   it("string (ASIAN)", function() {
+    this.timeout(30000);
     pattern(0, 65537).forEach(function(length) {
       var value = STRING_ASIAN.substr(0, length);
       var encoded = msgpack.encode(value);
@@ -138,7 +140,7 @@ describe(TITLE, function() {
   });
 
   it("array (large)", function() {
-    this.timeout(10000);
+    this.timeout(30000);
     pattern(0, 65537).forEach(function(length) {
       var value = new Array(length);
       assert.equal(value.length, length);
@@ -167,7 +169,7 @@ describe(TITLE, function() {
   });
 
   it("map (large)", function() {
-    this.timeout(10000);
+    this.timeout(30000);
     pattern(65536, 65537).forEach(function(length) {
       var value = {};
       for (var i = 0; i < length; i++) {
@@ -183,6 +185,7 @@ describe(TITLE, function() {
   });
 
   it("buffer", function() {
+    this.timeout(30000);
     pattern(2, 65537).forEach(function(length, idx) {
       var value = new Buffer(length);
       value.fill(idx);

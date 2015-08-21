@@ -1,7 +1,6 @@
 #!/usr/bin/env mocha -R spec
 
 var assert = require("assert");
-
 var msgpackJS = "../index";
 var isBrowser = ("undefined" !== typeof window);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
@@ -82,6 +81,7 @@ describe(TITLE, function() {
   // bin 16 -- 0xc5
   // bin 32 -- 0xc6
   it("c4-c6: bin 8/16/32", function() {
+    this.timeout(30000);
     var bin, buf;
 
     bin = Buffer(1);
@@ -101,6 +101,7 @@ describe(TITLE, function() {
   // ext 16 -- 0xc8
   // ext 32 -- 0xc9
   it("c7-c9: ext 8/16/32", function() {
+    this.timeout(30000);
     var ext, buf, act;
 
     ext = Buffer(1);
@@ -211,6 +212,7 @@ describe(TITLE, function() {
   // str 16 -- 0xda
   // str 32 -- 0xdb
   it("d9-db: str 8/16/32", function() {
+    this.timeout(30000);
     var str, buf, src = "a";
     for (var i = 0; i < 17; i++) src += src;
 
@@ -234,7 +236,7 @@ describe(TITLE, function() {
   // array 16 -- 0xdc
   // array 32 -- 0xdd
   it("dc-dd: array 16/32", function() {
-    this.timeout(10000);
+    this.timeout(30000);
     var i, src;
     var array = new Array(256);
     for (i = 0; i < 256; i++) array[i] = i & 0x7F;
@@ -249,7 +251,7 @@ describe(TITLE, function() {
   // map 16 -- 0xde
   // map 32 -- 0xdf
   it("de-df: map 16/32", function() {
-    this.timeout(10000);
+    this.timeout(30000);
     var i, src, key;
     var map = {};
     var array = [];

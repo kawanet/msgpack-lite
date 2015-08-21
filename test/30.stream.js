@@ -2,10 +2,7 @@
 
 var assert = require("assert");
 var Stream = require("stream");
-
-var msgpackJS = "../index";
-var isBrowser = ("undefined" !== typeof window);
-var msgpack = isBrowser && window.msgpack || require(msgpackJS);
+var msgpack = require("../index");
 var TITLE = __filename.replace(/^.*\//, "") + ":";
 var example = require("./example.json");
 
