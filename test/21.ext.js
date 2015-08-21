@@ -8,24 +8,27 @@ var msgpackJS = "../index";
 var isBrowser = ("undefined" !== typeof window);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
 var TITLE = __filename.replace(/^.*\//, "") + ":";
-var FUNCTION_HAS_NAME = NOP.name;
 
 describe(TITLE, function() {
-  var skip = FUNCTION_HAS_NAME ? it : it.skip;
-  skip("Boolean", function() {
+  it("Boolean", function() {
     [true, false].forEach(function(value) {
       var source = new Boolean(value);
       assert.equal(source - 0, value - 0);
       var encoded = msgpack.encode(source);
+      assert.equal(encoded[0], 0xD4); // fixext 1
+      assert.equal(encoded[1], 0x0B); // Boolean
       var decoded = msgpack.decode(encoded);
       assert.equal(decoded - 0, source - 0);
       assert.ok(decoded instanceof Boolean);
     });
   });
 
-  skip("Date", function() {
+  it("Date", function() {
     var source = new Date();
     var encoded = msgpack.encode(source);
+    assert.equal(encoded[0], 0xC7); // ext 8
+    assert.equal(encoded[1], 0x09); // 1+8
+    assert.equal(encoded[2], 0x0D); // Date
     var decoded = msgpack.decode(encoded);
     assert.equal(decoded - 0, source - 0);
     assert.ok(decoded instanceof Date);
@@ -34,8 +37,7 @@ describe(TITLE, function() {
   var ERROR_TYPES = ["Error", "EvalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError"];
   ERROR_TYPES.forEach(function(name, idx) {
     var Class = global[name];
-    var skip = FUNCTION_HAS_NAME && Class ? it : it.skip;
-    skip(name, function() {
+    it(name, function() {
       var message = "foo:" + idx;
       var source = new Class(message);
       var encoded = msgpack.encode(source);
@@ -43,11 +45,11 @@ describe(TITLE, function() {
       assert.equal(decoded + "", source + "");
       assert.equal(decoded.name, name);
       assert.equal(decoded.message, message);
-      assert.ok(decoded instanceof Error);
+      assert.ok(decoded instanceof Class);
     });
   });
 
-  skip("RegExp", function() {
+  it("RegExp", function() {
     var source = new RegExp("foo");
     var encoded = msgpack.encode(source);
     var decoded = msgpack.decode(encoded);
@@ -55,23 +57,26 @@ describe(TITLE, function() {
     assert.ok(decoded instanceof RegExp);
   });
 
-  skip("RegExp //g", function() {
-    var source = /bar/g;
+  it("RegExp //g", function() {
+    var source = /foo\/bar/g;
     var encoded = msgpack.encode(source);
     var decoded = msgpack.decode(encoded);
     assert.equal(decoded + "", source + "");
     assert.ok(decoded instanceof RegExp);
   });
 
-  skip("Number", function() {
+  it("Number", function() {
     var source = new Number(123.456);
     var encoded = msgpack.encode(source);
+    assert.equal(encoded[0], 0xC7); // ext 8
+    assert.equal(encoded[1], 0x09); // 1+8
+    assert.equal(encoded[2], 0x0F); // Number
     var decoded = msgpack.decode(encoded);
     assert.equal(decoded - 0, source - 0);
     assert.ok(decoded instanceof Number);
   });
 
-  skip("String", function() {
+  it("String", function() {
     var source = new String("qux");
     var encoded = msgpack.encode(source);
     var decoded = msgpack.decode(encoded);
@@ -79,21 +84,29 @@ describe(TITLE, function() {
     assert.ok(decoded instanceof String);
   });
 
-  it("ExtBuffer", function() {
-    for (var type = 32; type < 256; type++) {
-      // fixext 8 -- 0xd7
-      var header = new Buffer([0xd7, type]);
-      var content = new Buffer(8);
-      for (var i = 0; i < 8; i++) {
-        content[i] = (type + i) & 0x7F;
-      }
-      var source = Buffer.concat([header, content]);
-      var decoded = msgpack.decode(source);
-      var encoded = msgpack.encode(decoded);
-      assert.deepEqual(encoded, source);
+  it("ExtBuffer (0x00)", function() {
+    testExtBuffer(0);
+  });
+
+  it("ExtBuffer (0x20-0xFF)", function() {
+    for (var i = 32; i < 256; i++) {
+      testExtBuffer(i);
     }
   });
-});
 
-function NOP() {
-}
+  function testExtBuffer(type) {
+    // fixext 8 -- 0xd7
+    var header = new Buffer([0xd7, type]);
+    var content = new Buffer(8);
+    for (var i = 0; i < 8; i++) {
+      content[i] = (type + i) & 0x7F;
+    }
+    var source = Buffer.concat([header, content]);
+    var decoded = msgpack.decode(source);
+    assert.equal(decoded.type, type);
+    assert.equal(decoded.buffer.length, content.length);
+    assert.deepEqual(decoded.buffer, content);
+    var encoded = msgpack.encode(decoded);
+    assert.deepEqual(encoded, source);
+  }
+});
