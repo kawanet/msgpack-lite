@@ -11,38 +11,49 @@ describe(TITLE, function() {
 
   // positive fixint -- 0x00 - 0x7f
   it("00-7f: positive fixint", function() {
-    assert.deepEqual(msgpack.decode(Buffer([0x00])), 0);
-    assert.deepEqual(msgpack.decode(Buffer([0x7F])), 0x7F);
+    for (var i = 0; i <= 0x7F; i++) {
+      assert.deepEqual(msgpack.decode(Buffer([i])), i);
+    }
   });
 
   // fixmap -- 0x80 - 0x8f
   it("80-8f: fixmap", function() {
-    assert.deepEqual(msgpack.decode(Buffer([0x80])), {});
-
-    var map = {a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, i: 9, j: 10, k: 11, l: 12, m: 13, n: 14, o: 15};
-    var array = [0x8F];
+    var map = {a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, i: 9, j: 10, k: 11, l: 12, m: 13, n: 14, o: 15, p: 16};
+    var src = [0x80];
+    var exp = {};
     Object.keys(map).forEach(function(key) {
-      array.push(0xa1, key.charCodeAt(0), map[key]);
+      assert.deepEqual(msgpack.decode(Buffer(src)), exp);
+      src[0]++;
+      src.push(0xa1);
+      src.push(key.charCodeAt(0));
+      src.push(map[key]);
+      exp[key] = map[key];
     });
-    assert.deepEqual(msgpack.decode(Buffer(array)), map);
   });
 
   // fixarray -- 0x90 - 0x9f
   it("90-9f: fixarray", function() {
-    assert.deepEqual(msgpack.decode(Buffer([0x90])), []);
-
     var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-    var buf = Buffer.concat([Buffer([0x9F]), Buffer(array)]);
-    assert.deepEqual(msgpack.decode(buf), array);
+    var src = [0x90];
+    var exp = [];
+    for (var i = 0; i < 16; i++) {
+      assert.deepEqual(msgpack.decode(Buffer(src)), exp);
+      src[0]++;
+      src.push(array[i]);
+      exp.push(array[i]);
+    }
   });
 
   // fixstr -- 0xa0 - 0xbf
   it("a0-bf: fixstr", function() {
-    assert.deepEqual(msgpack.decode(Buffer([0xa0])), "");
-
-    var str = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-    var buf = Buffer.concat([Buffer([0xBF]), Buffer(str)]);
-    assert.deepEqual(msgpack.decode(buf), str);
+    var str = "0123456789abcdefghijklmnopqrstu";
+    var src = [0xa0];
+    for (var i = 0; i < 32; i++) {
+      var exp = str.substr(0, i);
+      assert.deepEqual(msgpack.decode(Buffer(src)), exp);
+      src[0]++;
+      src.push(str.charCodeAt(i));
+    }
   });
 
   // nil -- 0xc0
@@ -210,9 +221,49 @@ describe(TITLE, function() {
     assert.deepEqual(msgpack.decode(buf), str);
   });
 
+  // array 16 -- 0xdc
+  // array 32 -- 0xdd
+  it("dc-dd: array 16/32", function() {
+    this.timeout(10000);
+    var i, src;
+    var array = new Array(256);
+    for (i = 0; i < 256; i++) array[i] = i & 0x7F;
+    src = [0xdc, 0x01, 0x00].concat(array);
+    assert.deepEqual(msgpack.decode(Buffer(src)), array);
+
+    for (i = 0; i < 8; i++) array = array.concat(array);
+    src = [0xdd, 0x00, 0x01, 0x00, 0x00].concat(array);
+    assert.deepEqual(msgpack.decode(Buffer(src)), array);
+  });
+
+  // map 16 -- 0xde
+  // map 32 -- 0xdf
+  it("de-df: map 16/32", function() {
+    this.timeout(10000);
+    var i, src, key;
+    var map = {};
+    var array = [];
+    for (i = 0; i < 256; i++) {
+      key = i.toString(16);
+      if (i < 16) key = "0" + key;
+      map[key] = i & 0x7F;
+      array.push(0xa2);
+      array.push(key.charCodeAt(0));
+      array.push(key.charCodeAt(1));
+      array.push(i & 0x7F);
+    }
+    src = [0xde, 0x01, 0x00].concat(array);
+    assert.deepEqual(msgpack.decode(Buffer(src)), map);
+
+    for (i = 0; i < 8; i++) array = array.concat(array);
+    src = [0xdf, 0x00, 0x01, 0x00, 0x00].concat(array);
+    assert.deepEqual(msgpack.decode(Buffer(src)), map);
+  });
+
   // negative fixint -- 0xe0 - 0xff
   it("e0-ff: negative fixint", function() {
-    assert.deepEqual(msgpack.decode(Buffer([0xFF])), -1);
-    assert.deepEqual(msgpack.decode(Buffer([0xE0])), -32);
+    for (var i = -32; i <= -1; i++) {
+      assert.deepEqual(msgpack.decode(Buffer([i & 0xFF])), i);
+    }
   });
 });
