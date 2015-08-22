@@ -2,17 +2,19 @@
 
 Fast Pure JavaScript MessagePack Encoder and Decoder
 
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/msgpack-lite.svg)](https://saucelabs.com/u/msgpack-lite)
+
 Online demo: [http://kawanet.github.io/msgpack-lite/](http://kawanet.github.io/msgpack-lite/)
 
 ### Significantly Fast Encoding
 
-- 5x faster than other pure JavaScript libraries!
-- 60% faster than C++ node-gyp based [msgpack](https://www.npmjs.com/package/msgpack) library!
+- **5x faster** than other pure JavaScript libraries! (Node.js v0.12.7)
+- **50% faster** than C++ node-gyp based [msgpack](https://www.npmjs.com/package/msgpack) library!
 
 ### Fast Decoding
 
-- 20% faster than other pure JavaScript libraries!
-- 4% faster than C++ node-gyp based msgpack library!
+- **20% faster** than other pure JavaScript libraries!
+- **5% faster** than C++ node-gyp based msgpack library!
 
 ### Encoding and Decoding MessagePack
 
@@ -74,9 +76,13 @@ $ npm install --save msgpack-lite
 
 ### Browser Build
 
-Browser version is also available. 33KB minified, 10KB gziped.
+Browser version [msgpack.min.js](https://rawgithub.com/kawanet/msgpack-lite/master/dist/msgpack.min.js) is also available. 33KB minified, 10KB gziped.
 
 ```html
+<!--[if lte IE 9]>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.10/es5-shim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js"></script>
+<![endif]-->
 <script src="https://rawgithub.com/kawanet/msgpack-lite/master/dist/msgpack.min.js"></script>
 <script>
 // encode from JS Object to MessagePack (Uint8Array)
@@ -87,8 +93,6 @@ var array = new Uint8Array([0x81, 0xA3, 0x66, 0x6F, 0x6F, 0xA3, 0x62, 0x61, 0x72
 var data = msgpack.decode(array);
 </script>
 ```
-
-It works even on IE9 with [es5-shim ](https://github.com/es-shims/es5-shim).
 
 ### Interoperability
 
