@@ -1,25 +1,12 @@
 {
   "name": "msgpack-lite",
-  "version": "0.1.9",
   "description": "Fast Pure JavaScript MessagePack Encoder and Decoder",
-  "main": "index.js",
-  "scripts": {
-    "test": "make test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kawanet/msgpack-lite.git"
-  },
+  "version": "0.1.9",
+  "author": "@kawanet",
   "bin": {
     "msgpack": "./bin/msgpack"
   },
-  "author": "@kawanet",
   "browser": "lib/browser.js",
-  "license": {
-    "type": "MIT",
-    "url": "http://kawanet.mit-license.org/"
-  },
-  "homepage": "https://github.com/kawanet/msgpack-lite",
   "devDependencies": {
     "browserify": "^11.0.1",
     "jshint": "^2.8.0",
@@ -27,20 +14,7 @@
     "uglify-js": "^2.4.24",
     "zuul": "^3.3.0"
   },
-  "optionalDependencies": {
-    "msgpack": "^0.2.6",
-    "msgpack.codec": "git+https://github.com/kawanet/msgpack-javascript.git#msgpack.codec",
-    "msgpack-js": "^0.3.0",
-    "msgpack-js-v5": "^0.3.0-v5",
-    "msgpack-unpack": "^2.1.1",
-    "msgpack5": "^3.0.0"
-  },
-  "keywords": [
-    "messagepack",
-    "msgpack",
-    "serialize",
-    "stream"
-  ],
+  "homepage": "https://github.com/kawanet/msgpack-lite",
   "jshintConfig": {
     "es3": true,
     "globals": {
@@ -48,8 +22,34 @@
       "Symbol": true,
       "window": true
     },
-    "node": true,
     "mocha": true,
+    "node": true,
     "undef": true
+  },
+  "keywords": [
+    "messagepack",
+    "msgpack",
+    "serialize",
+    "stream"
+  ],
+  "license": {
+    "type": "MIT",
+    "url": "http://kawanet.mit-license.org/"
+  },
+  "main": "index.js",
+  "optionalDependencies": {
+    "msgpack": "^0.2.6",
+    "msgpack-js": "^0.3.0",
+    "msgpack-js-v5": "^0.3.0-v5",
+    "msgpack-unpack": "^2.1.1",
+    "msgpack.codec": "git+https://github.com/kawanet/msgpack-javascript.git#msgpack.codec",
+    "msgpack5": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kawanet/msgpack-lite.git"
+  },
+  "scripts": {
+    "test": "make test"
   }
 }
