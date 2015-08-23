@@ -20,14 +20,16 @@
     "browserify": "^11.0.1",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
+    "uglify-js": "^2.4.24",
+    "zuul": "^3.3.0"
+  },
+  "optionalDependencies": {
     "msgpack": "^0.2.6",
     "msgpack.codec": "git+https://github.com/kawanet/msgpack-javascript.git#msgpack.codec",
     "msgpack-js": "^0.3.0",
     "msgpack-js-v5": "^0.3.0-v5",
     "msgpack-unpack": "^2.1.1",
-    "msgpack5": "^3.0.0",
-    "uglify-js": "^2.4.24",
-    "zuul": "^3.3.0"
+    "msgpack5": "^3.0.0"
   },
   "keywords": [
     "messagepack",
