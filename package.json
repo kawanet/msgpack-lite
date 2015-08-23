@@ -1,7 +1,7 @@
 {
   "name": "msgpack-lite",
   "description": "Fast Pure JavaScript MessagePack Encoder and Decoder",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "author": "@kawanet",
   "bin": {
     "msgpack": "./bin/msgpack"
@@ -30,10 +30,13 @@
     "undef": true
   },
   "keywords": [
+    "buffer",
+    "fluentd",
     "messagepack",
     "msgpack",
     "serialize",
-    "stream"
+    "stream",
+    "typedarray"
   ],
   "license": {
     "type": "MIT",
