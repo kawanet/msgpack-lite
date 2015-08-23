@@ -14,6 +14,7 @@
     "msgpack": "./bin/msgpack"
   },
   "author": "@kawanet",
+  "browser": "lib/browser.js",
   "license": "MIT",
   "homepage": "https://github.com/kawanet/msgpack-lite",
   "devDependencies": {
