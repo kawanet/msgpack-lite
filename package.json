@@ -38,10 +38,7 @@
     "stream",
     "typedarray"
   ],
-  "license": {
-    "type": "MIT",
-    "url": "http://kawanet.mit-license.org/"
-  },
+  "license": "MIT",
   "main": "index.js",
   "optionalDependencies": {
     "msgpack": "^0.2.6",
