@@ -15,7 +15,10 @@
   },
   "author": "@kawanet",
   "browser": "lib/browser.js",
-  "license": "MIT",
+  "license": {
+    "type": "MIT",
+    "url": "http://kawanet.mit-license.org/"
+  },
   "homepage": "https://github.com/kawanet/msgpack-lite",
   "devDependencies": {
     "browserify": "^11.0.1",
