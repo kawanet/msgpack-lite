@@ -23,6 +23,8 @@ $(JSTEMP): $(LIB) $(DIST)
 
 $(JSDEST): $(JSTEMP)
 	./node_modules/.bin/uglifyjs $(JSTEMP) -c -m -o $(JSDEST)
+	gzip -fk $(JSDEST)
+	ls -l $(JSDEST) $(JSDEST).gz
 
 test:
 	@if [ "x$(BROWSER)" = "x" ]; then make test-node; else make test-browser; fi

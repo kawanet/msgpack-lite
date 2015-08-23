@@ -3,5 +3,5 @@
 .idea/
 node_modules/
 *.browserify.js
-/vendor/
-/gh-pages/
+*.js.gz
+gh-pages/
