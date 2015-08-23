@@ -33,7 +33,7 @@ describe(TITLE, function() {
     assert.deepEqual(they(msgpack.encode(data)), data);
   });
 
-  test("msgpack-javascript", function(they) {
+  test("msgpack.codec", function(they) {
     they = they.msgpack;
     assert.deepEqual(they.unpack(msgpack.encode(data)), data);
     assert.deepEqual(msgpack.decode(Buffer(they.pack(data))), data);
