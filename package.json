@@ -26,7 +26,8 @@
     "msgpack-js-v5": "^0.3.0-v5",
     "msgpack-unpack": "^2.1.1",
     "msgpack5": "^3.0.0",
-    "uglify-js": "^2.4.24"
+    "uglify-js": "^2.4.24",
+    "zuul": "^3.3.0"
   },
   "keywords": [
     "messagepack",

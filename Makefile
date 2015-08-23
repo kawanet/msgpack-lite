@@ -7,9 +7,8 @@ TESTS_BROWSER=./test/[12]?.*.js
 HINTS=$(LIB) $(TESTS) ./*.json ./test/*.json
 CLASS=msgpack
 DIST=./dist
-JSTEMP=./public/msgpack.browserify.js
+JSTEMP=./dist/msgpack.browserify.js
 JSDEST=./dist/msgpack.min.js
-TESTDEST=./public/test.browserify.js
 JSHINT=./node_modules/.bin/jshint
 UGLIFYJS=./node_modules/.bin/uglifyjs
 BROWSERIFY=./node_modules/.bin/browserify
@@ -29,10 +28,8 @@ $(JSTEMP): $(LIB) $(DIST)
 $(JSDEST): $(JSTEMP) $(DIST)
 	$(UGLIFYJS) $(JSTEMP) -c -m -o $(JSDEST)
 
-$(TESTDEST): $(TESTS_BROWSER)
-	$(BROWSERIFY) $(TESTS_BROWSER) -o $(TESTDEST) --debug
-
-test: jshint mocha
+test:
+	@if [ "x$(BROWSER)" = "x" ]; then make test-node; else make test-browser; fi
 
 mocha:
 	$(MOCHA) -R spec $(TESTS)
@@ -40,7 +37,15 @@ mocha:
 jshint:
 	$(JSHINT) $(HINTS)
 
-bench:
-	node lib/benchmark.js 10
+test-node: jshint mocha
 
-.PHONY: all clean test jshint mocha bench
+test-browser:
+	./node_modules/.bin/zuul -- $(TESTS_BROWSER)
+
+test-browser-local:
+	./node_modules/.bin/zuul --local 4000 -- $(TESTS_BROWSER)
+
+bench:
+	node lib/benchmark.js 1
+
+.PHONY: all clean test jshint mocha bench test-node test-browser test-browser-local
