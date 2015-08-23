@@ -74,6 +74,22 @@ $ echo '{"foo": "bar"}' | ./bin/msgpack -Jm | ./bin/msgpack -Mj
 $ npm install --save msgpack-lite
 ```
 
+### Tests
+
+Run tests on node.js:
+
+```sh
+$ make test
+```
+
+Run tests on browsers:
+
+```sh
+$ make test-browser-local
+open the following url in a browser:
+http://localhost:4000/__zuul
+```
+
 ### Browser Build
 
 Browser version [msgpack.min.js](https://rawgithub.com/kawanet/msgpack-lite/master/dist/msgpack.min.js) is also available. 33KB minified, 10KB gziped.
