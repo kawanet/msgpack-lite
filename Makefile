@@ -9,12 +9,8 @@ CLASS=msgpack
 DIST=./dist
 JSTEMP=./dist/msgpack.browserify.js
 JSDEST=./dist/msgpack.min.js
-JSHINT=./node_modules/.bin/jshint
-UGLIFYJS=./node_modules/.bin/uglifyjs
-BROWSERIFY=./node_modules/.bin/browserify
-MOCHA=./node_modules/.bin/mocha
 
-all: test $(JSDEST) $(TESTDEST)
+all: test $(JSDEST)
 
 clean:
 	rm -fr $(JSDEST) $(DOC_HTML)
@@ -23,19 +19,19 @@ $(DIST):
 	mkdir -p $(DIST)
 
 $(JSTEMP): $(LIB) $(DIST)
-	$(BROWSERIFY) -s $(CLASS) $(SRC) -o $(JSTEMP) --debug
+	./node_modules/.bin/browserify -s $(CLASS) $(SRC) -o $(JSTEMP) --debug
 
-$(JSDEST): $(JSTEMP) $(DIST)
-	$(UGLIFYJS) $(JSTEMP) -c -m -o $(JSDEST)
+$(JSDEST): $(JSTEMP)
+	./node_modules/.bin/uglifyjs $(JSTEMP) -c -m -o $(JSDEST)
 
 test:
 	@if [ "x$(BROWSER)" = "x" ]; then make test-node; else make test-browser; fi
 
 mocha:
-	$(MOCHA) -R spec $(TESTS)
+	./node_modules/.bin/mocha -R spec $(TESTS)
 
 jshint:
-	$(JSHINT) $(HINTS)
+	./node_modules/.bin/jshint $(HINTS)
 
 test-node: jshint mocha
 
