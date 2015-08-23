@@ -7,6 +7,9 @@
     "msgpack": "./bin/msgpack"
   },
   "browser": "lib/browser.js",
+  "bugs": {
+    "url": "https://github.com/kawanet/msgpack-lite/issues"
+  },
   "devDependencies": {
     "browserify": "^11.0.1",
     "jshint": "^2.8.0",
