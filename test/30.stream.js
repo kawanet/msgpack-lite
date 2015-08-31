@@ -103,6 +103,9 @@ describe(TITLE, function() {
       Array.prototype.forEach.call(buf, each);
     }
 
+    // decode stream should be closed
+    decoder.end();
+
     // write a single byte into the decode stream
     function each(x) {
       decoder.write(Buffer([x]));
