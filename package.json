@@ -11,6 +11,7 @@
     "url": "https://github.com/kawanet/msgpack-lite/issues"
   },
   "devDependencies": {
+    "async": "^1.4.2",
     "browserify": "^11.0.1",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
