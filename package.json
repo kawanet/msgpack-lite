@@ -13,6 +13,7 @@
   "devDependencies": {
     "async": "^1.4.2",
     "browserify": "^11.0.1",
+    "concat-stream": "^1.5.0",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
     "msgpack-js": "^0.3.0",
