@@ -2,6 +2,8 @@
 
 var assert = require("assert");
 var Stream = require("stream");
+var concat = require("concat-stream");
+
 var msgpack = require("../index");
 var TITLE = __filename.replace(/^.*\//, "") + ":";
 var example = require("./example.json");
@@ -18,21 +20,21 @@ var encoded = [
   msgpack.encode(src[2])
 ];
 
+var encodeall = Buffer.concat(encoded);
+
 describe(TITLE, function() {
 
   it("msgpack.createEncodeStream()", function(done) {
-    var count = 0;
     var encoder = msgpack.createEncodeStream();
-
-    encoder.on("data", onData);
+    encoder.pipe(concat(onEnd));
     encoder.write(src[0]);
     encoder.write(src[1]);
     encoder.write(src[2]);
     encoder.end();
 
-    function onData(data) {
-      assert.deepEqual(data, encoded[count++]);
-      if (count === 3) done();
+    function onEnd(data) {
+      assert.deepEqual(data, encodeall);
+      done();
     }
   });
 
@@ -61,7 +63,6 @@ describe(TITLE, function() {
     var outputStream = new Stream.PassThrough({objectMode: true});
 
     inputStream.pipe(encoder).pipe(passThrough).pipe(decoder).pipe(outputStream);
-
     outputStream.on("data", onData);
     inputStream.write(src[0]);
     inputStream.write(src[1]);
@@ -75,24 +76,20 @@ describe(TITLE, function() {
   });
 
   it("pipe(decoder).pipe(encoder)", function(done) {
-    var count = 0;
     var inputStream = new Stream.PassThrough();
     var decoder = msgpack.createDecodeStream();
     var passThrough = new Stream.PassThrough({objectMode: true});
     var encoder = msgpack.createEncodeStream();
-    var outputStream = new Stream.PassThrough();
 
-    inputStream.pipe(decoder).pipe(passThrough).pipe(encoder).pipe(outputStream);
-
-    outputStream.on("data", onData);
+    inputStream.pipe(decoder).pipe(passThrough).pipe(encoder).pipe(concat(onEnd));
     inputStream.write(encoded[0]);
     inputStream.write(encoded[1]);
     inputStream.write(encoded[2]);
     inputStream.end();
 
-    function onData(data) {
-      assert.deepEqual(data, encoded[count++]);
-      if (count === 3) done();
+    function onEnd(data) {
+      assert.deepEqual(data, encodeall);
+      done();
     }
   });
 
@@ -106,6 +103,10 @@ describe(TITLE, function() {
       Array.prototype.forEach.call(buf, each);
     }
 
+    // decode stream should be closed
+    decoder.end();
+
+    // write a single byte into the decode stream
     function each(x) {
       decoder.write(Buffer([x]));
     }
