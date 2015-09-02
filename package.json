@@ -10,12 +10,15 @@
   "bugs": {
     "url": "https://github.com/kawanet/msgpack-lite/issues"
   },
+  "dependencies": {
+    "event-lite": "^0.1.0"
+  },
   "devDependencies": {
     "async": "^1.4.2",
     "browserify": "^11.0.1",
     "concat-stream": "^1.5.0",
     "jshint": "^2.8.0",
-    "mocha": "^2.2.5",
+    "mocha": "^2.3.0",
     "msgpack-js": "^0.3.0",
     "msgpack-js-v5": "^0.3.0-v5",
     "msgpack-unpack": "^2.1.1",
