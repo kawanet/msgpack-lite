@@ -11,15 +11,15 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script src="https://rawgithub.com/kawanet/msgpack-lite/master/dist/msgpack.min.js"></script>
   <!--
-  <script src="../public/msgpack.browserify.js"></script>
+  <script src="../dist/msgpack.browserify.js"></script>
   <script src="../dist/msgpack.min.js"></script>
   -->
   <script>
     $(function() {
       var $source = $("#source").on("change", encode).on("keyup", encode);
       var $buffer = $("#buffer").on("change", decode).on("keyup", decode);
-      var $encode = $("#encode").on("click", encode);
-      var $decode = $("#decode").on("click", decode);
+      $("#encode, #hex, #array").on("click", encode);
+      $("#decode").on("click", decode);
       var spacer = "  ";
 
       var sample = {
@@ -42,25 +42,31 @@
           var json = $source.val();
           var data = JSON.parse(json);
           var buffer = msgpack.encode(data);
-          var binary = Array.prototype.map.call(buffer, function(val) {
-            var hex = (val).toString(16).toUpperCase();
-            if (val < 16) hex = "0" + hex;
-            return hex;
-          }).join(" ");
+          var ishex = $("#hex:checked").length;
+          var binary = ishex ? buffer_to_hex(buffer) : buffer_to_array(buffer);
           $buffer.val(binary);
         } catch (e) {
           $buffer.val(e + "");
         }
       }
 
+      function buffer_to_hex(buffer) {
+        return Array.prototype.map.call(buffer, function(val) {
+          var hex = (val).toString(16).toUpperCase();
+          if (val < 16) hex = "0" + hex;
+          return hex;
+        }).join(" ");
+      }
+
+      function buffer_to_array(buffer) {
+        return JSON.stringify(Array.prototype.slice.apply(buffer)).replace(/,/g, ", ");
+      }
+
       function decode() {
         try {
-          var binary = $buffer.val();
-          var array = binary.split(/\s+/).filter(function(chr) {
-            return (chr !== "");
-          }).map(function(chr) {
-            return parseInt(chr, 16);
-          });
+          var string = $buffer.val();
+          var ishex = string.search(/\[.*\]/) < 0;
+          var array = ishex ? hex_to_buffer(string) : array_to_buffer(string);
           var buffer = new Uint8Array(array);
           var data = msgpack.decode(buffer);
           var json = JSON.stringify(data, null, spacer);
@@ -69,12 +75,32 @@
           $source.val(e + "");
         }
       }
+
+      function hex_to_buffer(string) {
+        return string.split(/\s+/).filter(function(chr) {
+          return (chr !== "");
+        }).map(function(chr) {
+          return parseInt(chr, 16);
+        });
+      }
+
+      function array_to_buffer(string) {
+        return JSON.parse(string);
+      }
     });
   </script>
   <style>
     #encode, #decode {
       margin-top: 100px;
       margin-top: 25vh;
+    }
+
+    h5 {
+      margin-top: 0;
+    }
+
+    h5 label {
+      margin-left: 10px;
     }
 
     #main {
@@ -113,7 +139,7 @@
   <div id="main" class="container-fluid">
     <div class="row">
       <div class="col-sm-5">
-        <label for="source">JSON</label>
+        <h5 for="source">JSON</h5>
         <textarea class="form-control" id="source"></textarea>
       </div>
       <div class="col-sm-2">
@@ -129,7 +155,10 @@
         </button>
       </div>
       <div class="col-sm-5">
-        <label for="buffer">MessagePack (Uint8Array)</label>
+        <h5 for="buffer">MessagePack (Uint8Array)
+          <label for="hex"><input type="radio" id="hex" name="bintype" value="hex" checked> HEX</label>
+          <label for="array"><input type="radio" id="array" name="bintype" value="array"> Array</label>
+        </h5>
         <textarea class="form-control" id="buffer"></textarea>
       </div>
     </div>
