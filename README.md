@@ -6,6 +6,12 @@ Fast Pure JavaScript MessagePack Encoder and Decoder
 
 Online demo: [http://kawanet.github.io/msgpack-lite/](http://kawanet.github.io/msgpack-lite/)
 
+## Key Features
+
+- Fast but pure JavaScript (no node-gyp nor gcc required)
+- Environments: Node.js, io.js, browsers (including IE8)
+- Streaming encoding and decoding
+
 ### Significantly Fast Encoding
 
 - **5x faster** than other pure JavaScript libraries! (Node.js v0.12.7)
@@ -13,8 +19,10 @@ Online demo: [http://kawanet.github.io/msgpack-lite/](http://kawanet.github.io/m
 
 ### Fast Decoding
 
-- **20% faster** than other pure JavaScript libraries!
-- **5% faster** than C++ node-gyp based msgpack library!
+- **50% faster** than other pure JavaScript libraries!
+- **10% faster** than C++ node-gyp based msgpack library!
+
+## Usage
 
 ### Encoding and Decoding MessagePack
 
@@ -92,7 +100,7 @@ http://localhost:4000/__zuul
 
 ### Browser Build
 
-Browser version [msgpack.min.js](https://rawgithub.com/kawanet/msgpack-lite/master/dist/msgpack.min.js) is also available. 33KB minified, 10KB gziped.
+Browser version [msgpack.min.js](https://rawgithub.com/kawanet/msgpack-lite/master/dist/msgpack.min.js) is also available. 37KB minified, 11KB gziped.
 
 ```html
 <!--[if lte IE 9]>
@@ -123,88 +131,40 @@ It is tested to have basic compatibility with other Node.js MessagePack modules 
 
 ### Benchmark
 
-A benchmark tool lib/benchmark.js is available to compare encoding/decoding speed
+A benchmark tool `lib/benchmark.js` is available to compare encoding/decoding speed
 (operation per second) with other MessagePack modules.
+It counts operations of [1KB JSON document](https://github.com/kawanet/msgpack-lite/blob/master/test/example.json) in 10 seconds.
 
-```txt
-$ cat /etc/system-release
-Amazon Linux AMI release 2015.03
+operation                                                 |   op   |   ms  |  op/s 
+--------------------------------------------------------- | -----: | ----: | -----:
+buf = Buffer(JSON.stringify(obj));                        | 261300 | 10002 |  26124
+obj = JSON.parse(buf);                                    | 259200 | 10013 |  25886
+buf = require("msgpack-lite").encode(obj);                | 242800 | 10001 |  24277
+obj = require("msgpack-lite").decode(buf);                | 212000 | 10002 |  21195
+buf = require("msgpack").pack(obj);                       | 162800 | 10009 |  16265
+obj = require("msgpack").unpack(buf);                     | 189800 | 10012 |  18957
+buf = Buffer(require("msgpack.codec").msgpack.pack(obj)); |  46900 | 10006 |   4687
+obj = require("msgpack.codec").msgpack.unpack(buf);       | 155900 | 10000 |  15590
+buf = require("msgpack-js-v5").encode(obj);               |  45200 | 10017 |   4512
+obj = require("msgpack-js-v5").decode(buf);               | 146700 | 10015 |  14648
+buf = require("msgpack-js").encode(obj);                  |  43000 | 10009 |   4296
+obj = require("msgpack-js").decode(buf);                  | 146400 | 10011 |  14623
+buf = require("msgpack5")().encode(obj);                  |   4500 | 10040 |    448
+obj = require("msgpack5")().decode(buf);                  |  18900 | 10025 |   1885
+obj = require("msgpack-unpack").decode(buf);              |   1000 | 10343 |     96
 
-$ node lib/benchmark.js -v
-msgpack-lite 0.1.10
+Streaming benchmark tool `lib/benchmark-stream.js` is also available.
+It counts milliseconds for 1,000,000 operations of 30 bytes fluentd msgpack fragment.
+This shows streaming encoding and decoding are super faster.
 
-$ nvm use v0.10
-Now using node v0.10.40
+operation (1000000 x 3)                          |   op    |  ms   |  op/s 
+------------------------------------------------ | ------: | ----: | -----:
+stream.write(msgpack.encode(obj));               | 1000000 | 36072 |  27722
+msgpack.createEncodeStream().write(obj);         | 1000000 |  6080 | 164473
+stream.write(msgpack.decode(buf));               | 1000000 |  9568 | 104515
+msgpack.createDecodeStream().write(buf);         | 1000000 |  5681 | 176025
 
-$ node lib/benchmark.js 10
-operation                                                 | op / ms            | op/s
---------------------------------------------------------- | ------------------ | -----
-buf = Buffer(JSON.stringify(obj));                        | 223400op / 10001ms | 2233
-obj = JSON.parse(buf);                                    | 240800op / 10002ms | 2407
-buf = require("msgpack").pack(obj);                       | 187000op / 10000ms | 1870
-obj = require("msgpack").unpack(buf);                     | 231800op / 10001ms | 2317
-buf = require("msgpack-lite").encode(obj);                | 228700op / 10004ms | 2286
-obj = require("msgpack-lite").decode(buf);                | 193900op / 10001ms | 1938
-buf = Buffer(require("msgpack.codec").msgpack.pack(obj)); | 138100op / 10006ms | 1380
-obj = require("msgpack.codec").msgpack.unpack(buf);       | 101400op / 10011ms | 1012
-buf = require("msgpack-js-v5").encode(obj);               | 29800op / 10015ms  | 297
-obj = require("msgpack-js-v5").decode(buf);               | 108200op / 10002ms | 1081
-buf = require("msgpack-js").encode(obj);                  | 30100op / 10008ms  | 300
-obj = require("msgpack-js").decode(buf);                  | 105800op / 10018ms | 1056
-buf = require("msgpack5")().encode(obj);                  | 4400op / 10152ms   | 43
-obj = require("msgpack5")().decode(buf);                  | 18600op / 10024ms  | 185
-obj = require("msgpack-unpack").decode(buf);              | 1600op / 10208ms   | 15
-```
-
-This runs more faster on Node.js 0.12.
-
-```txt
-$ nvm use v0.12
-Now using node v0.12.7
-
-$ node lib/benchmark.js 10
-operation                                                 | op / ms            | op/s
---------------------------------------------------------- | ------------------ | -----
-buf = Buffer(JSON.stringify(obj));                        | 258000op / 10012ms | 2576
-obj = JSON.parse(buf);                                    | 260300op / 10002ms | 2602
-buf = require("msgpack").pack(obj);                       | 163600op / 10002ms | 1635
-obj = require("msgpack").unpack(buf);                     | 196400op / 10012ms | 1961
-buf = require("msgpack-lite").encode(obj);                | 248900op / 10008ms | 2487
-obj = require("msgpack-lite").decode(buf);                | 199600op / 10002ms | 1995
-buf = Buffer(require("msgpack.codec").msgpack.pack(obj)); | 47600op / 10001ms  | 475
-obj = require("msgpack.codec").msgpack.unpack(buf);       | 165500op / 10001ms | 1654
-buf = require("msgpack-js-v5").encode(obj);               | 43500op / 10007ms  | 434
-obj = require("msgpack-js-v5").decode(buf);               | 152700op / 10005ms | 1526
-buf = require("msgpack-js").encode(obj);                  | 44200op / 10014ms  | 441
-obj = require("msgpack-js").decode(buf);                  | 145300op / 10000ms | 1453
-buf = require("msgpack5")().encode(obj);                  | 4500op / 10185ms   | 44
-obj = require("msgpack5")().decode(buf);                  | 18700op / 10004ms  | 186
-obj = require("msgpack-unpack").decode(buf);              | 1000op / 10377ms   | 9
-```
-
-This is also compatible with [io.js](https://iojs.org/).
-
-```txt
-$ nvm use iojs
-Now using io.js v3.1.0
-
-$ node lib/benchmark.js 10
-operation                                                 | op / ms            | op/s
---------------------------------------------------------- | ------------------ | -----
-buf = Buffer(JSON.stringify(obj));                        | 338100op / 10001ms | 3380
-obj = JSON.parse(buf);                                    | 314900op / 10001ms | 3148
-buf = require("msgpack-lite").encode(obj);                | 240300op / 10006ms | 2401
-obj = require("msgpack-lite").decode(buf);                | 215600op / 10001ms | 2155
-buf = Buffer(require("msgpack.codec").msgpack.pack(obj)); | 242700op / 10002ms | 2426
-obj = require("msgpack.codec").msgpack.unpack(buf);       | 153000op / 10011ms | 1528
-buf = require("msgpack-js-v5").encode(obj);               | 45000op / 10015ms  | 449
-obj = require("msgpack-js-v5").decode(buf);               | 96900op / 10009ms  | 968
-buf = require("msgpack-js").encode(obj);                  | 44600op / 10021ms  | 445
-obj = require("msgpack-js").decode(buf);                  | 94000op / 10002ms  | 939
-buf = require("msgpack5")().encode(obj);                  | 4300op / 10231ms   | 42
-obj = require("msgpack5")().decode(buf);                  | 15800op / 10008ms  | 157
-obj = require("msgpack-unpack").decode(buf);              | 13000op / 10068ms  | 129
-```
+Test environment: msgpack-lite 0.1.13 on Node v0.12.7
 
 ### MessagePack Mapping Table
 
