@@ -4,7 +4,7 @@ var assert = require("assert");
 var msgpackJS = "../index";
 var isBrowser = ("undefined" !== typeof window);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
-var TITLE = __filename.replace(/^.*\//, "") + ":";
+var TITLE = __filename.replace(/^.*\//, "");
 
 var source = {"foo": "bar"};
 var packed = toArray(msgpack.encode(source));

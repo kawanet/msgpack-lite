@@ -5,7 +5,7 @@ var Stream = require("stream");
 var concat = require("concat-stream");
 
 var msgpack = require("../index");
-var TITLE = __filename.replace(/^.*\//, "") + ":";
+var TITLE = __filename.replace(/^.*\//, "");
 var example = require("./example.json");
 
 var src = [

@@ -4,7 +4,7 @@ var assert = require("assert");
 
 var msgpack = require("../index");
 var BufferLite = require("../lib/buffer-lite");
-var TITLE = __filename.replace(/^.*\//, "") + ":";
+var TITLE = __filename.replace(/^.*\//, "");
 
 describe(TITLE, function() {
 
