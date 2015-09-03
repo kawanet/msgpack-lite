@@ -37,10 +37,10 @@ jshint:
 
 test-node: jshint mocha
 
-test-browser:
+test-browser: $(JSDEST)
 	./node_modules/.bin/zuul -- $(TESTS_BROWSER)
 
-test-browser-local:
+test-browser-local: $(JSDEST)
 	./node_modules/.bin/zuul --local 4000 -- $(TESTS_BROWSER)
 
 bench:
