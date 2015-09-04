@@ -6,23 +6,14 @@ Fast Pure JavaScript MessagePack Encoder and Decoder
 
 Online demo: [http://kawanet.github.io/msgpack-lite/](http://kawanet.github.io/msgpack-lite/)
 
-## Key Features
+### Features
 
-- Fast but pure JavaScript (no node-gyp nor gcc required)
-- Environments: Node.js, io.js, browsers (including IE8)
-- Streaming encoding and decoding
-
-### Significantly Fast Encoding
-
-- **5x faster** than other pure JavaScript libraries! (Node.js v0.12.7)
-- **50% faster** than C++ node-gyp based [msgpack](https://www.npmjs.com/package/msgpack) library!
-
-### Fast Decoding
-
-- **50% faster** than other pure JavaScript libraries!
-- **10% faster** than C++ node-gyp based msgpack library!
-
-## Usage
+- Pure JavaScript only (No node-gyp nor gcc required)
+- Faster than any other pure JavaScript libraries: **5x faster** encoding and **50% faster** decoding
+- Even faster than C++ based [msgpack](https://www.npmjs.com/package/msgpack) library: **50% faster** encoding and **10% faster** decoding
+- Streaming encoding and decoding interface is also available. It's more faster.
+- [Browsers](https://saucelabs.com/u/msgpack-lite) ready (Chrome, Firefox, Safari and even works on IE8)
+- [Tested](https://travis-ci.org/kawanet/msgpack-lite) on Node.js-v0.12, v0.10 and io.js-v3.3 and browsers
 
 ### Encoding and Decoding MessagePack
 
