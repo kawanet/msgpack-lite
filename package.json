@@ -24,6 +24,7 @@
     "msgpack-unpack": "^2.1.1",
     "msgpack.codec": "git+https://github.com/kawanet/msgpack-javascript.git#msgpack.codec",
     "msgpack5": "^3.0.0",
+    "notepack": "0.0.2",
     "uglify-js": "^2.4.24",
     "zuul": "^3.3.0"
   },
