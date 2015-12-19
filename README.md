@@ -9,11 +9,11 @@ Online demo: [http://kawanet.github.io/msgpack-lite/](http://kawanet.github.io/m
 ### Features
 
 - Pure JavaScript only (No node-gyp nor gcc required)
-- Faster than any other pure JavaScript libraries: **5x faster** encoding and **50% faster** decoding
-- Even faster than C++ based [msgpack](https://www.npmjs.com/package/msgpack) library: **50% faster** encoding and **10% faster** decoding
+- Faster than any other pure JavaScript libraries on node.js v4
+- Even faster than C++ based [msgpack](https://www.npmjs.com/package/msgpack) library (**90% faster** on encoding)
 - Streaming encoding and decoding interface is also available. It's more faster.
 - [Browsers](https://saucelabs.com/u/msgpack-lite) ready (Chrome, Firefox, Safari and even works on IE8)
-- [Tested](https://travis-ci.org/kawanet/msgpack-lite) on Node.js-v0.12, v0.10 and io.js-v3.3 and browsers
+- [Tested](https://travis-ci.org/kawanet/msgpack-lite) on Node.js v0.10, v0.12 and v4.2 as well as browsers
 
 ### Encoding and Decoding MessagePack
 
@@ -115,14 +115,15 @@ var data = msgpack.decode(array);
 
 It is tested to have basic compatibility with other Node.js MessagePack modules below:
 
-- [https://www.npmjs.com/package/msgpack](https://www.npmjs.com/package/msgpack) (0.2.6)
+- [https://www.npmjs.com/package/msgpack](https://www.npmjs.com/package/msgpack) (1.0.2)
 - [https://www.npmjs.com/package/msgpack-js](https://www.npmjs.com/package/msgpack-js) (0.3.0)
 - [https://www.npmjs.com/package/msgpack-js-v5](https://www.npmjs.com/package/msgpack-js-v5) (0.3.0-v5)
-- [https://www.npmjs.com/package/msgpack5](https://www.npmjs.com/package/msgpack5) (3.1.0)
 - [https://www.npmjs.com/package/msgpack-unpack](https://www.npmjs.com/package/msgpack-unpack) (2.1.1)
 - [https://github.com/msgpack/msgpack-javascript](https://github.com/msgpack/msgpack-javascript) (msgpack.codec)
+- [https://www.npmjs.com/package/msgpack5](https://www.npmjs.com/package/msgpack5) (3.3.0)
+- [https://www.npmjs.com/package/notepack](https://www.npmjs.com/package/notepack) (0.0.2)
 
-### Benchmark
+### Benchmarks
 
 A benchmark tool `lib/benchmark.js` is available to compare encoding/decoding speed
 (operation per second) with other MessagePack modules.
@@ -130,34 +131,40 @@ It counts operations of [1KB JSON document](https://github.com/kawanet/msgpack-l
 
 operation                                                 |   op   |   ms  |  op/s 
 --------------------------------------------------------- | -----: | ----: | -----:
-buf = Buffer(JSON.stringify(obj));                        | 261300 | 10002 |  26124
-obj = JSON.parse(buf);                                    | 259200 | 10013 |  25886
-buf = require("msgpack-lite").encode(obj);                | 242800 | 10001 |  24277
-obj = require("msgpack-lite").decode(buf);                | 212000 | 10002 |  21195
-buf = require("msgpack").pack(obj);                       | 162800 | 10009 |  16265
-obj = require("msgpack").unpack(buf);                     | 189800 | 10012 |  18957
-buf = Buffer(require("msgpack.codec").msgpack.pack(obj)); |  46900 | 10006 |   4687
-obj = require("msgpack.codec").msgpack.unpack(buf);       | 155900 | 10000 |  15590
-buf = require("msgpack-js-v5").encode(obj);               |  45200 | 10017 |   4512
-obj = require("msgpack-js-v5").decode(buf);               | 146700 | 10015 |  14648
-buf = require("msgpack-js").encode(obj);                  |  43000 | 10009 |   4296
-obj = require("msgpack-js").decode(buf);                  | 146400 | 10011 |  14623
-buf = require("msgpack5")().encode(obj);                  |   4500 | 10040 |    448
-obj = require("msgpack5")().decode(buf);                  |  18900 | 10025 |   1885
-obj = require("msgpack-unpack").decode(buf);              |   1000 | 10343 |     96
+buf = Buffer(JSON.stringify(obj));                        | 1055200 | 10000 | 105520
+obj = JSON.parse(buf);                                    | 863800 | 10000 |  86380
+buf = require("msgpack-lite").encode(obj);                | 969100 | 10000 |  96910
+obj = require("msgpack-lite").decode(buf);                | 600300 | 10000 |  60030
+buf = require("msgpack").pack(obj);                       | 503500 | 10001 |  50344
+obj = require("msgpack").unpack(buf);                     | 560200 | 10001 |  56014
+buf = Buffer(require("msgpack.codec").msgpack.pack(obj)); | 653500 | 10000 |  65349
+obj = require("msgpack.codec").msgpack.unpack(buf);       | 367500 | 10001 |  36746
+buf = require("msgpack-js-v5").encode(obj);               | 189500 | 10002 |  18946
+obj = require("msgpack-js-v5").decode(buf);               | 408900 | 10000 |  40890
+buf = require("msgpack-js").encode(obj);                  | 189200 | 10000 |  18920
+obj = require("msgpack-js").decode(buf);                  | 375600 | 10002 |  37552
+buf = require("msgpack5")().encode(obj);                  | 110500 | 10009 |  11040
+obj = require("msgpack5")().decode(buf);                  | 165500 | 10000 |  16550
+buf = require("notepack")().encode(obj);                  | 847800 | 10000 |  84780
+obj = require("notepack")().decode(buf);                  | 599800 | 10000 |  59980
+obj = require("msgpack-unpack").decode(buf);              |  48100 | 10002 |   4809
 
 Streaming benchmark tool `lib/benchmark-stream.js` is also available.
 It counts milliseconds for 1,000,000 operations of 30 bytes fluentd msgpack fragment.
 This shows streaming encoding and decoding are super faster.
 
-operation (1000000 x 3)                          |   op    |  ms   |  op/s 
+operation (1000000 x 2)                          |   op    |  ms   |  op/s 
 ------------------------------------------------ | ------: | ----: | -----:
-stream.write(msgpack.encode(obj));               | 1000000 | 36072 |  27722
-msgpack.createEncodeStream().write(obj);         | 1000000 |  6080 | 164473
-stream.write(msgpack.decode(buf));               | 1000000 |  9568 | 104515
-msgpack.createDecodeStream().write(buf);         | 1000000 |  5681 | 176025
+stream.write(msgpack.encode(obj));               | 1000000 |  3027 | 330360
+stream.write(notepack.encode(obj));              | 1000000 |  2012 | 497017
+msgpack.Encoder().on("data",ondata).encode(obj); | 1000000 |  2956 | 338294
+msgpack.createEncodeStream().write(obj);         | 1000000 |  1888 | 529661
+stream.write(msgpack.decode(buf));               | 1000000 |  2020 | 495049
+stream.write(notepack.decode(buf));              | 1000000 |  1794 | 557413
+msgpack.Decoder().on("data",ondata).decode(buf); | 1000000 |  2744 | 364431
+msgpack.createDecodeStream().write(buf);         | 1000000 |  1341 | 745712
 
-Test environment: msgpack-lite 0.1.13 on Node v0.12.7
+Test environment: msgpack-lite 0.1.14, Node v4.2.3, Intel(R) Xeon(R) CPU E5-2666 v3 @ 2.90GHz
 
 ### MessagePack Mapping Table
 
