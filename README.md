@@ -25,6 +25,8 @@ var buffer = msgpack.encode({"foo": "bar"});
 
 // decode from MessagePack (Buffer) to JS Object
 var data = msgpack.decode(buffer); // => {"foo": "bar"}
+
+// if encode/decode receives an invalid argument an error is thrown
 ```
 
 ### Writing to MessagePack Stream
