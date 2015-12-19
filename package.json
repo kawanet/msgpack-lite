@@ -14,19 +14,20 @@
     "event-lite": "^0.1.0"
   },
   "devDependencies": {
-    "async": "^1.4.2",
-    "browserify": "^11.0.1",
-    "concat-stream": "^1.5.0",
+    "async": "^1.5.0",
+    "browserify": "^12.0.1",
+    "concat-stream": "^1.5.1",
     "jshint": "^2.8.0",
-    "mocha": "^2.3.0",
+    "mocha": "^2.3.4",
+    "msgpack": "^1.0.2",
     "msgpack-js": "^0.3.0",
     "msgpack-js-v5": "^0.3.0-v5",
     "msgpack-unpack": "^2.1.1",
     "msgpack.codec": "git+https://github.com/kawanet/msgpack-javascript.git#msgpack.codec",
-    "msgpack5": "^3.0.0",
+    "msgpack5": "^3.3.0",
     "notepack": "0.0.2",
-    "uglify-js": "^2.4.24",
-    "zuul": "^3.3.0"
+    "uglify-js": "^2.6.1",
+    "zuul": "^3.8.0"
   },
   "homepage": "https://github.com/kawanet/msgpack-lite",
   "jshintConfig": {
