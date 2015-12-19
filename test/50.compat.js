@@ -29,6 +29,11 @@ describe(TITLE, function() {
     assert.deepEqual(msgpack.decode(Buffer(they.encode(data))), data);
   });
 
+  test("notepack", function(they) {
+    assert.deepEqual(they.decode(msgpack.encode(data)), data);
+    assert.deepEqual(msgpack.decode(Buffer(they.encode(data))), data);
+  });
+
   test("msgpack-unpack", function(they) {
     assert.deepEqual(they(msgpack.encode(data)), data);
   });
