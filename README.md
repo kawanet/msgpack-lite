@@ -12,8 +12,8 @@ Online demo: [http://kawanet.github.io/msgpack-lite/](http://kawanet.github.io/m
 - Faster than any other pure JavaScript libraries on node.js v4
 - Even faster than C++ based [msgpack](https://www.npmjs.com/package/msgpack) library (**90% faster** on encoding)
 - Streaming encoding and decoding interface is also available. It's more faster.
-- [Browsers](https://saucelabs.com/u/msgpack-lite) ready (Chrome, Firefox, Safari and even works on IE8)
-- [Tested](https://travis-ci.org/kawanet/msgpack-lite) on Node.js v0.10, v0.12 and v4.2 as well as browsers
+- Ready for [Web browsers](https://saucelabs.com/u/msgpack-lite) including Chrome, Firefox, Safari and even IE8
+- [Tested](https://travis-ci.org/kawanet/msgpack-lite) on Node.js v0.10, v0.12 and v4.2 as well as Web browsers
 
 ### Encoding and Decoding MessagePack
 
@@ -68,6 +68,8 @@ $ echo '{"foo": "bar"}' | ./bin/msgpack -Jm | od -tx1
 $ echo '{"foo": "bar"}' | ./bin/msgpack -Jm | ./bin/msgpack -Mj
 {"foo":"bar"}
 ```
+
+`-Jm` means JSON-to-msgpack conversion. `-Mj` vice versa.
 
 ### Installation
 
@@ -129,6 +131,11 @@ A benchmark tool `lib/benchmark.js` is available to compare encoding/decoding sp
 (operation per second) with other MessagePack modules.
 It counts operations of [1KB JSON document](https://github.com/kawanet/msgpack-lite/blob/master/test/example.json) in 10 seconds.
 
+```sh
+$ npm install msgpack msgpack-js msgpack-js-v5 msgpack-unpack msgpack5 notepack
+$ node lib/benchmark.js 10
+```
+
 operation                                                 |   op   |   ms  |  op/s 
 --------------------------------------------------------- | -----: | ----: | -----:
 buf = Buffer(JSON.stringify(obj));                        | 1055200 | 10000 | 105520
@@ -152,6 +159,10 @@ obj = require("msgpack-unpack").decode(buf);              |  48100 | 10002 |   4
 Streaming benchmark tool `lib/benchmark-stream.js` is also available.
 It counts milliseconds for 1,000,000 operations of 30 bytes fluentd msgpack fragment.
 This shows streaming encoding and decoding are super faster.
+
+```sh
+$ node lib/benchmark-stream.js 2
+```
 
 operation (1000000 x 2)                          |   op    |  ms   |  op/s 
 ------------------------------------------------ | ------: | ----: | -----:
@@ -226,7 +237,7 @@ Other extension types are mapped to internal ExtBuffer object.
 
 The MIT License (MIT)
 
-Copyright (c) 2015 Yusuke Kawasaki
+Copyright (c) 2015-2016 Yusuke Kawasaki
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
