@@ -69,8 +69,6 @@ $ echo '{"foo": "bar"}' | ./bin/msgpack -Jm | ./bin/msgpack -Mj
 {"foo":"bar"}
 ```
 
-`-Jm` means JSON-to-msgpack conversion. `-Mj` vice versa.
-
 ### Installation
 
 ```sh
