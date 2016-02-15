@@ -60,29 +60,6 @@ var decodeStream = msgpack.createDecodeStream();
 readStream.pipe(decodeStream).on("data", console.warn);
 ```
 
-### Custom Codecs
-
-```js
-var msgpack = require("msgpack-lite");
-
-var codec = msgpack.createCodec();
-codec.addExtPacker(0x3F, MyClass, myClassPacker);
-codec.addExtUnpacker(0x3F, myClassUnpacker);
-msgpack.encode(data, {codec: codec});
-```
-
-The first argument of `addExtPacker` and `addExtUnpacker` should be an integer within the range of 0 and 127 (0x0 and 0x7F). `myClassPacker` is a function that accepts an instance of `MyClass`, and should return a buffer representing that instance. `myClassUnpacker` is the opposite: it accepts a buffer and should return an instance of `MyClass`.
-
-You can also pass the `{codec: codec}` option to new instances of `msgpack.Decoder(options)`, `msgpack.Encoder(options)`, `msgpack.createEncodeStream(options)`, and `msgpack.createDecodeStream(options)`.
-
-If you pass an array of functions to `addExtPacker` or `addExtUnpacker`, the value to be encoder/decoded will pass through each one in order. This allows you to do things like this:
-
-```js
-codec.addExtPacker(0x00, Date, [Number, msgpack.encode]);
-```
-
-If you wish to modify the default built-in codec, you can access it at `msgpack.codec.preset`.
-
 ### Command Line Interface
 
 A CLI tool bin/msgpack converts data stream from JSON to MessagePack and vice versa.
@@ -248,6 +225,29 @@ Type|Object|Type|Object
 0x0F|Number|0x1F|
 
 Other extension types are mapped to internal ExtBuffer object.
+
+### Custom Extension Types (Codecs)
+
+```js
+var msgpack = require("msgpack-lite");
+
+var codec = msgpack.createCodec();
+codec.addExtPacker(0x3F, MyClass, myClassPacker);
+codec.addExtUnpacker(0x3F, myClassUnpacker);
+msgpack.encode(data, {codec: codec});
+```
+
+The first argument of `addExtPacker` and `addExtUnpacker` should be an integer within the range of 0 and 127 (0x0 and 0x7F). `myClassPacker` is a function that accepts an instance of `MyClass`, and should return a buffer representing that instance. `myClassUnpacker` is the opposite: it accepts a buffer and should return an instance of `MyClass`.
+
+You can also pass the `{codec: codec}` option to new instances of `msgpack.Decoder(options)`, `msgpack.Encoder(options)`, `msgpack.createEncodeStream(options)`, and `msgpack.createDecodeStream(options)`.
+
+If you pass an array of functions to `addExtPacker` or `addExtUnpacker`, the value to be encoder/decoded will pass through each one in order. This allows you to do things like this:
+
+```js
+codec.addExtPacker(0x00, Date, [Number, msgpack.encode]);
+```
+
+If you wish to modify the default built-in codec, you can access it at `msgpack.codec.preset`.
 
 ### Repository
 
