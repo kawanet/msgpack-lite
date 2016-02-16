@@ -96,14 +96,14 @@ http://localhost:4000/__zuul
 
 ### Browser Build
 
-Browser version [msgpack.min.js](https://rawgithub.com/kawanet/msgpack-lite/master/dist/msgpack.min.js) is also available. 37KB minified, 11KB gziped.
+Browser version [msgpack.min.js](https://rawgit.com/kawanet/msgpack-lite/master/dist/msgpack.min.js) is also available. 37KB minified, 11KB gziped.
 
 ```html
 <!--[if lte IE 9]>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.10/es5-shim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js"></script>
 <![endif]-->
-<script src="https://rawgithub.com/kawanet/msgpack-lite/master/dist/msgpack.min.js"></script>
+<script src="https://rawgit.com/kawanet/msgpack-lite/master/dist/msgpack.min.js"></script>
 <script>
 // encode from JS Object to MessagePack (Uint8Array)
 var buffer = msgpack.encode({foo: "bar"});
