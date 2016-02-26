@@ -6,6 +6,8 @@ var isBrowser = ("undefined" !== typeof window);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
 var TITLE = __filename.replace(/^.*\//, "");
 
+var HAS_UINT8ARRAY = ("undefined" !== typeof Uint8Array);
+
 ArrayBridge.concat = ArrayBridge_concat;
 Uint8ArrayBridge.concat = Uint8ArrayBridge_concat;
 
@@ -18,7 +20,7 @@ describe(TITLE, function() {
     run_tests(ArrayBridge);
   });
 
-  var describe_Uint8Array = ("undefined" !== typeof Uint8Array) ? describe : describe.skip;
+  var describe_Uint8Array = HAS_UINT8ARRAY ? describe : describe.skip;
   describe_Uint8Array("Uint8Array", function() {
     run_tests(Uint8ArrayBridge);
   });
@@ -316,7 +318,7 @@ function ArrayBridge(array) {
     array = init_seq([], array);
   } else if ("string" === typeof array) {
     array = copy_string([], array);
-  } else if (Buffer.isBuffer(array) || (array instanceof Uint8Array)) {
+  } else if (Buffer.isBuffer(array) || (HAS_UINT8ARRAY && (array instanceof Uint8Array))) {
     array = copy_array([], array);
   }
 
