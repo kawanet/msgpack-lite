@@ -6,12 +6,29 @@ var isBrowser = ("undefined" !== typeof window);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
 var TITLE = __filename.replace(/^.*\//, "");
 
-describe(TITLE, function() {
+ArrayBridge.concat = ArrayBridge_concat;
+Uint8ArrayBridge.concat = Uint8ArrayBridge_concat;
 
+describe(TITLE, function() {
+  describe("Buffer", function() {
+    run_tests(Buffer);
+  });
+
+  describe("Array", function() {
+    run_tests(ArrayBridge);
+  });
+
+  var describe_Uint8Array = ("undefined" !== typeof Uint8Array) ? describe : describe.skip;
+  describe_Uint8Array("Uint8Array", function() {
+    run_tests(Uint8ArrayBridge);
+  });
+});
+
+function run_tests(BUFFER) {
   // positive fixint -- 0x00 - 0x7f
   it("00-7f: positive fixint", function() {
     for (var i = 0; i <= 0x7F; i++) {
-      assert.deepEqual(msgpack.decode(Buffer([i])), i);
+      assert.deepEqual(msgpack.decode(BUFFER([i])), i);
     }
   });
 
@@ -21,7 +38,7 @@ describe(TITLE, function() {
     var src = [0x80];
     var exp = {};
     Object.keys(map).forEach(function(key) {
-      assert.deepEqual(msgpack.decode(Buffer(src)), exp);
+      assert.deepEqual(msgpack.decode(BUFFER(src)), exp);
       src[0]++;
       src.push(0xa1);
       src.push(key.charCodeAt(0));
@@ -36,7 +53,7 @@ describe(TITLE, function() {
     var src = [0x90];
     var exp = [];
     for (var i = 0; i < 16; i++) {
-      assert.deepEqual(msgpack.decode(Buffer(src)), exp);
+      assert.deepEqual(msgpack.decode(BUFFER(src)), exp);
       src[0]++;
       src.push(array[i]);
       exp.push(array[i]);
@@ -49,7 +66,7 @@ describe(TITLE, function() {
     var src = [0xa0];
     for (var i = 0; i < 32; i++) {
       var exp = str.substr(0, i);
-      assert.deepEqual(msgpack.decode(Buffer(src)), exp);
+      assert.deepEqual(msgpack.decode(BUFFER(src)), exp);
       src[0]++;
       src.push(str.charCodeAt(i));
     }
@@ -57,13 +74,13 @@ describe(TITLE, function() {
 
   // nil -- 0xc0
   it("c0: nil", function() {
-    assert.deepEqual(msgpack.decode(Buffer([0xc0])), null);
+    assert.deepEqual(msgpack.decode(BUFFER([0xc0])), null);
   });
 
   // (never used) -- 0xc1
   it("c1: (never used)", function(done) {
     try {
-      msgpack.decode(Buffer([0xc1]));
+      msgpack.decode(BUFFER([0xc1]));
       done("should throw");
     } catch (e) {
       done();
@@ -73,8 +90,8 @@ describe(TITLE, function() {
   // false -- 0xc2
   // true -- 0xc3
   it("c2-c3: boolean", function() {
-    assert.equal(msgpack.decode(Buffer([0xc2])), false);
-    assert.equal(msgpack.decode(Buffer([0xc3])), true);
+    assert.equal(msgpack.decode(BUFFER([0xc2])), false);
+    assert.equal(msgpack.decode(BUFFER([0xc3])), true);
   });
 
   // bin 8 -- 0xc4
@@ -84,16 +101,16 @@ describe(TITLE, function() {
     this.timeout(30000);
     var bin, buf;
 
-    bin = Buffer(1);
-    buf = Buffer.concat([Buffer([0xc4, 1]), bin]);
+    bin = BUFFER(1);
+    buf = BUFFER.concat([BUFFER([0xc4, 1]), bin]);
     assert.deepEqual(msgpack.decode(buf), bin);
 
-    bin = Buffer(256);
-    buf = Buffer.concat([Buffer([0xc5, 1, 0]), bin]);
+    bin = BUFFER(256);
+    buf = BUFFER.concat([BUFFER([0xc5, 1, 0]), bin]);
     assert.deepEqual(msgpack.decode(buf), bin);
 
-    bin = Buffer(65536);
-    buf = Buffer.concat([Buffer([0xc6, 0, 1, 0, 0]), bin]);
+    bin = BUFFER(65536);
+    buf = BUFFER.concat([BUFFER([0xc6, 0, 1, 0, 0]), bin]);
     assert.deepEqual(msgpack.decode(buf), bin);
   });
 
@@ -104,18 +121,18 @@ describe(TITLE, function() {
     this.timeout(30000);
     var ext, buf, act;
 
-    ext = Buffer(1);
-    buf = Buffer.concat([Buffer([0xc7, 1, 0]), ext]);
+    ext = BUFFER(1);
+    buf = BUFFER.concat([BUFFER([0xc7, 1, 0]), ext]);
     act = msgpack.decode(buf);
     assert.deepEqual(act.buffer, ext);
 
-    ext = Buffer(256);
-    buf = Buffer.concat([Buffer([0xc8, 1, 0, 0]), ext]);
+    ext = BUFFER(256);
+    buf = BUFFER.concat([BUFFER([0xc8, 1, 0, 0]), ext]);
     act = msgpack.decode(buf);
     assert.deepEqual(act.buffer, ext);
 
-    ext = Buffer(65536);
-    buf = Buffer.concat([Buffer([0xc9, 0, 1, 0, 0, 0]), ext]);
+    ext = BUFFER(65536);
+    buf = BUFFER.concat([BUFFER([0xc9, 0, 1, 0, 0, 0]), ext]);
     act = msgpack.decode(buf);
     assert.deepEqual(act.buffer, ext);
   });
@@ -128,12 +145,12 @@ describe(TITLE, function() {
     buf = Buffer(5);
     buf.writeUInt8(0xCA, 0);
     buf.writeFloatBE(0.5, 1);
-    assert.deepEqual(msgpack.decode(buf), 0.5);
+    assert.deepEqual(msgpack.decode(BUFFER(buf)), 0.5);
 
     buf = Buffer(9);
     buf.writeUInt8(0xCB, 0);
     buf.writeDoubleBE(0.5, 1);
-    assert.deepEqual(msgpack.decode(buf), 0.5);
+    assert.deepEqual(msgpack.decode(BUFFER(buf)), 0.5);
   });
 
   // uint 8 -- 0xcc
@@ -141,16 +158,16 @@ describe(TITLE, function() {
   // uint 32 -- 0xce
   // uint 64 -- 0xcf
   it("cc-cf: uint 8/16/32/64", function() {
-    assert.deepEqual(msgpack.decode(Buffer([0xcc, 0x01])), 0x01);
-    assert.deepEqual(msgpack.decode(Buffer([0xcc, 0xFF])), 0xFF);
-    assert.deepEqual(msgpack.decode(Buffer([0xcd, 0x00, 0x01])), 0x0001);
-    assert.deepEqual(msgpack.decode(Buffer([0xcd, 0xFF, 0xFF])), 0xFFFF);
-    assert.deepEqual(msgpack.decode(Buffer([0xce, 0x00, 0x00, 0x00, 0x01])), 0x00000001);
-    assert.deepEqual(msgpack.decode(Buffer([0xce, 0x7F, 0xFF, 0xFF, 0xFF])), 0x7FFFFFFF);
-    assert.deepEqual(msgpack.decode(Buffer([0xce, 0xFF, 0xFF, 0xFF, 0xFF])), 0xFFFFFFFF);
-    assert.deepEqual(msgpack.decode(Buffer([0xcf, 0, 0, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF])), 0x00000000FFFFFFFF);
-    assert.deepEqual(msgpack.decode(Buffer([0xcf, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF, 0, 0])), 0x0000FFFFFFFF0000);
-    assert.deepEqual(msgpack.decode(Buffer([0xcf, 0xFF, 0xFF, 0xFF, 0xFF, 0, 0, 0, 0])), 0xFFFFFFFF00000000);
+    assert.deepEqual(msgpack.decode(BUFFER([0xcc, 0x01])), 0x01);
+    assert.deepEqual(msgpack.decode(BUFFER([0xcc, 0xFF])), 0xFF);
+    assert.deepEqual(msgpack.decode(BUFFER([0xcd, 0x00, 0x01])), 0x0001);
+    assert.deepEqual(msgpack.decode(BUFFER([0xcd, 0xFF, 0xFF])), 0xFFFF);
+    assert.deepEqual(msgpack.decode(BUFFER([0xce, 0x00, 0x00, 0x00, 0x01])), 0x00000001);
+    assert.deepEqual(msgpack.decode(BUFFER([0xce, 0x7F, 0xFF, 0xFF, 0xFF])), 0x7FFFFFFF);
+    assert.deepEqual(msgpack.decode(BUFFER([0xce, 0xFF, 0xFF, 0xFF, 0xFF])), 0xFFFFFFFF);
+    assert.deepEqual(msgpack.decode(BUFFER([0xcf, 0, 0, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF])), 0x00000000FFFFFFFF);
+    assert.deepEqual(msgpack.decode(BUFFER([0xcf, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF, 0, 0])), 0x0000FFFFFFFF0000);
+    assert.deepEqual(msgpack.decode(BUFFER([0xcf, 0xFF, 0xFF, 0xFF, 0xFF, 0, 0, 0, 0])), 0xFFFFFFFF00000000);
   });
 
   // int 8 -- 0xd0
@@ -158,20 +175,20 @@ describe(TITLE, function() {
   // int 32 -- 0xd2
   // int 64 -- 0xd3
   it("d0-d3: int 8/16/32/64", function() {
-    assert.deepEqual(msgpack.decode(Buffer([0xd0, 0x7F])), 0x7F);
-    assert.deepEqual(msgpack.decode(Buffer([0xd0, 0x80])), -0x80);
-    assert.deepEqual(msgpack.decode(Buffer([0xd0, 0xFF])), -1);
-    assert.deepEqual(msgpack.decode(Buffer([0xd1, 0x7F, 0xFF])), 0x7FFF);
-    assert.deepEqual(msgpack.decode(Buffer([0xd1, 0x80, 0x00])), -0x8000);
-    assert.deepEqual(msgpack.decode(Buffer([0xd1, 0xFF, 0xFF])), -1);
-    assert.deepEqual(msgpack.decode(Buffer([0xd2, 0x7F, 0xFF, 0xFF, 0xFF])), 0x7FFFFFFF);
-    assert.deepEqual(msgpack.decode(Buffer([0xd2, 0x80, 0x00, 0x00, 0x00])), -0x80000000);
-    assert.deepEqual(msgpack.decode(Buffer([0xd2, 0xFF, 0xFF, 0xFF, 0xFF])), -1);
-    assert.deepEqual(msgpack.decode(Buffer([0xd3, 0, 0, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF])), 0x00000000FFFFFFFF);
-    assert.deepEqual(msgpack.decode(Buffer([0xd3, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF, 0, 0])), 0x0000FFFFFFFF0000);
-    assert.deepEqual(msgpack.decode(Buffer([0xd3, 0x7F, 0xFF, 0xFF, 0xFF, 0, 0, 0, 0])), 0x7FFFFFFF00000000);
-    assert.deepEqual(msgpack.decode(Buffer([0xd3, 0x80, 0, 0, 0, 0, 0, 0, 0])), -0x8000000000000000);
-    assert.deepEqual(msgpack.decode(Buffer([0xd3, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF])), -1);
+    assert.deepEqual(msgpack.decode(BUFFER([0xd0, 0x7F])), 0x7F);
+    assert.deepEqual(msgpack.decode(BUFFER([0xd0, 0x80])), -0x80);
+    assert.deepEqual(msgpack.decode(BUFFER([0xd0, 0xFF])), -1);
+    assert.deepEqual(msgpack.decode(BUFFER([0xd1, 0x7F, 0xFF])), 0x7FFF);
+    assert.deepEqual(msgpack.decode(BUFFER([0xd1, 0x80, 0x00])), -0x8000);
+    assert.deepEqual(msgpack.decode(BUFFER([0xd1, 0xFF, 0xFF])), -1);
+    assert.deepEqual(msgpack.decode(BUFFER([0xd2, 0x7F, 0xFF, 0xFF, 0xFF])), 0x7FFFFFFF);
+    assert.deepEqual(msgpack.decode(BUFFER([0xd2, 0x80, 0x00, 0x00, 0x00])), -0x80000000);
+    assert.deepEqual(msgpack.decode(BUFFER([0xd2, 0xFF, 0xFF, 0xFF, 0xFF])), -1);
+    assert.deepEqual(msgpack.decode(BUFFER([0xd3, 0, 0, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF])), 0x00000000FFFFFFFF);
+    assert.deepEqual(msgpack.decode(BUFFER([0xd3, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF, 0, 0])), 0x0000FFFFFFFF0000);
+    assert.deepEqual(msgpack.decode(BUFFER([0xd3, 0x7F, 0xFF, 0xFF, 0xFF, 0, 0, 0, 0])), 0x7FFFFFFF00000000);
+    assert.deepEqual(msgpack.decode(BUFFER([0xd3, 0x80, 0, 0, 0, 0, 0, 0, 0])), -0x8000000000000000);
+    assert.deepEqual(msgpack.decode(BUFFER([0xd3, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF])), -1);
   });
 
   // fixext 1 -- 0xd4
@@ -182,28 +199,28 @@ describe(TITLE, function() {
   it("d4-d8: fixext 1/2/4/8/16", function() {
     var ext, buf, act;
 
-    ext = Buffer(1);
-    buf = Buffer.concat([Buffer([0xd4, 0]), ext]);
+    ext = BUFFER(1);
+    buf = BUFFER.concat([BUFFER([0xd4, 0]), ext]);
     act = msgpack.decode(buf);
     assert.deepEqual(act.buffer, ext);
 
-    ext = Buffer(2);
-    buf = Buffer.concat([Buffer([0xd5, 0]), ext]);
+    ext = BUFFER(2);
+    buf = BUFFER.concat([BUFFER([0xd5, 0]), ext]);
     act = msgpack.decode(buf);
     assert.deepEqual(act.buffer, ext);
 
-    ext = Buffer(4);
-    buf = Buffer.concat([Buffer([0xd6, 0]), ext]);
+    ext = BUFFER(4);
+    buf = BUFFER.concat([BUFFER([0xd6, 0]), ext]);
     act = msgpack.decode(buf);
     assert.deepEqual(act.buffer, ext);
 
-    ext = Buffer(8);
-    buf = Buffer.concat([Buffer([0xd7, 0]), ext]);
+    ext = BUFFER(8);
+    buf = BUFFER.concat([BUFFER([0xd7, 0]), ext]);
     act = msgpack.decode(buf);
     assert.deepEqual(act.buffer, ext);
 
-    ext = Buffer(16);
-    buf = Buffer.concat([Buffer([0xd8, 0]), ext]);
+    ext = BUFFER(16);
+    buf = BUFFER.concat([BUFFER([0xd8, 0]), ext]);
     act = msgpack.decode(buf);
     assert.deepEqual(act.buffer, ext);
   });
@@ -217,19 +234,19 @@ describe(TITLE, function() {
     for (var i = 0; i < 17; i++) src += src;
 
     str = src.substr(0, 0xFF);
-    buf = Buffer.concat([Buffer([0xd9, 0xFF]), Buffer(str)]);
+    buf = BUFFER.concat([BUFFER([0xd9, 0xFF]), BUFFER(str)]);
     assert.deepEqual(msgpack.decode(buf), str);
 
     str = src.substr(0, 0x0100);
-    buf = Buffer.concat([Buffer([0xda, 0x01, 0x00]), Buffer(str)]);
+    buf = BUFFER.concat([BUFFER([0xda, 0x01, 0x00]), BUFFER(str)]);
     assert.deepEqual(msgpack.decode(buf), str);
 
     str = src.substr(0, 0xFFFF);
-    buf = Buffer.concat([Buffer([0xda, 0xFF, 0xFF]), Buffer(str)]);
+    buf = BUFFER.concat([BUFFER([0xda, 0xFF, 0xFF]), BUFFER(str)]);
     assert.deepEqual(msgpack.decode(buf), str);
 
     str = src.substr(0, 0x010000);
-    buf = Buffer.concat([Buffer([0xdb, 0x00, 0x01, 0x00, 0x00]), Buffer(str)]);
+    buf = BUFFER.concat([BUFFER([0xdb, 0x00, 0x01, 0x00, 0x00]), BUFFER(str)]);
     assert.deepEqual(msgpack.decode(buf), str);
   });
 
@@ -241,11 +258,11 @@ describe(TITLE, function() {
     var array = new Array(256);
     for (i = 0; i < 256; i++) array[i] = i & 0x7F;
     src = [0xdc, 0x01, 0x00].concat(array);
-    assert.deepEqual(msgpack.decode(Buffer(src)), array);
+    assert.deepEqual(msgpack.decode(BUFFER(src)), array);
 
     for (i = 0; i < 8; i++) array = array.concat(array);
     src = [0xdd, 0x00, 0x01, 0x00, 0x00].concat(array);
-    assert.deepEqual(msgpack.decode(Buffer(src)), array);
+    assert.deepEqual(msgpack.decode(BUFFER(src)), array);
   });
 
   // map 16 -- 0xde
@@ -265,17 +282,70 @@ describe(TITLE, function() {
       array.push(i & 0x7F);
     }
     src = [0xde, 0x01, 0x00].concat(array);
-    assert.deepEqual(msgpack.decode(Buffer(src)), map);
+    assert.deepEqual(msgpack.decode(BUFFER(src)), map);
 
     for (i = 0; i < 8; i++) array = array.concat(array);
     src = [0xdf, 0x00, 0x01, 0x00, 0x00].concat(array);
-    assert.deepEqual(msgpack.decode(Buffer(src)), map);
+    assert.deepEqual(msgpack.decode(BUFFER(src)), map);
   });
 
   // negative fixint -- 0xe0 - 0xff
   it("e0-ff: negative fixint", function() {
     for (var i = -32; i <= -1; i++) {
-      assert.deepEqual(msgpack.decode(Buffer([i & 0xFF])), i);
+      assert.deepEqual(msgpack.decode(BUFFER([i & 0xFF])), i);
     }
   });
-});
+}
+
+function ArrayBridge(array) {
+  if ("number" === typeof array) {
+    array = init_seq([], array);
+  } else if ("string" === typeof array) {
+    array = copy_string([], array);
+  } else if (Buffer.isBuffer(array) || (array instanceof Uint8Array)) {
+    array = copy_array([], array);
+  }
+
+  return array;
+}
+
+function init_seq(array, length) {
+  for (var i = 0; i < length; i++) {
+    array[i] = i & 255;
+  }
+  return array;
+}
+
+function copy_string(array, src) {
+  for (var i = 0; i < src.length; i++) {
+    array[i] = src.charCodeAt(i);
+  }
+  return array;
+}
+
+function copy_array(array, src) {
+  for (var i = 0; i < src.length; i++) {
+    array[i] = src[i];
+  }
+  return array;
+}
+
+function ArrayBridge_concat(pair) {
+  return Array.prototype.concat.apply([], pair);
+}
+
+function Uint8ArrayBridge(array) {
+  if ("string" === typeof array) {
+    array = copy_string(new Uint8Array(array.length), array);
+  } else if (Buffer.isBuffer(array)) {
+    array = copy_array(new Uint8Array(array.length), array);
+  } else {
+    array = new Uint8Array(array);
+  }
+
+  return array;
+}
+
+function Uint8ArrayBridge_concat(pair) {
+  return Uint8ArrayBridge(ArrayBridge_concat(pair.map(ArrayBridge)));
+}

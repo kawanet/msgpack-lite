@@ -17,7 +17,8 @@
     "Joshua Wise <josh@joshuawise.ninja>"
   ],
   "dependencies": {
-    "event-lite": "^0.1.1"
+    "event-lite": "^0.1.1",
+    "ieee754": "^1.1.6"
   },
   "devDependencies": {
     "async": "^1.5.2",
