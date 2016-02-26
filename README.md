@@ -60,6 +60,21 @@ var decodeStream = msgpack.createDecodeStream();
 readStream.pipe(decodeStream).on("data", console.warn);
 ```
 
+### Decoding MessagePack Bytes Array
+
+```js
+var msgpack = require("msgpack-lite");
+
+// decode() accepts Buffer instance per default
+msgpack.decode(Buffer([0x81, 0xA3, 0x66, 0x6F, 0x6F, 0xA3, 0x62, 0x61, 0x72]));
+
+// decode() also accepts Array instance
+msgpack.decode([0x81, 0xA3, 0x66, 0x6F, 0x6F, 0xA3, 0x62, 0x61, 0x72]);
+
+// decode() accepts raw Uint8Array instance as well
+msgpack.decode(new Uint8Array([0x81, 0xA3, 0x66, 0x6F, 0x6F, 0xA3, 0x62, 0x61, 0x72]));
+```
+
 ### Command Line Interface
 
 A CLI tool bin/msgpack converts data stream from JSON to MessagePack and vice versa.
