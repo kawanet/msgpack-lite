@@ -129,6 +129,45 @@ var data = msgpack.decode(array);
 </script>
 ```
 
+### MessagePack With Browserify
+
+Step #1: write some code at first.
+
+```js
+var msgpack = require("msgpack-lite");
+var buffer = msgpack.encode({"foo": "bar"});
+var data = msgpack.decode(buffer);
+console.warn(data); // => {"foo": "bar"}
+```
+
+Step #2: add `browser` property on `package.json` in your project if you prefer faster compilation time. This refers the global `msgpack` object instead of including whole of `msgpack-lite` source code.
+
+```json
+{
+  "dependencies": {
+    "msgpack-lite": "*"
+  },
+  "browser": {
+    "msgpack-lite": "msgpack-lite/global"
+  }
+}
+```
+
+Step #3: compile it with [browserify](https://www.npmjs.com/package/browserify) and [uglifyjs](https://www.npmjs.com/package/uglify-js).
+
+```sh
+browserify src/main.js -o tmp/main.browserify.js -s main
+uglifyjs tmp/main.browserify.js -m -c -o js/main.min.js
+cp node_modules/msgpack-lite/dist/msgpack.min.js js/msgpack.min.js
+```
+
+Step #4: load [msgpack.min.js](https://rawgit.com/kawanet/msgpack-lite/master/dist/msgpack.min.js) before your code.
+
+```html
+<script src="js/msgpack.min.js"></script>
+<script src="js/main.min.js"></script>
+```
+
 ### Interoperability
 
 It is tested to have basic compatibility with other Node.js MessagePack modules below:
