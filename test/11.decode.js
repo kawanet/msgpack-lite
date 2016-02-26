@@ -99,19 +99,25 @@ function run_tests(BUFFER) {
   // bin 32 -- 0xc6
   it("c4-c6: bin 8/16/32", function() {
     this.timeout(30000);
-    var bin, buf;
+    var bin, buf, act;
 
     bin = BUFFER(1);
     buf = BUFFER.concat([BUFFER([0xc4, 1]), bin]);
-    assert.deepEqual(msgpack.decode(buf), bin);
+    act = msgpack.decode(buf);
+    assert.ok(Buffer.isBuffer(act));
+    assert.deepEqual(ArrayBridge(act), ArrayBridge(bin));
 
     bin = BUFFER(256);
     buf = BUFFER.concat([BUFFER([0xc5, 1, 0]), bin]);
-    assert.deepEqual(msgpack.decode(buf), bin);
+    act = msgpack.decode(buf);
+    assert.ok(Buffer.isBuffer(act));
+    assert.deepEqual(ArrayBridge(act), ArrayBridge(bin));
 
     bin = BUFFER(65536);
     buf = BUFFER.concat([BUFFER([0xc6, 0, 1, 0, 0]), bin]);
-    assert.deepEqual(msgpack.decode(buf), bin);
+    act = msgpack.decode(buf);
+    assert.ok(Buffer.isBuffer(act));
+    assert.deepEqual(ArrayBridge(act), ArrayBridge(bin));
   });
 
   // ext 8 -- 0xc7
@@ -124,17 +130,20 @@ function run_tests(BUFFER) {
     ext = BUFFER(1);
     buf = BUFFER.concat([BUFFER([0xc7, 1, 0]), ext]);
     act = msgpack.decode(buf);
-    assert.deepEqual(act.buffer, ext);
+    assert.ok(Buffer.isBuffer(act.buffer));
+    assert.deepEqual(ArrayBridge(act.buffer), ArrayBridge(ext));
 
     ext = BUFFER(256);
     buf = BUFFER.concat([BUFFER([0xc8, 1, 0, 0]), ext]);
     act = msgpack.decode(buf);
-    assert.deepEqual(act.buffer, ext);
+    assert.ok(Buffer.isBuffer(act.buffer));
+    assert.deepEqual(ArrayBridge(act.buffer), ArrayBridge(ext));
 
     ext = BUFFER(65536);
     buf = BUFFER.concat([BUFFER([0xc9, 0, 1, 0, 0, 0]), ext]);
     act = msgpack.decode(buf);
-    assert.deepEqual(act.buffer, ext);
+    assert.ok(Buffer.isBuffer(act.buffer));
+    assert.deepEqual(ArrayBridge(act.buffer), ArrayBridge(ext));
   });
 
   // float 32 -- 0xca
@@ -202,27 +211,32 @@ function run_tests(BUFFER) {
     ext = BUFFER(1);
     buf = BUFFER.concat([BUFFER([0xd4, 0]), ext]);
     act = msgpack.decode(buf);
-    assert.deepEqual(act.buffer, ext);
+    assert.ok(Buffer.isBuffer(act.buffer));
+    assert.deepEqual(ArrayBridge(act.buffer), ArrayBridge(ext));
 
     ext = BUFFER(2);
     buf = BUFFER.concat([BUFFER([0xd5, 0]), ext]);
     act = msgpack.decode(buf);
-    assert.deepEqual(act.buffer, ext);
+    assert.ok(Buffer.isBuffer(act.buffer));
+    assert.deepEqual(ArrayBridge(act.buffer), ArrayBridge(ext));
 
     ext = BUFFER(4);
     buf = BUFFER.concat([BUFFER([0xd6, 0]), ext]);
     act = msgpack.decode(buf);
-    assert.deepEqual(act.buffer, ext);
+    assert.ok(Buffer.isBuffer(act.buffer));
+    assert.deepEqual(ArrayBridge(act.buffer), ArrayBridge(ext));
 
     ext = BUFFER(8);
     buf = BUFFER.concat([BUFFER([0xd7, 0]), ext]);
     act = msgpack.decode(buf);
-    assert.deepEqual(act.buffer, ext);
+    assert.ok(Buffer.isBuffer(act.buffer));
+    assert.deepEqual(ArrayBridge(act.buffer), ArrayBridge(ext));
 
     ext = BUFFER(16);
     buf = BUFFER.concat([BUFFER([0xd8, 0]), ext]);
     act = msgpack.decode(buf);
-    assert.deepEqual(act.buffer, ext);
+    assert.ok(Buffer.isBuffer(act.buffer));
+    assert.deepEqual(ArrayBridge(act.buffer), ArrayBridge(ext));
   });
 
   // str 8 -- 0xd9
@@ -335,7 +349,9 @@ function ArrayBridge_concat(pair) {
 }
 
 function Uint8ArrayBridge(array) {
-  if ("string" === typeof array) {
+  if ("number" === typeof array) {
+    array = init_seq(new Uint8Array(array), array);
+  } else if ("string" === typeof array) {
     array = copy_string(new Uint8Array(array.length), array);
   } else if (Buffer.isBuffer(array)) {
     array = copy_array(new Uint8Array(array.length), array);
