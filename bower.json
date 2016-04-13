@@ -1,9 +1,6 @@
 {
   "name": "msgpack-lite",
   "description": "Fast Pure JavaScript MessagePack Encoder and Decoder",
-  "main": [
-    "dist/msgpack.min.js"
-  ],
   "authors": [
     "@kawanet"
   ],
