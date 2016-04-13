@@ -19,6 +19,7 @@
   "dependencies": {
     "event-lite": "^0.1.1",
     "ieee754": "^1.1.6",
+    "int64-buffer": "^0.1.4",
     "isarray": "^1.0.0"
   },
   "devDependencies": {
