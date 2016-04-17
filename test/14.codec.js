@@ -58,6 +58,16 @@ describe(TITLE, function() {
       assert.equal(decoded.value, type);
     }
   });
+
+  // The safe mode works as same as the default mode. It'd be hard for test it.
+  it("safe", function() {
+    codec = codec.extend({safe: true});
+    var options = {codec: codec};
+    var source = 1;
+    var encoded = msgpack.encode(source, options);
+    var decoded = msgpack.decode(encoded, options);
+    assert.equal(decoded, source);
+  });
 });
 
 function MyClass(value) {
