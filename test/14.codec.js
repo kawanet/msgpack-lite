@@ -7,8 +7,10 @@ var msgpack = isBrowser && window.msgpack || require(msgpackJS);
 var TITLE = __filename.replace(/^.*\//, "");
 
 describe(TITLE, function() {
+  var codec;
+
   it("createCodec()", function() {
-    var codec = msgpack.createCodec();
+    codec = msgpack.createCodec();
     var options = {codec: codec};
     assert.ok(codec);
 
@@ -29,9 +31,22 @@ describe(TITLE, function() {
   });
 
   it("addExtPacker()", function() {
-    var codec = msgpack.createCodec();
     codec.addExtPacker(0, MyClass, myClassPacker);
     codec.addExtUnpacker(0, myClassUnpacker);
+    var options = {codec: codec};
+    [0, 1, 127, 255].forEach(test);
+
+    function test(type) {
+      var source = new MyClass(type);
+      var encoded = msgpack.encode(source, options);
+      var decoded = msgpack.decode(encoded, options);
+      assert.ok(decoded instanceof MyClass);
+      assert.equal(decoded.value, type);
+    }
+  });
+
+  it("extend()", function() {
+    codec = codec.extend();
     var options = {codec: codec};
     [0, 1, 127, 255].forEach(test);
 
