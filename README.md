@@ -321,6 +321,55 @@ You can also pass the `codec` option to `msgpack.Decoder(options)`, `msgpack.Enc
 
 If you wish to modify the default built-in codec, you can access it at `msgpack.codec.preset`.
 
+### Custom Codec Options
+
+`msgpack.createCodec()` function accepts some options.
+
+It does NOT have the preset extension types defined per default.
+
+```js
+var codec = msgpack.createCodec();
+```
+
+`preset`: It has the preset extension types described above.
+
+```js
+var codec = msgpack.createCodec({preset: true});
+```
+
+`safe`: It runs a validation of the value before writing it into buffer. This is the default behavior for some old browsers which do not support `ArrayBuffer` object.
+
+```js
+var codec = msgpack.createCodec({safe: true});
+```
+
+`useraw`: It uses `raw` formats instead of `bin` and `str`.
+
+```js
+var codec = msgpack.createCodec({useraw: true});
+```
+
+### Compatibility Mode
+
+The [compatibility mode](https://github.com/kawanet/msgpack-lite/issues/22) respects for [msgpack's old spec](https://github.com/msgpack/msgpack/blob/master/spec-old.md). Set `true` to `useraw`.
+
+```js
+// default: str and bin formats available individually
+msgpack.encode("Aa"); // => <Buffer a2 41 61> (str format)
+msgpack.encode(new Buffer([0x41, 0x61])); // => <Buffer c4 02 41 61> (bin format)
+
+msgpack.decode(new Buffer([0xa2, 0x41, 0x61])); // => 'Aa' (String)
+msgpack.decode(new Buffer([0xc4, 0x02, 0x41, 0x61])); // => <Buffer 41 61> (Buffer)
+
+// compatibility mode: raw format used both for String and Buffer
+var options = {codec: msgpack.createCodec({useraw: true})};
+msgpack.encode("Aa", options); // => <Buffer a2 41 61> (raw format)
+msgpack.encode(new Buffer([0x41, 0x61]), options); // => <Buffer a2 41 61> (raw format)
+
+msgpack.decode(new Buffer([0xa2, 0x41, 0x61]), options); // => <Buffer 41 61> (Buffer)
+msgpack.decode(new Buffer([0xa2, 0x41, 0x61]), options).toString(); // => 'Aa' (String)
+```
+
 ### Repository
 
 - [https://github.com/kawanet/msgpack-lite](https://github.com/kawanet/msgpack-lite)
