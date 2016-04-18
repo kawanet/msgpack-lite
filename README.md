@@ -286,9 +286,27 @@ Other extension types are mapped to internal ExtBuffer object.
 var msgpack = require("msgpack-lite");
 
 var codec = msgpack.createCodec();
-codec.addExtPacker(0x3F, MyClass, myClassPacker);
-codec.addExtUnpacker(0x3F, myClassUnpacker);
-msgpack.encode(data, {codec: codec});
+codec.addExtPacker(0x3F, MyVector, myVectorPacker);
+codec.addExtUnpacker(0x3F, myVectorUnpacker);
+
+var data = new MyVector(1, 2);
+var encoded = msgpack.encode(data, {codec: codec});
+var decoded = msgpack.decode(encoded, {codec: codec});
+
+function MyVector(x, y) {
+  this.x = x;
+  this.y = y;
+}
+
+function myVectorPacker(vector) {
+  var array = [vector.x, vector.y];
+  return msgpack.encode(array); // return Buffer serialized
+}
+
+function myVectorUnpacker(buffer) {
+  var array = msgpack.decode(buffer);
+  return new MyVector(array[0], array[1]); // return Object deserialized
+}
 ```
 
 The first argument of `addExtPacker` and `addExtUnpacker` should be an integer within the range of 0 and 127 (0x0 and 0x7F). `myClassPacker` is a function that accepts an instance of `MyClass`, and should return a buffer representing that instance. `myClassUnpacker` is the opposite: it accepts a buffer and should return an instance of `MyClass`.
