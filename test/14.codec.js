@@ -7,10 +7,8 @@ var msgpack = isBrowser && window.msgpack || require(msgpackJS);
 var TITLE = __filename.replace(/^.*\//, "");
 
 describe(TITLE, function() {
-  var codec;
-
   it("createCodec()", function() {
-    codec = msgpack.createCodec();
+    var codec = msgpack.createCodec();
     var options = {codec: codec};
     assert.ok(codec);
 
@@ -31,6 +29,7 @@ describe(TITLE, function() {
   });
 
   it("addExtPacker()", function() {
+    var codec = msgpack.createCodec();
     codec.addExtPacker(0, MyClass, myClassPacker);
     codec.addExtUnpacker(0, myClassUnpacker);
     var options = {codec: codec};
@@ -45,31 +44,16 @@ describe(TITLE, function() {
     }
   });
 
-  it("extend()", function() {
-    codec = codec.extend();
-    var options = {codec: codec};
-    [0, 1, 127, 255].forEach(test);
-
-    function test(type) {
-      var source = new MyClass(type);
-      var encoded = msgpack.encode(source, options);
-      var decoded = msgpack.decode(encoded, options);
-      assert.ok(decoded instanceof MyClass);
-      assert.equal(decoded.value, type);
-    }
-  });
-
   // The safe mode works as same as the default mode. It'd be hard for test it.
-  it("safe", function() {
-    codec = codec.extend({safe: true});
-    var options = {codec: codec};
+  it("createCodec({safe: true})", function() {
+    var options = {codec: msgpack.createCodec({safe: true})};
     var source = 1;
     var encoded = msgpack.encode(source, options);
     var decoded = msgpack.decode(encoded, options);
     assert.equal(decoded, source);
   });
 
-  it("preset", function() {
+  it("createCodec({preset: true})", function() {
     var options1 = {codec: msgpack.createCodec({preset: true})};
     var options2 = {codec: msgpack.createCodec({preset: false})};
     [true, false].forEach(test);
