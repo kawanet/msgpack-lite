@@ -68,6 +68,30 @@ describe(TITLE, function() {
     var decoded = msgpack.decode(encoded, options);
     assert.equal(decoded, source);
   });
+
+  it("preset", function() {
+    var options1 = {codec: msgpack.createCodec({preset: true})};
+    var options2 = {codec: msgpack.createCodec({preset: false})};
+    [true, false].forEach(test);
+
+    function test(bool) {
+      /*jshint -W053 */ // Do not use Boolean as a constructor.
+
+      var source = new Boolean(bool);
+      var encoded = msgpack.encode(source, options1);
+      assert.equal(encoded[0], 0xd4);
+      assert.equal(encoded[1], 0x0b);
+
+      // decode as Boolean instance
+      var decoded = msgpack.decode(encoded, options1);
+      assert.ok(decoded instanceof Boolean);
+
+      // decode as ExtBuffer
+      decoded = msgpack.decode(encoded, options2);
+      assert.ok(!(decoded instanceof Boolean));
+      assert.equal(decoded.type, 0x0b);
+    }
+  });
 });
 
 function MyClass(value) {
