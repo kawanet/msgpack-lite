@@ -56,25 +56,22 @@ describe(TITLE, function() {
   it("createCodec({preset: true})", function() {
     var options1 = {codec: msgpack.createCodec({preset: true})};
     var options2 = {codec: msgpack.createCodec({preset: false})};
-    [true, false].forEach(test);
 
-    function test(bool) {
-      /*jshint -W053 */ // Do not use Boolean as a constructor.
+    var source = new Date();
+    var encoded = msgpack.encode(source, options1);
+    assert.equal(encoded[0], 0xC7); // ext 8
+    assert.equal(encoded[1], 0x09); // 1+8
+    assert.equal(encoded[2], 0x0D); // Date
 
-      var source = new Boolean(bool);
-      var encoded = msgpack.encode(source, options1);
-      assert.equal(encoded[0], 0xd4);
-      assert.equal(encoded[1], 0x0b);
+    // decode as Boolean instance
+    var decoded = msgpack.decode(encoded, options1);
+    assert.equal(decoded - 0, source - 0);
+    assert.ok(decoded instanceof Date);
 
-      // decode as Boolean instance
-      var decoded = msgpack.decode(encoded, options1);
-      assert.ok(decoded instanceof Boolean);
-
-      // decode as ExtBuffer
-      decoded = msgpack.decode(encoded, options2);
-      assert.ok(!(decoded instanceof Boolean));
-      assert.equal(decoded.type, 0x0b);
-    }
+    // decode as ExtBuffer
+    decoded = msgpack.decode(encoded, options2);
+    assert.ok(!(decoded instanceof Date));
+    assert.equal(decoded.type, 0x0D);
   });
 });
 
