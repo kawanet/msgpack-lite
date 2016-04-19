@@ -10,7 +10,7 @@ Online demo: [http://kawanet.github.io/msgpack-lite/](http://kawanet.github.io/m
 
 - Pure JavaScript only (No node-gyp nor gcc required)
 - Faster than any other pure JavaScript libraries on node.js v4
-- Even faster than C++ based [msgpack](https://www.npmjs.com/package/msgpack) library (**90% faster** on encoding)
+- Even faster than node-gyp C++ based [msgpack](https://www.npmjs.com/package/msgpack) library (**90% faster** on encoding)
 - Streaming encoding and decoding interface is also available. It's more faster.
 - Ready for [Web browsers](https://saucelabs.com/u/msgpack-lite) including Chrome, Firefox, Safari and even IE8
 - [Tested](https://travis-ci.org/kawanet/msgpack-lite) on Node.js v0.10, v0.12, v4 and v5 as well as Web browsers
@@ -111,7 +111,7 @@ http://localhost:4000/__zuul
 
 ### Browser Build
 
-Browser version [msgpack.min.js](https://rawgit.com/kawanet/msgpack-lite/master/dist/msgpack.min.js) is also available. 37KB minified, 11KB gziped.
+Browser version [msgpack.min.js](https://rawgit.com/kawanet/msgpack-lite/master/dist/msgpack.min.js) is also available. 41KB minified, 12KB gziped.
 
 ```html
 <!--[if lte IE 9]>
@@ -140,7 +140,9 @@ var data = msgpack.decode(buffer);
 console.warn(data); // => {"foo": "bar"}
 ```
 
-Step #2: add `browser` property on `package.json` in your project if you prefer faster compilation time. This refers the global `msgpack` object instead of including whole of `msgpack-lite` source code.
+Proceed to the next steps if you prefer faster browserify compilation time.
+
+Step #2: add `browser` property on `package.json` in your project. This refers the global `msgpack` object instead of including whole of `msgpack-lite` source code.
 
 ```json
 {
@@ -278,9 +280,11 @@ Type|Object|Type|Object
 0x0E|Error|0x1E|
 0x0F|Number|0x1F|
 
-Other extension types are mapped to internal ExtBuffer object.
+Other extension types are mapped to built-in ExtBuffer object.
 
 ### Custom Extension Types (Codecs)
+
+Register a custom extension type number to serialize/deserialize your own class instances.
 
 ```js
 var msgpack = require("msgpack-lite");
@@ -325,7 +329,7 @@ If you wish to modify the default built-in codec, you can access it at `msgpack.
 
 `msgpack.createCodec()` function accepts some options.
 
-It does NOT have the preset extension types defined per default.
+It does NOT have the preset extension types defined when no options given.
 
 ```js
 var codec = msgpack.createCodec();
@@ -354,14 +358,14 @@ var codec = msgpack.createCodec({useraw: true});
 The [compatibility mode](https://github.com/kawanet/msgpack-lite/issues/22) respects for [msgpack's old spec](https://github.com/msgpack/msgpack/blob/master/spec-old.md). Set `true` to `useraw`.
 
 ```js
-// default: str and bin formats available individually
+// default mode handles both str and bin formats individually
 msgpack.encode("Aa"); // => <Buffer a2 41 61> (str format)
 msgpack.encode(new Buffer([0x41, 0x61])); // => <Buffer c4 02 41 61> (bin format)
 
 msgpack.decode(new Buffer([0xa2, 0x41, 0x61])); // => 'Aa' (String)
 msgpack.decode(new Buffer([0xc4, 0x02, 0x41, 0x61])); // => <Buffer 41 61> (Buffer)
 
-// compatibility mode: raw format used both for String and Buffer
+// compatibility mode handles only raw format both for String and Buffer
 var options = {codec: msgpack.createCodec({useraw: true})};
 msgpack.encode("Aa", options); // => <Buffer a2 41 61> (raw format)
 msgpack.encode(new Buffer([0x41, 0x61]), options); // => <Buffer a2 41 61> (raw format)
