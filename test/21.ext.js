@@ -14,7 +14,7 @@ describe(TITLE, function() {
       var source = new Boolean(value);
       assert.equal(source - 0, value - 0);
       var encoded = msgpack.encode(source);
-      assert.equal(encoded[0], 0xD4); // fixext 1
+      assert.equal(encoded[0], 0xD4, "preset ext format failure. (128 means map format)"); // fixext 1
       assert.equal(encoded[1], 0x0B); // Boolean
       var decoded = msgpack.decode(encoded);
       assert.equal(decoded - 0, source - 0);
@@ -25,7 +25,7 @@ describe(TITLE, function() {
   it("Date", function() {
     var source = new Date();
     var encoded = msgpack.encode(source);
-    assert.equal(encoded[0], 0xC7); // ext 8
+    assert.equal(encoded[0], 0xC7, "preset ext format failure. (128 means map format)"); // ext 8
     assert.equal(encoded[1], 0x09); // 1+8
     assert.equal(encoded[2], 0x0D); // Date
     var decoded = msgpack.decode(encoded);

@@ -59,7 +59,7 @@ describe(TITLE, function() {
 
     var source = new Date();
     var encoded = msgpack.encode(source, options1);
-    assert.equal(encoded[0], 0xC7); // ext 8
+    assert.equal(encoded[0], 0xC7, "preset ext format failure. (128 means map format)"); // ext 8
     assert.equal(encoded[1], 0x09); // 1+8
     assert.equal(encoded[2], 0x0D); // Date
 
