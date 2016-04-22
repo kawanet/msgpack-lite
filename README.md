@@ -111,7 +111,7 @@ http://localhost:4000/__zuul
 
 ### Browser Build
 
-Browser version [msgpack.min.js](https://rawgit.com/kawanet/msgpack-lite/master/dist/msgpack.min.js) is also available. 41KB minified, 12KB gziped.
+Browser version [msgpack.min.js](https://rawgit.com/kawanet/msgpack-lite/master/dist/msgpack.min.js) is also available. 44KB minified, 13KB gziped.
 
 ```html
 <!--[if lte IE 9]>
