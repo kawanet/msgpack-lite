@@ -353,6 +353,12 @@ var codec = msgpack.createCodec({safe: true});
 var codec = msgpack.createCodec({useraw: true});
 ```
 
+`int64`: It decodes msgpack's int64/uint64 formats with [int64-buffer](https://github.com/kawanet/int64-buffer) object.
+
+```js
+var codec = msgpack.createCodec({int64: true});
+```
+
 ### Compatibility Mode
 
 The [compatibility mode](https://github.com/kawanet/msgpack-lite/issues/22) respects for [msgpack's old spec](https://github.com/msgpack/msgpack/blob/master/spec-old.md). Set `true` to `useraw`.
