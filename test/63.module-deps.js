@@ -29,7 +29,7 @@ describe(TITLE, function() {
     }
 
     function check(value) {
-      return value.match(/stream/);
+      return value.match(/stream/) && !value.match(/node_modules/);
     }
   });
 
@@ -50,7 +50,7 @@ describe(TITLE, function() {
     }
 
     function check(value) {
-      return value.match(/encode|write/);
+      return value.match(/encode|write/) && !value.match(/node_modules/);
     }
   });
 
@@ -71,7 +71,7 @@ describe(TITLE, function() {
     }
 
     function check(value) {
-      return value.match(/decode|read/);
+      return value.match(/decode|read/) && !value.match(/node_modules/);
     }
   });
 });
