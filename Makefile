@@ -13,7 +13,7 @@ JSDEST=./dist/msgpack.min.js
 all: test $(JSDEST)
 
 clean:
-	rm -fr $(JSDEST) $(DOC_HTML)
+	rm -fr $(JSDEST) $(JSTEMP)
 
 $(DIST):
 	mkdir -p $(DIST)

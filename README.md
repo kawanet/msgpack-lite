@@ -190,7 +190,7 @@ It counts operations of [1KB JSON document](https://github.com/kawanet/msgpack-l
 
 ```sh
 $ npm install msgpack msgpack-js msgpack-js-v5 msgpack-unpack msgpack5 notepack
-$ node lib/benchmark.js 10
+$ npm run benchmark 10
 ```
 
 operation                                                 |   op   |   ms  |  op/s 
@@ -218,7 +218,7 @@ It counts milliseconds for 1,000,000 operations of 30 bytes fluentd msgpack frag
 This shows streaming encoding and decoding are super faster.
 
 ```sh
-$ node lib/benchmark-stream.js 2
+$ npm run benchmark-stream 2
 ```
 
 operation (1000000 x 2)                          |   op    |  ms   |  op/s 

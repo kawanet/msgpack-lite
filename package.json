@@ -45,6 +45,7 @@
     "undef": true
   },
   "keywords": [
+    "arraybuffer",
     "buffer",
     "fluentd",
     "messagepack",
@@ -52,7 +53,6 @@
     "serialize",
     "stream",
     "typedarray",
-    "arraybuffer",
     "uint8array"
   ],
   "license": "MIT",
@@ -62,6 +62,12 @@
     "url": "https://github.com/kawanet/msgpack-lite.git"
   },
   "scripts": {
-    "test": "make test"
+    "benchmark": "./lib/benchmark.js",
+    "benchmark-lite": "./lib/benchmark.js msgpack-lite",
+    "benchmark-stream": "./lib/benchmark-stream.js",
+    "make": "make",
+    "size": "make clean dist/msgpack.min.js && gzip -9fkv dist/msgpack.min.js && ls -l dist",
+    "test": "make test",
+    "test-browser-local": "make test-browser-local"
   }
 }
