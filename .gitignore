@@ -5,3 +5,4 @@ node_modules/
 *.browserify.js
 *.js.gz
 gh-pages/
+*.log
