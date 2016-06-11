@@ -353,10 +353,16 @@ var codec = msgpack.createCodec({safe: true});
 var codec = msgpack.createCodec({useraw: true});
 ```
 
-`int64`: It decodes msgpack's int64/uint64 formats with [int64-buffer](https://github.com/kawanet/int64-buffer) object.
+`int64`: It decodes msgpack's `int64`/`uint64` formats with [int64-buffer](https://github.com/kawanet/int64-buffer) object.
 
 ```js
 var codec = msgpack.createCodec({int64: true});
+```
+
+`binarraybuffer`: It ties msgpack's `bin` format with `ArrayBuffer` object, instead of `Buffer` object.
+
+```js
+var codec = msgpack.createCodec({binarraybuffer: true, preset: true});
 ```
 
 ### Compatibility Mode
