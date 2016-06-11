@@ -22,7 +22,7 @@ describeSkip(TITLE, function() {
 
   it("binarraybuffer (decode)", function() {
     var decoded;
-    options = {codec: msgpack.createCodec({binarraybuffer: true})};
+    options = {codec: msgpack.createCodec({binarraybuffer: true, preset: true})};
 
     // bin (Buffer)
     decoded = msgpack.decode(new Buffer([0xc4, 2, 65, 66]), options);
@@ -68,5 +68,21 @@ describeSkip(TITLE, function() {
       assert.equal(decoded.length, length);
       if (length) assert.equal(decoded[0], 65);
     }
+  });
+
+  it("binarraybuffer (ext)", function() {
+    // reserve Buffer class name when mangling
+    if (Buffer.name) {
+      assert.equal(Buffer.name, "Buffer");
+    }
+
+    // fixext 2 (Buffer)
+    var encoded = msgpack.encode(new Buffer([97, 98]), options);
+    assert.deepEqual(toArray(encoded), [0xd5, 0x1b, 97, 98]);
+
+    // fixext 2 (Buffer)
+    var decoded = msgpack.decode([0xd5, 0x1b, 65, 66], options);
+    assert.ok(Buffer.isBuffer(decoded));
+    assert.deepEqual(toArray(decoded), [65, 66]);
   });
 });
