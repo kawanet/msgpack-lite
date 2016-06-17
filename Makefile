@@ -22,7 +22,7 @@ $(JSTEMP): $(LIB) $(DIST)
 	./node_modules/.bin/browserify -s $(CLASS) $(SRC) -o $(JSTEMP) --debug
 
 $(JSDEST): $(JSTEMP)
-	./node_modules/.bin/uglifyjs $(JSTEMP) -c -m -o $(JSDEST)
+	./node_modules/.bin/uglifyjs $(JSTEMP) -c -m -r Buffer -o $(JSDEST)
 	ls -l $(JSDEST)
 
 test:
