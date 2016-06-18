@@ -365,6 +365,12 @@ var codec = msgpack.createCodec({int64: true});
 var codec = msgpack.createCodec({binarraybuffer: true, preset: true});
 ```
 
+`uint8array`: It returns Uint8Array object when encoding, instead of `Buffer` object.
+
+```js
+var codec = msgpack.createCodec({uint8array: true});
+```
+
 ### Compatibility Mode
 
 The [compatibility mode](https://github.com/kawanet/msgpack-lite/issues/22) respects for [msgpack's old spec](https://github.com/msgpack/msgpack/blob/master/spec-old.md). Set `true` to `useraw`.
