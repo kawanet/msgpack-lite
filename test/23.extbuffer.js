@@ -30,8 +30,13 @@ describe(TITLE, function() {
     var decoded = msgpack.decode(source);
     assert.equal(decoded.type, type);
     assert.equal(decoded.buffer.length, content.length);
-    assert.deepEqual(decoded.buffer, content);
+    assert.deepEqual(toArray(decoded.buffer), toArray(content));
     var encoded = msgpack.encode(decoded);
-    assert.deepEqual(encoded, source);
+    assert.deepEqual(toArray(encoded), toArray(source));
   }
 });
+
+function toArray(array) {
+  if (array instanceof ArrayBuffer) array = new Uint8Array(array);
+  return Array.prototype.slice.call(array);
+}

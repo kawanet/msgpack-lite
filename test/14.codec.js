@@ -24,7 +24,7 @@ describe(TITLE, function() {
       assert.equal(decoded.type, type);
       assert.equal(decoded.buffer.length, 1);
       var encoded = msgpack.encode(decoded, options);
-      assert.deepEqual(encoded, source);
+      assert.deepEqual(toArray(encoded), toArray(source));
     }
   });
 
@@ -85,4 +85,9 @@ function myClassPacker(obj) {
 
 function myClassUnpacker(buffer) {
   return new MyClass(buffer[0]);
+}
+
+function toArray(array) {
+  if (array instanceof ArrayBuffer) array = new Uint8Array(array);
+  return Array.prototype.slice.call(array);
 }
