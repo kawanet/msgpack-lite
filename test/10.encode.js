@@ -20,7 +20,7 @@ describe(TITLE, function() {
     it("{uint8array: true}", function() {
       var codec = msgpack.createCodec({uint8array: true});
       options = {codec: codec};
-      assert.ok(ArrayBuffer.isView(msgpack.encode(1, options)));
+      if (ArrayBuffer.isView) assert.ok(ArrayBuffer.isView(msgpack.encode(1, options)));
     });
 
     run_tests(options);

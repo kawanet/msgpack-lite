@@ -1,6 +1,7 @@
 #!/usr/bin/env mocha -R spec
 
 var assert = require("assert");
+var Bufferish = require("../lib/bufferish");
 var msgpackJS = "../index";
 var isBrowser = ("undefined" !== typeof window);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
@@ -23,7 +24,8 @@ describe(TITLE, function() {
 
     // small data
     var encoded = msgpack.encode(1, options);
-    assert.ok(ArrayBuffer.isView(encoded));
+    if (ArrayBuffer.isView) assert.ok(ArrayBuffer.isView(encoded));
+    assert.ok(Bufferish.isView(encoded));
     assert.ok(!Buffer.isBuffer(encoded));
 
     // bigger data
@@ -31,7 +33,8 @@ describe(TITLE, function() {
     big[big.length - 1] = 99;
     var source = [big, big, big, big, big, big, big, big]; // 64KB
     encoded = msgpack.encode(source, options);
-    assert.ok(ArrayBuffer.isView(encoded));
+    if (ArrayBuffer.isView) assert.ok(ArrayBuffer.isView(encoded));
+    assert.ok(Bufferish.isView(encoded));
     assert.ok(!Buffer.isBuffer(encoded));
     assert.equal(encoded[encoded.length - 1], 99); // last byte
   });
