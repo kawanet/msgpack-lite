@@ -8,7 +8,7 @@ var TITLE = __filename.replace(/^.*\//, "");
 
 describe(TITLE, function() {
 
-  it("BufferLite.writeUint64BE() 1...", function() {
+  it("BufferLite.writeUInt64BE() 1...", function() {
     var exp = [
       [0xcf, 0, 0, 0, 0, 0, 0, 0, 1], // 1
       [0xcf, 0, 0, 0, 0, 0, 0, 1, 0], // 256
@@ -23,14 +23,14 @@ describe(TITLE, function() {
     for (var i = 0; i < exp.length; i++) {
       var buffer = Buffer(9);
       buffer[0] = 0xcf;
-      BufferLite.writeUint64BE.call(buffer, val, 1);
+      BufferLite.writeUInt64BE.call(buffer, val, 1);
       assert.deepEqual(buffer, Buffer(exp[i]));
       assert.equal(msgpack.decode(buffer), val);
       val *= 256;
     }
   });
 
-  it("BufferLite.writeUint64BE() 32767...", function() {
+  it("BufferLite.writeUInt64BE() 32767...", function() {
     var exp = [
       [0xcf, 0, 0, 0, 0, 0, 0, 0x7F, 0xFF], // 32767
       [0xcf, 0, 0, 0, 0, 0, 0x7F, 0xFF, 0],
@@ -44,7 +44,7 @@ describe(TITLE, function() {
     for (var i = 0; i < exp.length; i++) {
       var buffer = Buffer(9);
       buffer[0] = 0xcf;
-      BufferLite.writeUint64BE.call(buffer, val, 1);
+      BufferLite.writeUInt64BE.call(buffer, val, 1);
       assert.deepEqual(buffer, Buffer(exp[i]));
       assert.equal(msgpack.decode(buffer), val);
       val *= 256;
