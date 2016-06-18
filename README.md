@@ -13,7 +13,7 @@ Online demo: [http://kawanet.github.io/msgpack-lite/](http://kawanet.github.io/m
 - Even faster than node-gyp C++ based [msgpack](https://www.npmjs.com/package/msgpack) library (**90% faster** on encoding)
 - Streaming encoding and decoding interface is also available. It's more faster.
 - Ready for [Web browsers](https://saucelabs.com/u/msgpack-lite) including Chrome, Firefox, Safari and even IE8
-- [Tested](https://travis-ci.org/kawanet/msgpack-lite) on Node.js v0.10, v0.12, v4 and v5 as well as Web browsers
+- [Tested](https://travis-ci.org/kawanet/msgpack-lite) on Node.js v0.10, v0.12, v4, v5 and v6 as well as Web browsers
 
 ### Encoding and Decoding MessagePack
 
