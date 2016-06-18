@@ -8,6 +8,8 @@ var isBrowser = ("undefined" !== typeof window);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
 var TITLE = __filename.replace(/^.*\//, "");
 
+var HAS_UINT8ARRAY = ("undefined" !== typeof Uint8Array);
+
 describe(TITLE, function() {
   it("ExtBuffer (0x00)", function() {
     testExtBuffer(0);
@@ -37,6 +39,6 @@ describe(TITLE, function() {
 });
 
 function toArray(array) {
-  if (array instanceof ArrayBuffer) array = new Uint8Array(array);
+  if (HAS_UINT8ARRAY && array instanceof ArrayBuffer) array = new Uint8Array(array);
   return Array.prototype.slice.call(array);
 }

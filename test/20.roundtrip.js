@@ -42,13 +42,19 @@ describe(TITLE, function() {
 
   var describe_Uint8Array = HAS_UINT8ARRAY ? describe : describe.skip;
   describe_Uint8Array("Uint8Array", function() {
-    var codec = msgpack.createCodec({uint8array: true});
-    var options = {codec: codec};
-    run_tests(options);
+    run_tests({uint8array: true});
   });
 });
 
-function run_tests(options) {
+function run_tests(codecopt) {
+  var options;
+
+  if (codecopt) it(JSON.stringify(codecopt), function() {
+    var codec = msgpack.createCodec(codecopt);
+    assert.ok(codec);
+    options = {codec: codec};
+  });
+
   it("null", function() {
     [null, undefined].forEach(function(value) {
       var encoded = msgpack.encode(value, options);

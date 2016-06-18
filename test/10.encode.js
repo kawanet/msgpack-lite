@@ -15,19 +15,19 @@ describe(TITLE, function() {
 
   var describe_Uint8Array = HAS_UINT8ARRAY ? describe : describe.skip;
   describe_Uint8Array("Uint8Array", function() {
-    var options;
-
-    it("{uint8array: true}", function() {
-      var codec = msgpack.createCodec({uint8array: true});
-      options = {codec: codec};
-      if (ArrayBuffer.isView) assert.ok(ArrayBuffer.isView(msgpack.encode(1, options)));
-    });
-
-    run_tests(options);
+    run_tests({uint8array: true});
   });
 });
 
-function run_tests(options) {
+function run_tests(codecopt) {
+  var options;
+
+  if (codecopt) it(JSON.stringify(codecopt), function() {
+    var codec = msgpack.createCodec(codecopt);
+    assert.ok(codec);
+    options = {codec: codec};
+  });
+
   // positive fixint -- 0x00 - 0x7f
   it("00-7f: positive fixint", function() {
     for (var i = 0; i <= 0x7F; i++) {

@@ -17,9 +17,11 @@ describe(TITLE, function() {
   });
 
   var it_Uint8Array = HAS_UINT8ARRAY ? it : it.skip;
+  var codecopt = {uint8array: true};
 
-  it_Uint8Array("{uint8array: true}", function() {
-    var codec = msgpack.createCodec({uint8array: true});
+  it_Uint8Array(JSON.stringify(codecopt), function() {
+    var codec = msgpack.createCodec(codecopt);
+    assert.ok(codec);
     var options = {codec: codec};
 
     // small data

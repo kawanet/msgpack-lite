@@ -44,7 +44,7 @@ describeSkip(TITLE, function() {
   });
 
   it("binarraybuffer (encode)", function() {
-    // bin (Uint8Array)
+    // bin (ArrayBuffer)
     var encoded = msgpack.encode(new Uint8Array([65, 66]).buffer, options);
     assert.deepEqual(toArray(encoded), [0xc4, 2, 65, 66]);
   });
@@ -77,8 +77,11 @@ describeSkip(TITLE, function() {
     }
 
     // fixext 2 (Buffer)
-    var encoded = msgpack.encode(new Buffer([97, 98]), options);
-    assert.deepEqual(toArray(encoded), [0xd5, 0x1b, 97, 98]);
+    // IE may give another name than Buffer
+    if (Buffer.name === "Buffer") {
+      var encoded = msgpack.encode(new Buffer([97, 98]), options);
+      assert.deepEqual(toArray(encoded), [0xd5, 0x1b, 97, 98]);
+    }
 
     // fixext 2 (Buffer)
     var decoded = msgpack.decode([0xd5, 0x1b, 65, 66], options);
