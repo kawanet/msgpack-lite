@@ -15,8 +15,14 @@ describe(TITLE, function() {
 
   var describe_Uint8Array = HAS_UINT8ARRAY ? describe : describe.skip;
   describe_Uint8Array("Uint8Array", function() {
-    var codec = msgpack.createCodec({uint8array: true});
-    var options = {codec: codec};
+    var options;
+
+    it("{uint8array: true}", function() {
+      var codec = msgpack.createCodec({uint8array: true});
+      options = {codec: codec};
+      assert.ok(ArrayBuffer.isView(msgpack.encode(1, options)));
+    });
+
     run_tests(options);
   });
 });
