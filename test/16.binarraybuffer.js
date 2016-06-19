@@ -70,19 +70,19 @@ describeSkip(TITLE, function() {
     }
   });
 
-  it("binarraybuffer (ext)", function() {
-    // reserve Buffer class name when mangling
-    if (Buffer.name) {
-      assert.equal(Buffer.name, "Buffer");
-    }
-
+  // addExtPacker() and getExtPacker() methods need a valid constructor name.
+  // IE10 and iOS7 Safari may give another constructor name than Buffer.
+  // At those cases, below will be encoded as Uint8Array: [0xd5, 0x12, 97, 98]
+  var b = new Buffer(1);
+  var c = b.constructor;
+  var d = (c && c.name === "Buffer") ? it : it.skip;
+  d("encode Buffer ext format 0x1B", function() {
     // fixext 2 (Buffer)
-    // IE may give another name than Buffer
-    if (Buffer.name === "Buffer") {
-      var encoded = msgpack.encode(new Buffer([97, 98]), options);
-      assert.deepEqual(toArray(encoded), [0xd5, 0x1b, 97, 98]);
-    }
+    var encoded = msgpack.encode(new Buffer([97, 98]), options);
+    assert.deepEqual(toArray(encoded), [0xd5, 0x1b, 97, 98]);
+  });
 
+  it("decode Buffer ext format 0x1B", function() {
     // fixext 2 (Buffer)
     var decoded = msgpack.decode([0xd5, 0x1b, 65, 66], options);
     assert.ok(Buffer.isBuffer(decoded));
