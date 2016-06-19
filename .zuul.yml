@@ -15,6 +15,6 @@ browsers:
   - name: safari
     version: "7..latest"
   - name: iphone
-    version: ["7.1", "8.4", "9.2..latest"]
+    version: ["7.1", "8.4", "9.3..latest"]
   - name: android
     version: ["4.1", "4.4", "5.1..latest"]
