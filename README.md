@@ -249,7 +249,8 @@ Number (64bit double)|float format family|Number (double)
 String|str format family|String
 Buffer|bin format family|Buffer
 Array|array format family|Array
-Object (plain object)|map format family|Object
+Map|map format family|Map (if `usemap=true`)
+Object (plain object)|map format family|Object (or Map if `usemap=true`)
 Object (see below)|ext format family|Object (see below)
 
 Note that both `null` and `undefined` are mapped to nil `0xC1` type.
@@ -363,6 +364,13 @@ var codec = msgpack.createCodec({int64: true});
 
 ```js
 var codec = msgpack.createCodec({binarraybuffer: true, preset: true});
+```
+
+`usemap`: Uses the global JavaScript Map type, if available, to unpack
+MessagePack map elements.
+
+```js
+var codec = msgpack.createCodec({usemap: true});
 ```
 
 ### Compatibility Mode
