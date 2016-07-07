@@ -194,8 +194,9 @@ describe(TITLE, function() {
         value.set(key, length);
       }
       assert.equal(value.size, length);
-      var encoded = msgpack.encode(value);
-      var decoded = msgpack.decode(encoded, {"usemap": true});
+      var options = {codec: msgpack.createCodec({usemap: true})};
+      var encoded = msgpack.encode(value, options);
+      var decoded = msgpack.decode(encoded, options);
       assert.equal(true, decoded instanceof Map);
       assert.equal(decoded.size, length);
       assert.equal(decoded.get(String.fromCharCode(0)), value.get(String.fromCharCode(0)));
@@ -211,8 +212,9 @@ describe(TITLE, function() {
         value.set(i, length);
       }
       assert.equal(value.size, length);
-      var encoded = msgpack.encode(value);
-      var decoded = msgpack.decode(encoded, {"usemap": true});
+      var options = {codec: msgpack.createCodec({usemap: true})};
+      var encoded = msgpack.encode(value, options);
+      var decoded = msgpack.decode(encoded, options);
       assert.equal(decoded.size, length);
       assert.equal(decoded.get(0), value.get(0));
       assert.equal(decoded.get(length - 1), value.get(length - 1));
