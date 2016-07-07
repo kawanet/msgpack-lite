@@ -4,6 +4,7 @@ var assert = require("assert");
 var msgpackJS = "../index";
 var isBrowser = ("undefined" !== typeof window);
 var Map = isBrowser && window.Map || global.Map;
+var usemap = ("undefined" !== typeof Map);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
 var TITLE = __filename.replace(/^.*\//, "");
 
@@ -185,41 +186,43 @@ describe(TITLE, function() {
     });
   });
 
-  it("Map (small)", function() {
-    pattern(0, 257).forEach(function(length) {
-      var value = new Map();
-      assert.equal(true, value instanceof Map);
-      for (var i = 0; i < length; i++) {
-        var key = String.fromCharCode(i);
-        value.set(key, length);
-      }
-      assert.equal(value.size, length);
-      var options = {codec: msgpack.createCodec({usemap: true})};
-      var encoded = msgpack.encode(value, options);
-      var decoded = msgpack.decode(encoded, options);
-      assert.equal(true, decoded instanceof Map);
-      assert.equal(decoded.size, length);
-      assert.equal(decoded.get(String.fromCharCode(0)), value.get(String.fromCharCode(0)));
-      assert.equal(decoded.get(String.fromCharCode(length - 1)), value.get(String.fromCharCode(length - 1)));
+  if (usemap) {
+    it("Map (small)", function() {
+      pattern(0, 257).forEach(function(length) {
+        var value = new Map();
+        assert.equal(true, value instanceof Map);
+        for (var i = 0; i < length; i++) {
+          var key = String.fromCharCode(i);
+          value.set(key, length);
+        }
+        assert.equal(value.size, length);
+        var options = {codec: msgpack.createCodec({usemap: true})};
+        var encoded = msgpack.encode(value, options);
+        var decoded = msgpack.decode(encoded, options);
+        assert.equal(true, decoded instanceof Map);
+        assert.equal(decoded.size, length);
+        assert.equal(decoded.get(String.fromCharCode(0)), value.get(String.fromCharCode(0)));
+        assert.equal(decoded.get(String.fromCharCode(length - 1)), value.get(String.fromCharCode(length - 1)));
+      });
     });
-  });
 
-  it("Map (large)", function() {
-    this.timeout(30000);
-    pattern(65536, 65537).forEach(function(length) {
-      var value = new Map();
-      for (var i = 0; i < length; i++) {
-        value.set(i, length);
-      }
-      assert.equal(value.size, length);
-      var options = {codec: msgpack.createCodec({usemap: true})};
-      var encoded = msgpack.encode(value, options);
-      var decoded = msgpack.decode(encoded, options);
-      assert.equal(decoded.size, length);
-      assert.equal(decoded.get(0), value.get(0));
-      assert.equal(decoded.get(length - 1), value.get(length - 1));
+    it("Map (large)", function() {
+      this.timeout(30000);
+      pattern(65536, 65537).forEach(function(length) {
+        var value = new Map();
+        for (var i = 0; i < length; i++) {
+          value.set(i, length);
+        }
+        assert.equal(value.size, length);
+        var options = {codec: msgpack.createCodec({usemap: true})};
+        var encoded = msgpack.encode(value, options);
+        var decoded = msgpack.decode(encoded, options);
+        assert.equal(decoded.size, length);
+        assert.equal(decoded.get(0), value.get(0));
+        assert.equal(decoded.get(length - 1), value.get(length - 1));
+      });
     });
-  });
+  }
 
   it("buffer", function() {
     this.timeout(30000);
