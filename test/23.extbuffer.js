@@ -8,6 +8,8 @@ var isBrowser = ("undefined" !== typeof window);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
 var TITLE = __filename.replace(/^.*\//, "");
 
+var HAS_UINT8ARRAY = ("undefined" !== typeof Uint8Array);
+
 describe(TITLE, function() {
   it("ExtBuffer (0x00)", function() {
     testExtBuffer(0);
@@ -36,9 +38,9 @@ describe(TITLE, function() {
     var decoded = msgpack.decode(source);
     assert.equal(decoded.type, type);
     assert.equal(decoded.buffer.length, content.length);
-    assert.deepEqual(decoded.buffer, content);
+    assert.deepEqual(toArray(decoded.buffer), toArray(content));
     var encoded = msgpack.encode(decoded);
-    assert.deepEqual(encoded, source);
+    assert.deepEqual(toArray(encoded), toArray(source));
   }
 
   // Unpack and re-pack an array of extension types.
@@ -70,3 +72,8 @@ describe(TITLE, function() {
   }
 
 });
+
+function toArray(array) {
+  if (HAS_UINT8ARRAY && array instanceof ArrayBuffer) array = new Uint8Array(array);
+  return Array.prototype.slice.call(array);
+}

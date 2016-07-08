@@ -44,7 +44,7 @@ describeSkip(TITLE, function() {
   });
 
   it("binarraybuffer (encode)", function() {
-    // bin (Uint8Array)
+    // bin (ArrayBuffer)
     var encoded = msgpack.encode(new Uint8Array([65, 66]).buffer, options);
     assert.deepEqual(toArray(encoded), [0xc4, 2, 65, 66]);
   });

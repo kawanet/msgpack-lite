@@ -6,6 +6,8 @@ var isBrowser = ("undefined" !== typeof window);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
 var TITLE = __filename.replace(/^.*\//, "");
 
+var HAS_UINT8ARRAY = ("undefined" !== typeof Uint8Array);
+
 describe(TITLE, function() {
   it("createCodec()", function() {
     var codec = msgpack.createCodec();
@@ -24,7 +26,7 @@ describe(TITLE, function() {
       assert.equal(decoded.type, type);
       assert.equal(decoded.buffer.length, 1);
       var encoded = msgpack.encode(decoded, options);
-      assert.deepEqual(encoded, source);
+      assert.deepEqual(toArray(encoded), toArray(source));
     }
   });
 
@@ -85,4 +87,9 @@ function myClassPacker(obj) {
 
 function myClassUnpacker(buffer) {
   return new MyClass(buffer[0]);
+}
+
+function toArray(array) {
+  if (HAS_UINT8ARRAY && array instanceof ArrayBuffer) array = new Uint8Array(array);
+  return Array.prototype.slice.call(array);
 }
