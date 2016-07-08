@@ -1,7 +1,7 @@
 {
   "name": "msgpack-lite",
   "description": "Fast Pure JavaScript MessagePack Encoder and Decoder",
-  "version": "0.1.24",
+  "version": "0.1.25",
   "author": "@kawanet",
   "bin": {
     "msgpack": "./bin/msgpack"
@@ -30,7 +30,7 @@
     "jshint": "^2.9.2",
     "mocha": "^2.5.3",
     "msgpack.codec": "git+https://github.com/kawanet/msgpack-javascript.git#msgpack.codec",
-    "uglify-js": "^2.6.2",
+    "uglify-js": "^2.7.0",
     "zuul": "^3.10.1"
   },
   "homepage": "https://github.com/kawanet/msgpack-lite",
