@@ -1,7 +1,7 @@
 {
   "name": "msgpack-lite",
   "description": "Fast Pure JavaScript MessagePack Encoder and Decoder",
-  "version": "0.1.22",
+  "version": "0.1.24",
   "author": "@kawanet",
   "bin": {
     "msgpack": "./bin/msgpack"
@@ -11,6 +11,7 @@
     "url": "https://github.com/kawanet/msgpack-lite/issues"
   },
   "contributors": [
+    "Christopher Vermilion <chris@figlyinc.com>",
     "Frederik Dudzik <4004blog@gmail.com>",
     "Garrett Serack <gserack@gmail.com>",
     "Jesse Armand <jesse@jessearmand.com>",
@@ -38,6 +39,7 @@
     "globals": {
       "JSON": true,
       "Symbol": true,
+      "Map": true,
       "window": true
     },
     "mocha": true,
