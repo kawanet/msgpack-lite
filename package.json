@@ -18,9 +18,10 @@
     "Joshua Wise <josh@joshuawise.ninja>"
   ],
   "dependencies": {
+    "bufferish": "^0.1.0",
     "event-lite": "^0.1.1",
     "ieee754": "^1.1.6",
-    "int64-buffer": "^0.1.7",
+    "int64-buffer": "^0.1.9",
     "isarray": "^1.0.0"
   },
   "devDependencies": {
