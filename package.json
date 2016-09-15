@@ -1,5 +1,5 @@
 {
-  "name": "msgpack-lite",
+  "name": "keybase-msgpack-lite",
   "description": "Fast Pure JavaScript MessagePack Encoder and Decoder",
   "version": "0.1.25",
   "author": "@kawanet",
