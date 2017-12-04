@@ -30,7 +30,7 @@
     "concat-stream": "^1.6.0",
     "jshint": "^2.9.5",
     "mocha": "^4.0.1",
-    "msgpack.codec": "git+https://github.com/kawanet/msgpack-javascript.git#msgpack.codec",
+    "msgpack-test-js": "git+https://github.com/kawanet/msgpack-test-js.git",
     "uglify-js": "^3.1.10",
     "zuul": "^3.11.1"
   },

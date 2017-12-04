@@ -4,7 +4,7 @@ var assert = require("assert");
 var msgpackJS = "../index";
 var isBrowser = ("undefined" !== typeof window);
 var msgpack = isBrowser && window.msgpack || require(msgpackJS);
-var Suite = require("msgpack-test-js").Suite;
+var Exam = require("msgpack-test-js").Exam;
 
 var TITLE = __filename.split("/").pop();
 
@@ -27,34 +27,28 @@ var opt = {codec: msgpack.createCodec({int64: true})};
  */
 
 describe(TITLE, function() {
-  var suite = new Suite();
 
-  // get an array of groups
-  suite.getGroups().forEach(function(group) {
+  // find exams for types supported by the library
+  Exam.getExams(TEST_TYPES).forEach(function(exam) {
 
-    // get an array of exams
-    suite.getExams(group).forEach(function(exam) {
-      var types = exam.getTypes(TEST_TYPES);
+    // find types tested by the exam
+    var types = exam.getTypes(TEST_TYPES);
+    var first = types[0];
+    var title = first + ": " + exam.stringify(first);
+    it(title, function() {
 
-      // skip when types not supported
-      if (!types.length) return;
+      // test for encoding
+      types.forEach(function(type) {
+        var value = exam.getValue(type);
+        var buffer = msgpack.encode(value, opt);
+        assert(exam.matchMsgpack(buffer), exam.stringify(type));
+      });
 
-      var title = types[0] + ": " + exam.stringify(types[0]);
-      it(title, function() {
-
-        // test for encoding
-        types.forEach(function(type) {
-          var value = exam.getValue(type);
-          var buffer = msgpack.encode(value, opt);
-          assert(exam.matchMsgpack(buffer), exam.stringify(type));
-        });
-
-        // test for decoding
-        var msgpacks = exam.getMsgpacks();
-        msgpacks.forEach(function(encoded, idx) {
-          var value = msgpack.decode(encoded, opt);
-          assert(exam.matchValue(value), exam.stringify(idx));
-        });
+      // test for decoding
+      var msgpacks = exam.getMsgpacks();
+      msgpacks.forEach(function(encoded, idx) {
+        var value = msgpack.decode(encoded, opt);
+        assert(exam.matchValue(value), exam.stringify(idx));
       });
     });
   });
