@@ -22,6 +22,9 @@ var encoded = [
 
 var encodeall = Buffer.concat(encoded);
 
+// invalid msgpack type
+var invalencoded = Buffer([0xc1]);
+
 describe(TITLE, function() {
 
   it("msgpack.createEncodeStream()", function(done) {
@@ -116,4 +119,38 @@ describe(TITLE, function() {
       if (++count === 3) done();
     }
   });
+
+  it("msgpack.createDecodeStream().on('error',fn)", function(done) {
+    var decoder = msgpack.createDecodeStream();
+
+    decoder.on("error", function(e) {
+      assert.ok(e instanceof Error, "should be an error");
+      setTimeout(done, 1);
+    });
+
+    decoder.on("data", function(data) {
+      assert.fail("should not emit data");
+    });
+
+    decoder.end(invalencoded);
+  });
+
+  it("msgpack.createEncodeStream().on('error',fn)", function(done) {
+    var circular = [];
+    var encoder = msgpack.createEncodeStream();
+
+    circular.push(circular);
+
+    encoder.on("error", function(e) {
+      assert.ok(e instanceof Error, "should be an error");
+      setTimeout(done, 1);
+    });
+
+    encoder.on("data", function(data) {
+      assert.fail("should not emit data");
+    });
+
+    encoder.end(circular);
+  });
+
 });
