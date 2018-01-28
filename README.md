@@ -182,6 +182,10 @@ It is tested to have basic compatibility with other Node.js MessagePack modules 
 - [https://www.npmjs.com/package/msgpack5](https://www.npmjs.com/package/msgpack5) (3.3.0)
 - [https://www.npmjs.com/package/notepack](https://www.npmjs.com/package/notepack) (0.0.2)
 
+### Important Tip about Signed and Unsigned Integers
+
+This implementation (like some other MessagePack implementations) encodes non-negative integers with an unsigned integer format (uint8, uint16, uint32, or uint64). The MessagePack specification does not directly suggest to encode non-negative integers this way, but it does say that "serializers SHOULD use the format which represents the data in the smallest number of bytes." Thus many libraries encode non-negative integers as unsigned integers, since many numbers can be represented more compactly as unsigned. So _you may get surprising errors if encoding using msgpack-lite and decoding using another library_ (such as [github.com/dchenk/msgp](https://github.com/dchenk/msgp)) which preserves integer types strongly and does not allow converting from int to uint or vice-versa. If you'll be decoding with another library or one that uses strong typing, be aware that you may need special workarounds to decode some integers accurately.
+
 ### Benchmarks
 
 A benchmark tool `lib/benchmark.js` is available to compare encoding/decoding speed
