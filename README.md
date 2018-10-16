@@ -2,8 +2,6 @@
 
 Fast Pure JavaScript MessagePack Encoder and Decoder
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/msgpack-lite.svg)](https://saucelabs.com/u/msgpack-lite)
-
 Online demo: [http://kawanet.github.io/msgpack-lite/](http://kawanet.github.io/msgpack-lite/)
 
 ### Features
@@ -12,8 +10,7 @@ Online demo: [http://kawanet.github.io/msgpack-lite/](http://kawanet.github.io/m
 - Faster than any other pure JavaScript libraries on node.js v4
 - Even faster than node-gyp C++ based [msgpack](https://www.npmjs.com/package/msgpack) library (**90% faster** on encoding)
 - Streaming encoding and decoding interface is also available. It's more faster.
-- Ready for [Web browsers](https://saucelabs.com/u/msgpack-lite) including Chrome, Firefox, Safari and even IE8
-- [Tested](https://travis-ci.org/kawanet/msgpack-lite) on Node.js v4, v6 and v8 as well as Web browsers
+- [Tested](https://travis-ci.org/kawanet/msgpack-lite) on Node.js v4, v6, v8 and v10 as well as Web browsers
 
 ### Encoding and Decoding MessagePack
 
@@ -105,8 +102,6 @@ Run tests on browsers:
 
 ```sh
 $ make test-browser-local
-open the following url in a browser:
-http://localhost:4000/__zuul
 ```
 
 ### Browser Build
