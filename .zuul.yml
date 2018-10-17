@@ -1,0 +1,5 @@
+name: msgpack-lite
+ui: mocha-bdd
+html: "test/zuul/ie.html"
+scripts:
+  - "dist/msgpack.min.js"
