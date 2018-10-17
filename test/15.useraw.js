@@ -19,10 +19,10 @@ describe(TITLE, function() {
     options = {codec: msgpack.createCodec({useraw: true})};
 
     // raw
-    assert.deepEqual(toArray(msgpack.decode(new Buffer([0xa1, 65]), options)), [65]);
+    assert.deepEqual(toArray(msgpack.decode(Buffer.from([0xa1, 65]), options)), [65]);
 
     // str
-    assert.equal(msgpack.decode(new Buffer([0xa1, 65])), "A");
+    assert.equal(msgpack.decode(Buffer.from([0xa1, 65])), "A");
   });
 
   it("useraw (encode)", function() {
@@ -30,7 +30,7 @@ describe(TITLE, function() {
     assert.deepEqual(toArray(msgpack.encode("A", options)), [0xa1, 65]);
 
     // raw (Buffer)
-    assert.deepEqual(toArray(msgpack.encode(new Buffer([65]), options)), [0xa1, 65]);
+    assert.deepEqual(toArray(msgpack.encode(Buffer.from([65]), options)), [0xa1, 65]);
 
     // str
     assert.deepEqual(toArray(msgpack.encode("A")), [0xa1, 65]);
@@ -67,7 +67,7 @@ describe(TITLE, function() {
     TESTS.forEach(test);
 
     function test(length) {
-      var source = new Buffer(length);
+      var source = Buffer.alloc(length);
       for (var i = 0; i < length; i++) {
         source[i] = 65; // "A"
       }

@@ -31,7 +31,7 @@ describe(TITLE, function() {
     assert.ok(!Buffer.isBuffer(encoded));
 
     // bigger data
-    var big = new Buffer(8192); // 8KB
+    var big = Buffer.alloc(8192); // 8KB
     big[big.length - 1] = 99;
     var source = [big, big, big, big, big, big, big, big]; // 64KB
     encoded = msgpack.encode(source, options);

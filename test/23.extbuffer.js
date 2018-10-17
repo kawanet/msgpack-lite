@@ -29,8 +29,8 @@ describe(TITLE, function() {
 
   function testExtBuffer(type) {
     // fixext 8 -- 0xd7
-    var header = new Buffer([0xd7, type]);
-    var content = new Buffer(8);
+    var header = Buffer.from([0xd7, type]);
+    var content = Buffer.alloc(8);
     for (var i = 0; i < 8; i++) {
       content[i] = (type + i) & 0x7F;
     }
@@ -49,14 +49,14 @@ describe(TITLE, function() {
   function testExtBufferArray(type) {
     function content(j) {
         var x = j * type;
-        return Buffer([x & 0x7F, (x + 1) & 0x7F]);
+        return Buffer.from([x & 0x7F, (x + 1) & 0x7F]);
     }
     // fixarray len 10
-    var arrayHeader = new Buffer([0x9a]);
+    var arrayHeader = Buffer.from([0x9a]);
     var fullBuffer = arrayHeader;
     for (var j = 0; j < 10; j++) {
       // fixext 2 -- 0xd5
-      var header = new Buffer([0xd5, type]);
+      var header = Buffer.from([0xd5, type]);
       fullBuffer = Buffer.concat([fullBuffer, header, content(j)]);
     }
     var decoded = msgpack.decode(fullBuffer);

@@ -15,7 +15,7 @@ describe(TITLE, function() {
     assert.deepEqual(toArray(encode("a")), [161, 97]);
 
     // ExtBuffer
-    var ext = new ExtBuffer(new Buffer([1]), 127);
+    var ext = new ExtBuffer(Buffer.from([1]), 127);
     assert.ok(ext instanceof ExtBuffer);
     assert.deepEqual(toArray(encode(ext)), [212, 127, 1]);
   });

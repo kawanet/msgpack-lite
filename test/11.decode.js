@@ -13,7 +13,7 @@ Uint8ArrayBridge.concat = Uint8ArrayBridge_concat;
 
 describe(TITLE, function() {
   describe("Buffer", function() {
-    run_tests(Buffer);
+    run_tests(BufferBridge);
   });
 
   describe("Array", function() {
@@ -153,12 +153,12 @@ function run_tests(BUFFER) {
   it("ca-cb: float 32/64", function() {
     var buf;
 
-    buf = Buffer(5);
+    buf = Buffer.alloc(5);
     buf.writeUInt8(0xCA, 0);
     buf.writeFloatBE(0.5, 1);
     assert.deepEqual(msgpack.decode(BUFFER(buf)), 0.5);
 
-    buf = Buffer(9);
+    buf = Buffer.alloc(9);
     buf.writeUInt8(0xCB, 0);
     buf.writeDoubleBE(0.5, 1);
     assert.deepEqual(msgpack.decode(BUFFER(buf)), 0.5);
@@ -314,6 +314,18 @@ function run_tests(BUFFER) {
     }
   });
 }
+
+function BufferBridge(array) {
+  if ("number" === typeof array) {
+    array = Buffer.alloc(array);
+  } else {
+    array = Buffer.from(array);
+  }
+
+  return array;
+}
+
+BufferBridge.concat = Buffer.concat;
 
 function ArrayBridge(array) {
   if ("number" === typeof array) {

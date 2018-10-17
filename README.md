@@ -381,18 +381,18 @@ The [compatibility mode](https://github.com/kawanet/msgpack-lite/issues/22) resp
 ```js
 // default mode handles both str and bin formats individually
 msgpack.encode("Aa"); // => <Buffer a2 41 61> (str format)
-msgpack.encode(new Buffer([0x41, 0x61])); // => <Buffer c4 02 41 61> (bin format)
+msgpack.encode(Buffer.from([0x41, 0x61])); // => <Buffer c4 02 41 61> (bin format)
 
-msgpack.decode(new Buffer([0xa2, 0x41, 0x61])); // => 'Aa' (String)
-msgpack.decode(new Buffer([0xc4, 0x02, 0x41, 0x61])); // => <Buffer 41 61> (Buffer)
+msgpack.decode(Buffer.from([0xa2, 0x41, 0x61])); // => 'Aa' (String)
+msgpack.decode(Buffer.from([0xc4, 0x02, 0x41, 0x61])); // => <Buffer 41 61> (Buffer)
 
 // compatibility mode handles only raw format both for String and Buffer
 var options = {codec: msgpack.createCodec({useraw: true})};
 msgpack.encode("Aa", options); // => <Buffer a2 41 61> (raw format)
-msgpack.encode(new Buffer([0x41, 0x61]), options); // => <Buffer a2 41 61> (raw format)
+msgpack.encode(Buffer.from([0x41, 0x61]), options); // => <Buffer a2 41 61> (raw format)
 
-msgpack.decode(new Buffer([0xa2, 0x41, 0x61]), options); // => <Buffer 41 61> (Buffer)
-msgpack.decode(new Buffer([0xa2, 0x41, 0x61]), options).toString(); // => 'Aa' (String)
+msgpack.decode(Buffer.from([0xa2, 0x41, 0x61]), options); // => <Buffer 41 61> (Buffer)
+msgpack.decode(Buffer.from([0xa2, 0x41, 0x61]), options).toString(); // => 'Aa' (String)
 ```
 
 ### Repository

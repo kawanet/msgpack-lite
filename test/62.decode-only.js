@@ -15,7 +15,7 @@ describe(TITLE, function() {
     assert.equal(decode([161, 97]), "a");
 
     // ExtBuffer
-    var ext = decode(new Buffer([212, 127, 1]));
+    var ext = decode(Buffer.from([212, 127, 1]));
     assert.ok(ext instanceof ExtBuffer);
     assert.equal(ext.buffer[0], 1);
     assert.equal(ext.type, 127);
