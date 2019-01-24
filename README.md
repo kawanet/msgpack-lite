@@ -379,6 +379,12 @@ MessagePack map elements.
 var codec = msgpack.createCodec({usemap: true});
 ```
 
+`canonical`: Encodes object's keys in alphabetical order to ensure canonical representation.
+
+```js
+var codec = msgpack.createCodec({canonical: true});
+```
+
 ### Compatibility Mode
 
 The [compatibility mode](https://github.com/kawanet/msgpack-lite/issues/22) respects for [msgpack's old spec](https://github.com/msgpack/msgpack/blob/master/spec-old.md). Set `true` to `useraw`.
