@@ -140,7 +140,6 @@ function run_tests(codecopt) {
     assert.deepEqual(toArray(msgpack.encode(-0x80, options)), [0xd0, 0x80]);
     assert.deepEqual(toArray(msgpack.encode(-0x8000, options)), [0xd1, 0x80, 0x00]);
     assert.deepEqual(toArray(msgpack.encode(-0x80000000, options)), [0xd2, 0x80, 0x00, 0x00, 0x00]);
-    assert.deepEqual(toArray(msgpack.encode(-0x80000000, options)), [0xd2, 0x80, 0x00, 0x00, 0x00]);
     assert.deepEqual(toArray(msgpack.encode(Number.MIN_SAFE_INTEGER, options)), [0xd3, 0xFF, 0xE0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01]);
   });
 
