@@ -32,7 +32,8 @@
     "mocha": "^3.1.2",
     "msgpack.codec": "git+https://github.com/kawanet/msgpack-javascript.git#msgpack.codec",
     "uglify-js": "^2.7.3",
-    "zuul": "3.11.1"
+    "zuul": "3.11.1",
+    "ip-regex": "1.0.0"
   },
   "homepage": "https://github.com/kawanet/msgpack-lite",
   "jshintConfig": {
