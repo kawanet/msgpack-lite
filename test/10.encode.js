@@ -123,21 +123,23 @@ function run_tests(codecopt) {
   // uint 8 -- 0xcc
   // uint 16 -- 0xcd
   // uint 32 -- 0xce
-  // uint 64 -- 0xcf -- NOT SUPPORTED
+  // uint 64 -- 0xcf
   it("cc-cf: uint 8/16/32/64", function() {
     assert.deepEqual(toArray(msgpack.encode(0xFF, options)), [0xcc, 0xFF]);
     assert.deepEqual(toArray(msgpack.encode(0xFFFF, options)), [0xcd, 0xFF, 0xFF]);
-    assert.deepEqual(toArray(msgpack.encode(0x7FFFFFFF, options)), [0xce, 0x7F, 0xFF, 0xFF, 0xFF]);
+    assert.deepEqual(toArray(msgpack.encode(0xFFFFFFFF, options)), [0xce, 0xFF, 0xFF, 0xFF, 0xFF]);
+    assert.deepEqual(toArray(msgpack.encode(0xFFFFFFFFFFFFFFFF, options)), [0xcf, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]);
   });
 
   // int 8 -- 0xd0
   // int 16 -- 0xd1
   // int 32 -- 0xd2
-  // int 64 -- 0xd3 -- NOT SUPPORTED
+  // int 64 -- 0xd3
   it("d0-d3: int 8/16/32/64", function() {
     assert.deepEqual(toArray(msgpack.encode(-0x80, options)), [0xd0, 0x80]);
     assert.deepEqual(toArray(msgpack.encode(-0x8000, options)), [0xd1, 0x80, 0x00]);
     assert.deepEqual(toArray(msgpack.encode(-0x80000000, options)), [0xd2, 0x80, 0x00, 0x00, 0x00]);
+    assert.deepEqual(toArray(msgpack.encode(-0x8000000000000000, options)), [0xd2, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
   });
 
   // str 8 -- 0xd9
