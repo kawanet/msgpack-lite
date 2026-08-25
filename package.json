@@ -1,7 +1,7 @@
 {
   "name": "msgpack-lite",
   "description": "Fast Pure JavaScript MessagePack Encoder and Decoder",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "author": "@kawanet",
   "bin": {
     "msgpack": "./bin/msgpack"
