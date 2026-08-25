@@ -1,0 +1,64 @@
+name: Publish
+
+# Releases are cut by pushing a version tag, so ordinary pushes never reach
+# npm. The staged publish below still leaves the version invisible until a
+# maintainer approves it with 2FA.
+on:
+  push:
+    tags: [ "0.*.*" ]
+
+# Deny by default; each job opts in to the minimum it needs.
+permissions: { }
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # merge-base below needs the history of main, not just the tag.
+          fetch-depth: 0
+          persist-credentials: false
+
+      # A tag created on a side branch must never reach npm.
+      - name: Verify tag is on main
+        run: git merge-base --is-ancestor "$GITHUB_SHA" origin/main
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Verify tag matches package.json
+        run: |
+          version=$(npm pkg get version | tr -d '"')
+          test "$version" = "$GITHUB_REF_NAME"
+
+      - run: npm install --ignore-scripts
+      - run: npm run build --if-present
+      - run: npm test
+
+  stage:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: npm-stage
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      # dist/ is committed, so the tag alone carries everything npm needs.
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      # Nothing third party is installed in this job, so no foreign code runs
+      # while the OIDC token is reachable. This only queues the tarball: a
+      # maintainer releases it with 'npm stage approve'.
+      - run: npm stage publish --ignore-scripts
