@@ -15,8 +15,10 @@
     "Frederik Dudzik <4004blog@gmail.com>",
     "Garrett Serack <gserack@gmail.com>",
     "Jesse Armand <jesse@jessearmand.com>",
+    "Joshua Mouch <josh@mouch.name>",
     "Joshua Wise <josh@joshuawise.ninja>",
-    "Maciej Hirsz <maciej.hirsz@gmail.com>"
+    "Maciej Hirsz <maciej.hirsz@gmail.com>",
+    "Rafał Michalski <royaltm75@gmail.com>"
   ],
   "dependencies": {
     "event-lite": "^0.1.1",

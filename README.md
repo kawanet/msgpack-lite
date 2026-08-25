@@ -1,8 +1,6 @@
-# msgpack-lite [![npm version](https://badge.fury.io/js/msgpack-lite.svg)](http://badge.fury.io/js/msgpack-lite) [![Build Status](https://travis-ci.org/kawanet/msgpack-lite.svg?branch=master)](https://travis-ci.org/kawanet/msgpack-lite)
+# msgpack-lite [![npm version](https://badge.fury.io/js/msgpack-lite.svg)](http://badge.fury.io/js/msgpack-lite) [![Node.js CI](https://github.com/kawanet/msgpack-lite/workflows/Node.js%20CI/badge.svg?branch=main)](https://github.com/kawanet/msgpack-lite/actions/)
 
 Fast Pure JavaScript MessagePack Encoder and Decoder
-
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/msgpack-lite.svg)](https://saucelabs.com/u/msgpack-lite)
 
 Online demo: [http://kawanet.github.io/msgpack-lite/](http://kawanet.github.io/msgpack-lite/)
 
@@ -12,8 +10,8 @@ Online demo: [http://kawanet.github.io/msgpack-lite/](http://kawanet.github.io/m
 - Faster than any other pure JavaScript libraries on node.js v4
 - Even faster than node-gyp C++ based [msgpack](https://www.npmjs.com/package/msgpack) library (**90% faster** on encoding)
 - Streaming encoding and decoding interface is also available. It's more faster.
-- Ready for [Web browsers](https://saucelabs.com/u/msgpack-lite) including Chrome, Firefox, Safari and even IE8
-- [Tested](https://travis-ci.org/kawanet/msgpack-lite) on Node.js v0.10, v0.12, v4, v5 and v6 as well as Web browsers
+- Ready for Web browsers as well as Node.js
+- [Tested](https://github.com/kawanet/msgpack-lite/actions/) on Node.js v18, v20, v22, v24 and v26
 
 ### Encoding and Decoding MessagePack
 
@@ -186,7 +184,7 @@ It is tested to have basic compatibility with other Node.js MessagePack modules 
 
 A benchmark tool `lib/benchmark.js` is available to compare encoding/decoding speed
 (operation per second) with other MessagePack modules.
-It counts operations of [1KB JSON document](https://github.com/kawanet/msgpack-lite/blob/master/test/example.json) in 10 seconds.
+It counts operations of [1KB JSON document](https://github.com/kawanet/msgpack-lite/blob/main/test/example.json) in 10 seconds.
 
 ```sh
 $ npm install msgpack msgpack-js msgpack-js-v5 msgpack-unpack msgpack5 notepack
@@ -412,7 +410,7 @@ msgpack.decode(new Buffer([0xa2, 0x41, 0x61]), options).toString(); // => 'Aa' (
 
 The MIT License (MIT)
 
-Copyright (c) 2015-2016 Yusuke Kawasaki
+Copyright (c) 2015-2026 Yusuke Kawasaki
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
