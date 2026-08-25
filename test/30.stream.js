@@ -23,7 +23,7 @@ var encoded = [
 var encodeall = Buffer.concat(encoded);
 
 // invalid msgpack type
-var invalencoded = Buffer([0xc1]);
+var invalencoded = Buffer.from([0xc1]);
 
 describe(TITLE, function() {
 
@@ -124,12 +124,14 @@ describe(TITLE, function() {
     var decoder = msgpack.createDecodeStream();
 
     decoder.on("error", function(e) {
-      assert.ok(e instanceof Error, "should be an error");
-      setTimeout(done, 1);
+      if (!(e instanceof Error)) return done(new Error("should be an error"));
+      if (!/Invalid type/.test(e.message)) return done(new Error("unexpected: " + e.message));
+      done();
     });
 
-    decoder.on("data", function(data) {
-      assert.fail("should not emit data");
+    decoder.on("data", function() {
+      // throwing here would be captured by the try/catch under test
+      done(new Error("should not emit data"));
     });
 
     decoder.end(invalencoded);
@@ -137,18 +139,27 @@ describe(TITLE, function() {
 
   it("msgpack.createEncodeStream().on('error',fn)", function(done) {
     var circular = [];
-    var encoder = msgpack.createEncodeStream();
-
     circular.push(circular);
 
+    // the error event should carry what the synchronous API throws
+    var expected;
+    try {
+      msgpack.encode(circular);
+    } catch (e) {
+      expected = e;
+    }
+    assert.ok(expected instanceof Error, "encode() should throw for circular references");
+
+    var encoder = msgpack.createEncodeStream();
+
     encoder.on("error", function(e) {
-      assert.ok(e instanceof Error, "should be an error");
-      setTimeout(done, 1);
+      if (!(e instanceof Error)) return done(new Error("should be an error"));
+      if (e.name !== expected.name) return done(new Error("unexpected: " + e.name));
+      done();
     });
 
-    encoder.on("data", function(data) {
-      assert.fail("should not emit data");
-    });
+    // partial output is flushed as the internal buffer overflows
+    encoder.resume();
 
     encoder.end(circular);
   });
