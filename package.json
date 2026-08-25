@@ -31,8 +31,7 @@
     "jshint": "^2.9.3",
     "mocha": "^3.1.2",
     "msgpack.codec": "git+https://github.com/kawanet/msgpack-javascript.git#msgpack.codec",
-    "uglify-js": "^2.7.3",
-    "zuul": "^3.11.1"
+    "uglify-js": "^2.7.3"
   },
   "homepage": "https://github.com/kawanet/msgpack-lite",
   "jshintConfig": {
@@ -71,7 +70,6 @@
     "fixpack": "fixpack",
     "make": "make",
     "size": "make clean dist/msgpack.min.js && gzip -9fkv dist/msgpack.min.js && ls -l dist",
-    "test": "make test",
-    "test-browser-local": "make test-browser-local"
+    "test": "make test"
   }
 }
