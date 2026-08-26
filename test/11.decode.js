@@ -8,12 +8,13 @@ var TITLE = __filename.replace(/^.*\//, "");
 
 var HAS_UINT8ARRAY = ("undefined" !== typeof Uint8Array);
 
+BufferBridge.concat = Buffer.concat;
 ArrayBridge.concat = ArrayBridge_concat;
 Uint8ArrayBridge.concat = Uint8ArrayBridge_concat;
 
 describe(TITLE, function() {
   describe("Buffer", function() {
-    run_tests(Buffer);
+    run_tests(BufferBridge);
   });
 
   describe("Array", function() {
@@ -313,6 +314,16 @@ function run_tests(BUFFER) {
       assert.deepEqual(msgpack.decode(BUFFER([i & 0xFF])), i);
     }
   });
+}
+
+function BufferBridge(array) {
+  if ("number" === typeof array) {
+    array = init_seq(Buffer.alloc(array), array);
+  } else {
+    array = Buffer.from(array);
+  }
+
+  return array;
 }
 
 function ArrayBridge(array) {
