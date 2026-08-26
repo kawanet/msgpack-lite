@@ -24,7 +24,7 @@ $(JSDEST): $(JSTEMP)
 	./node_modules/.bin/uglifyjs $(JSTEMP) -c -m -r Buffer -o $(JSDEST)
 	ls -l $(JSDEST)
 
-test: jshint mocha
+test: jshint mocha test-dep
 
 mocha:
 	./node_modules/.bin/mocha -R spec $(TESTS)
@@ -32,7 +32,12 @@ mocha:
 jshint:
 	./node_modules/.bin/jshint $(HINTS)
 
+# Requiring the library must stay silent. Deprecation warnings only
+# surface under --pending-deprecation, so ask for them explicitly.
+test-dep:
+	! node --pending-deprecation --trace-deprecation ./index.js 2>&1 | grep .
+
 bench:
 	node lib/benchmark.js 1
 
-.PHONY: all clean test jshint mocha bench
+.PHONY: all clean test jshint mocha test-dep bench
