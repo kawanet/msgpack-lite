@@ -25,7 +25,7 @@ describeSkip(TITLE, function() {
     options = {codec: msgpack.createCodec({binarraybuffer: true, preset: true})};
 
     // bin (Buffer)
-    decoded = msgpack.decode(new Buffer([0xc4, 2, 65, 66]), options);
+    decoded = msgpack.decode(Buffer.from([0xc4, 2, 65, 66]), options);
     assert.ok(decoded instanceof ArrayBuffer);
     assert.ok(!Buffer.isBuffer(decoded));
     assert.deepEqual(toArray(decoded), [65, 66]);
@@ -73,12 +73,12 @@ describeSkip(TITLE, function() {
   // addExtPacker() and getExtPacker() methods need a valid constructor name.
   // IE10 and iOS7 Safari may give another constructor name than Buffer.
   // At those cases, below will be encoded as Uint8Array: [0xd5, 0x12, 97, 98]
-  var b = new Buffer(1);
+  var b = Buffer.alloc(1);
   var c = b.constructor;
   var d = (c && c.name === "Buffer") ? it : it.skip;
   d("encode Buffer ext format 0x1B", function() {
     // fixext 2 (Buffer)
-    var encoded = msgpack.encode(new Buffer([97, 98]), options);
+    var encoded = msgpack.encode(Buffer.from([97, 98]), options);
     assert.deepEqual(toArray(encoded), [0xd5, 0x1b, 97, 98]);
   });
 

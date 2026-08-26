@@ -21,7 +21,7 @@ describe(TITLE, function() {
 
     function test(type) {
       // fixext 1 -- 0xd4
-      var source = new Buffer([0xd4, type, type]);
+      var source = Buffer.from([0xd4, type, type]);
       var decoded = msgpack.decode(source, options);
       assert.equal(decoded.type, type);
       assert.equal(decoded.buffer.length, 1);
@@ -82,7 +82,7 @@ function MyClass(value) {
 }
 
 function myClassPacker(obj) {
-  return new Buffer([obj.value]);
+  return Buffer.from([obj.value]);
 }
 
 function myClassUnpacker(buffer) {

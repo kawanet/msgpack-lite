@@ -101,15 +101,15 @@ function run_tests(codecopt) {
   it("c4-c6: bin 8/16/32", function() {
     this.timeout(30000);
     var bin;
-    bin = Buffer(1);
+    bin = Buffer.alloc(1);
     bin.fill(0);
     assert.deepEqual(toArray(msgpack.encode(bin, options)), concat([0xc4, 1], bin));
 
-    bin = Buffer(256);
+    bin = Buffer.alloc(256);
     bin.fill(0);
     assert.deepEqual(toArray(msgpack.encode(bin, options)), concat([0xc5, 1, 0], bin));
 
-    bin = Buffer(65536);
+    bin = Buffer.alloc(65536);
     bin.fill(0);
     assert.deepEqual(toArray(msgpack.encode(bin, options)), concat([0xc6, 0, 1, 0, 0], bin));
   });
@@ -149,16 +149,16 @@ function run_tests(codecopt) {
     for (var i = 0; i < 17; i++) src += src;
 
     str = src.substr(0, 0xFF);
-    assert.deepEqual(toArray(msgpack.encode(str, options)), concat([0xd9, 0xFF], Buffer(str)));
+    assert.deepEqual(toArray(msgpack.encode(str, options)), concat([0xd9, 0xFF], Buffer.from(str)));
 
     str = src.substr(0, 0x0100);
-    assert.deepEqual(toArray(msgpack.encode(str, options)), concat([0xda, 0x01, 0x00], Buffer(str)));
+    assert.deepEqual(toArray(msgpack.encode(str, options)), concat([0xda, 0x01, 0x00], Buffer.from(str)));
 
     str = src.substr(0, 0xFFFF);
-    assert.deepEqual(toArray(msgpack.encode(str, options)), concat([0xda, 0xFF, 0xFF], Buffer(str)));
+    assert.deepEqual(toArray(msgpack.encode(str, options)), concat([0xda, 0xFF, 0xFF], Buffer.from(str)));
 
     str = src.substr(0, 0x010000);
-    assert.deepEqual(toArray(msgpack.encode(str, options)), concat([0xdb, 0x00, 0x01, 0x00, 0x00], Buffer(str)));
+    assert.deepEqual(toArray(msgpack.encode(str, options)), concat([0xdb, 0x00, 0x01, 0x00, 0x00], Buffer.from(str)));
   });
 
   // array 16 -- 0xdc

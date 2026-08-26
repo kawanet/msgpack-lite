@@ -111,7 +111,7 @@ describe(TITLE, function() {
 
     // write a single byte into the decode stream
     function each(x) {
-      decoder.write(Buffer([x]));
+      decoder.write(Buffer.from([x]));
     }
 
     function onData(data) {

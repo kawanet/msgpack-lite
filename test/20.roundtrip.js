@@ -207,7 +207,7 @@ function run_tests(codecopt) {
   it("buffer", function() {
     this.timeout(30000);
     pattern(2, 65537).forEach(function(length, idx) {
-      var value = new Buffer(length);
+      var value = Buffer.alloc(length);
       value.fill(idx);
       assert.equal(value.length, length);
       var encoded = msgpack.encode(value, options);

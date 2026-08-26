@@ -10,28 +10,28 @@ var data = require("./example.json");
 describe(TITLE, function() {
   test("msgpack", function(they) {
     assert.deepEqual(they.unpack(msgpack.encode(data)), data);
-    assert.deepEqual(msgpack.decode(Buffer(they.pack(data))), data);
+    assert.deepEqual(msgpack.decode(Buffer.from(they.pack(data))), data);
   });
 
   test("msgpack-js", function(they) {
     assert.deepEqual(they.decode(msgpack.encode(data)), data);
-    assert.deepEqual(msgpack.decode(Buffer(they.encode(data))), data);
+    assert.deepEqual(msgpack.decode(Buffer.from(they.encode(data))), data);
   });
 
   test("msgpack-js-v5", function(they) {
     assert.deepEqual(they.decode(msgpack.encode(data)), data);
-    assert.deepEqual(msgpack.decode(Buffer(they.encode(data))), data);
+    assert.deepEqual(msgpack.decode(Buffer.from(they.encode(data))), data);
   });
 
   test("msgpack5", function(they) {
     they = they();
     assert.deepEqual(they.decode(msgpack.encode(data)), data);
-    assert.deepEqual(msgpack.decode(Buffer(they.encode(data))), data);
+    assert.deepEqual(msgpack.decode(Buffer.from(they.encode(data))), data);
   });
 
   test("notepack", function(they) {
     assert.deepEqual(they.decode(msgpack.encode(data)), data);
-    assert.deepEqual(msgpack.decode(Buffer(they.encode(data))), data);
+    assert.deepEqual(msgpack.decode(Buffer.from(they.encode(data))), data);
   });
 
   test("msgpack-unpack", function(they) {
@@ -41,7 +41,7 @@ describe(TITLE, function() {
   test("msgpack.codec", function(they) {
     they = they.msgpack;
     assert.deepEqual(they.unpack(msgpack.encode(data)), data);
-    assert.deepEqual(msgpack.decode(Buffer(they.pack(data))), data);
+    assert.deepEqual(msgpack.decode(Buffer.from(they.pack(data))), data);
   });
 });
 
