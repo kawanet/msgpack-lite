@@ -92,14 +92,14 @@ $ make test
 
 ### Browser Build
 
-Browser version [msgpack.min.js](https://rawgit.com/kawanet/msgpack-lite/master/dist/msgpack.min.js) is also available. 50KB minified, 14KB gziped.
+Browser version [msgpack.min.js](https://cdn.jsdelivr.net/npm/msgpack-lite/dist/msgpack.min.js) is also available. 50KB minified, 14KB gziped.
 
 ```html
 <!--[if lte IE 9]>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.10/es5-shim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js"></script>
 <![endif]-->
-<script src="https://rawgit.com/kawanet/msgpack-lite/master/dist/msgpack.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/msgpack-lite/dist/msgpack.min.js"></script>
 <script>
 // encode from JS Object to MessagePack (Uint8Array)
 var buffer = msgpack.encode({foo: "bar"});
@@ -144,7 +144,7 @@ uglifyjs tmp/main.browserify.js -m -c -o js/main.min.js
 cp node_modules/msgpack-lite/dist/msgpack.min.js js/msgpack.min.js
 ```
 
-Step #4: load [msgpack.min.js](https://rawgit.com/kawanet/msgpack-lite/master/dist/msgpack.min.js) before your code.
+Step #4: load [msgpack.min.js](https://cdn.jsdelivr.net/npm/msgpack-lite/dist/msgpack.min.js) before your code.
 
 ```html
 <script src="js/msgpack.min.js"></script>
