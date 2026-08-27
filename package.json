@@ -1,7 +1,7 @@
 {
   "name": "msgpack-lite",
   "description": "Fast Pure JavaScript MessagePack Encoder and Decoder",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": "@kawanet",
   "bin": {
     "msgpack": "./bin/msgpack"
@@ -18,7 +18,8 @@
     "Joshua Mouch <josh@mouch.name>",
     "Joshua Wise <josh@joshuawise.ninja>",
     "Maciej Hirsz <maciej.hirsz@gmail.com>",
-    "Rafał Michalski <royaltm75@gmail.com>"
+    "Rafał Michalski <royaltm75@gmail.com>",
+    "Yarchik <spoko.dev@gmail.com>"
   ],
   "dependencies": {
     "event-lite": "^1.0.0",
