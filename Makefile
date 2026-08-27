@@ -10,6 +10,7 @@ JSTEMP=./dist/msgpack.browserify.js
 JSDEST=./dist/msgpack.min.js
 MINJS_MAX_BYTES := 60000
 NAMED_EXPORTS := encode decode Encoder Decoder createCodec
+NODE_ONLY_EXPORTS := createEncodeStream createDecodeStream
 
 all: $(JSDEST)
 
@@ -46,6 +47,7 @@ test-dep:
 # file in from a CDN.
 smoke-minjs: $(JSDEST)
 	(echo 'module = void 0; exports = void 0;' && cat $< && echo '; for (const k of process.argv.slice(2)) { if (typeof $(CLASS)[k] !== "function") { console.error("missing browser export:", k); process.exit(1); } console.log("browser export OK:", k); }') | node - $(NAMED_EXPORTS)
+	(echo 'module = void 0; exports = void 0;' && cat $< && echo '; for (const k of process.argv.slice(2)) { if (typeof $(CLASS)[k] !== "undefined") { console.error("unexpected browser export:", k); process.exit(1); }}') | node - $(NODE_ONLY_EXPORTS)
 	node --input-type=commonjs -e 'const m = require("$(JSDEST)"); for (const k of process.argv.slice(1)) { if (typeof m[k] !== "function") { console.error("missing minjs CJS export:", k); process.exit(1); } console.log("minjs CJS export OK:", k); }' $(NAMED_EXPORTS)
 
 .PHONY: all clean test jshint mocha test-dep smoke-minjs
