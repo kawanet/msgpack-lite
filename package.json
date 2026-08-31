@@ -35,6 +35,7 @@
     "@rollup/plugin-commonjs": "^29.0.3",
     "@rollup/plugin-multi-entry": "^7.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
+    "assert": "^1.5.1",
     "browserify": "^17.0.1",
     "concat-stream": "^2.0.0",
     "jshint": "^2.13.6",
