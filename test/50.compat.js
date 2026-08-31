@@ -3,7 +3,7 @@
 var assert = require("assert");
 
 var msgpack = require("../index");
-var TITLE = __filename.replace(/^.*\//, "");
+var TITLE = "50.compat.js";
 
 var data = require("./example.json");
 

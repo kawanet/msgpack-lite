@@ -1,10 +1,8 @@
 #!/usr/bin/env mocha -R spec
 
 var assert = require("assert");
-var msgpackJS = "../index";
-var isBrowser = ("undefined" !== typeof window);
-var msgpack = isBrowser && window.msgpack || require(msgpackJS);
-var TITLE = __filename.replace(/^.*\//, "");
+var msgpack = require("../index");
+var TITLE = "64.decode-limit.js";
 
 describe(TITLE, function() {
   // An array32/map32 header may declare up to 2^32-1 elements. Decoding a

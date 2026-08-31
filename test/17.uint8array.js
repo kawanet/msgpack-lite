@@ -2,10 +2,8 @@
 
 var assert = require("assert");
 var Bufferish = require("../lib/bufferish");
-var msgpackJS = "../index";
-var isBrowser = ("undefined" !== typeof window);
-var msgpack = isBrowser && window.msgpack || require(msgpackJS);
-var TITLE = __filename.replace(/^.*\//, "");
+var msgpack = require("../index");
+var TITLE = "17.uint8array.js";
 
 var HAS_UINT8ARRAY = ("undefined" !== typeof Uint8Array);
 

@@ -3,6 +3,9 @@
   "description": "Fast Pure JavaScript MessagePack Encoder and Decoder",
   "version": "0.2.1",
   "author": "@kawanet",
+  "allowScripts": {
+    "msgpackr-extract": false
+  },
   "bin": {
     "msgpack": "./bin/msgpack"
   },
@@ -29,6 +32,10 @@
   },
   "devDependencies": {
     "@msgpack/msgpack": "^3.1.3",
+    "@rollup/plugin-commonjs": "^29.0.3",
+    "@rollup/plugin-multi-entry": "^7.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "assert": "^1.5.1",
     "browserify": "^17.0.1",
     "concat-stream": "^2.0.0",
     "jshint": "^2.13.6",
@@ -36,7 +43,15 @@
     "msgpack5": "^6.0.2",
     "msgpackr": "^2.0.6",
     "notepack.io": "^3.0.1",
+    "rollup": "^4.63.1",
     "uglify-js": "^3.19.3"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=22.18.0",
+      "onFail": "warn"
+    }
   },
   "files": [
     "LICENSE",
@@ -85,5 +100,6 @@
     "make": "make",
     "size": "make clean dist/msgpack.min.js && gzip -9fkv dist/msgpack.min.js && ls -l dist",
     "test": "make test"
-  }
+  },
+  "type": "commonjs"
 }
