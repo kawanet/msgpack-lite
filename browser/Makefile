@@ -13,7 +13,7 @@ ASSERT_DST := tests/assert.shim.js
 
 ALL := $(TEST_DST) $(BUFFER_DST) $(ASSERT_DST)
 
-all: $(ALL)
+all: dist $(ALL)
 
 bundled: all
 
@@ -28,7 +28,7 @@ install:
 dist:
 	$(MAKE) -C .. dist/msgpack.min.js
 
-test: dist all
+test: all
 	cd .. && node browser/tests.cli.mjs
 
 $(TEST_DST): $(TEST_SRC) Makefile
