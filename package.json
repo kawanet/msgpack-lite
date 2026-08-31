@@ -46,6 +46,13 @@
     "rollup": "^4.63.1",
     "uglify-js": "^3.19.3"
   },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": ">=22.18.0",
+      "onFail": "warn"
+    }
+  },
   "files": [
     "LICENSE",
     "README.md",
