@@ -17,7 +17,8 @@ const run = async () => {
         // stats on window when done, and an unfinished or broken page just
         // never does -- so this times out instead of passing.
         await page.waitForFunction(() => window.mochaStats !== undefined, null, {timeout: 60_000})
-        const {tests, failures} = await page.evaluate(() => window.mochaStats)
+        const {tests, passes, pending, failures, duration} = await page.evaluate(() => window.mochaStats)
+        console.log(`${passes} passing, ${failures} failing, ${pending} pending (${tests} tests, ${duration}ms)`)
 
         if (pageErrors.length) {
             throw new AggregateError(pageErrors, "Browser page errors occurred")
