@@ -14,3 +14,4 @@ package-lock.json
 *.js.gz
 gh-pages/
 *.log
+!browser/tests.cli.mjs

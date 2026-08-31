@@ -17,8 +17,6 @@
 <script src="./tests/assert.shim.js"></script>
 <script src="./tests/buffer.shim.js"></script>
 <script src="./tests/bundled.js"></script>
-<script class="mocha-exec">
-    mocha.run();
-</script>
+<script>const runner = mocha.run(() => (window.mochaStats = runner.stats));</script>
 </body>
 </html>
