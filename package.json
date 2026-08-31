@@ -3,6 +3,9 @@
   "description": "Fast Pure JavaScript MessagePack Encoder and Decoder",
   "version": "0.2.1",
   "author": "@kawanet",
+  "allowScripts": {
+    "msgpackr-extract": false
+  },
   "bin": {
     "msgpack": "./bin/msgpack"
   },
@@ -85,5 +88,6 @@
     "make": "make",
     "size": "make clean dist/msgpack.min.js && gzip -9fkv dist/msgpack.min.js && ls -l dist",
     "test": "make test"
-  }
+  },
+  "type": "commonjs"
 }
