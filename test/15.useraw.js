@@ -1,10 +1,8 @@
 #!/usr/bin/env mocha -R spec
 
 var assert = require("assert");
-var msgpackJS = "../index";
-var isBrowser = ("undefined" !== typeof window);
-var msgpack = isBrowser && window.msgpack || require(msgpackJS);
-var TITLE = __filename.replace(/^.*\//, "");
+var msgpack = require("../index");
+var TITLE = "15.useraw.js";
 
 var TESTS = [0, 1, 31, 32, 255, 256, 65535, 65536];
 

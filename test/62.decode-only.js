@@ -4,7 +4,7 @@ var assert = require("assert");
 
 var decode = require("../lib/decode").decode;
 var ExtBuffer = require("../lib/ext-buffer").ExtBuffer;
-var TITLE = __filename.replace(/^.*\//, "");
+var TITLE = "62.decode-only.js";
 
 describe(TITLE, function() {
   it("decode", function() {
