@@ -1,0 +1,4 @@
+.github/
+browser/
+dist/
+node_modules/

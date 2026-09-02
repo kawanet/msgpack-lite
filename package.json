@@ -1,7 +1,7 @@
 {
   "name": "msgpack-lite",
   "description": "Fast Pure JavaScript MessagePack Encoder and Decoder",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "@kawanet",
   "allowScripts": {
     "msgpackr-extract": false
@@ -41,7 +41,7 @@
     "jshint": "^2.13.6",
     "mocha": "^11.8.0",
     "msgpack5": "^6.0.2",
-    "msgpackr": "^2.0.6",
+    "msgpackr": "^2.1.0",
     "notepack.io": "^3.0.1",
     "rollup": "^4.63.1",
     "uglify-js": "^3.19.3"
