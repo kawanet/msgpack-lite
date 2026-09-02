@@ -47,15 +47,16 @@ $(BUFFER_DST): $(BUFFER_SRC) Makefile
 	../node_modules/.bin/rollup $< --format iife \
 	--plugin @rollup/plugin-commonjs \
 	--plugin @rollup/plugin-node-resolve \
-	--name "__BUFFER__" | \
-	perl -pe 's#^var __BUFFER__#const {Buffer}#' > $@
+	--banner "const {Buffer} = " \
+	--file $@
 
 $(ASSERT_DST): $(ASSERT_SRC) Makefile
 	mkdir -p $(dir $@)
 	../node_modules/.bin/rollup $< --format iife \
 	--plugin @rollup/plugin-commonjs \
 	--plugin @rollup/plugin-node-resolve \
-	--name "assert" > $@
+	--name "assert" \
+	--file $@
 
 clean:
 	/bin/rm -fr $(ALL)
