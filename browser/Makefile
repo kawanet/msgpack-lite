@@ -38,8 +38,8 @@ $(TEST_DST): $(TEST_SRC) Makefile
 	--plugin @rollup/plugin-multi-entry \
 	--plugin @rollup/plugin-node-resolve \
 	--external 'assert,../index' \
-	--globals 'assert:assert' \
-	--globals '../index:msgpack' \
+	--globals 'assert:assert,../index:msgpack' \
+	--no-makeAbsoluteExternalsRelative \
 	--file $@
 
 $(BUFFER_DST): $(BUFFER_SRC) Makefile
