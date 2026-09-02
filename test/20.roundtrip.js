@@ -1,6 +1,6 @@
 #!/usr/bin/env mocha -R spec
 
-var assert = require("assert");
+var assert = require("assert").strict;
 var msgpack = require("../index");
 var TITLE = "20.roundtrip.js";
 
@@ -57,7 +57,7 @@ function run_tests(codecopt) {
     [null, undefined].forEach(function(value) {
       var encoded = msgpack.encode(value, options);
       var decoded = msgpack.decode(encoded, options);
-      assert.equal(decoded, value);
+      assert.equal(STR(decoded), STR(value));
     });
   });
 
@@ -165,8 +165,8 @@ function run_tests(codecopt) {
       var encoded = msgpack.encode(value, options);
       var decoded = msgpack.decode(encoded, options);
       assert.equal(decoded.length, length);
-      assert.equal(decoded[0], value[0]);
-      assert.equal(decoded[length - 1], value[length - 1]);
+      assert.equal(STR(decoded[0]), STR(value[0]));
+      assert.equal(STR(decoded[length - 1]), STR(value[length - 1]));
     });
   });
 
@@ -215,4 +215,8 @@ function run_tests(codecopt) {
       assert.equal(decoded[length - 1], value[length - 1]);
     });
   });
+}
+
+function STR(v) {
+  return v == null ? "null" : String(v);
 }
