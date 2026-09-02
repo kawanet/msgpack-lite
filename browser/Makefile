@@ -8,7 +8,7 @@ TEST_SRC := ../test/[12]*.js ../test/6[12]*.js
 TEST_DST := tests/bundled.js
 BUFFER_SRC := ../node_modules/buffer/index.js
 BUFFER_DST := tests/buffer.shim.js
-ASSERT_SRC := ../node_modules/assert/assert.js
+ASSERT_SRC := ../node_modules/assert/build/assert.js
 ASSERT_DST := tests/assert.shim.js
 
 ALL := $(TEST_DST) $(BUFFER_DST) $(ASSERT_DST)
@@ -55,6 +55,7 @@ $(ASSERT_DST): $(ASSERT_SRC) Makefile
 	../node_modules/.bin/rollup $< --format iife \
 	--plugin @rollup/plugin-commonjs \
 	--plugin @rollup/plugin-node-resolve \
+	--intro "const process = {env: {}}" \
 	--name "assert" \
 	--file $@
 

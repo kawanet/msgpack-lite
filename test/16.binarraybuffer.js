@@ -1,6 +1,6 @@
 #!/usr/bin/env mocha -R spec
 
-var assert = require("assert");
+var assert = require("assert").strict;
 var msgpack = require("../index");
 var TITLE = "16.binarraybuffer.js";
 var HAS_UINT8ARRAY = ("undefined" !== typeof Uint8Array);

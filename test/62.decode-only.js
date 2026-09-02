@@ -1,6 +1,6 @@
 #!/usr/bin/env mocha -R spec
 
-var assert = require("assert");
+var assert = require("assert").strict;
 
 var decode = require("../lib/decode").decode;
 var ExtBuffer = require("../lib/ext-buffer").ExtBuffer;

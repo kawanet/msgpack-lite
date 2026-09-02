@@ -2,7 +2,7 @@
 
 /*jshint -W053 */
 
-var assert = require("assert");
+var assert = require("assert").strict;
 var msgpack = require("../index");
 var TITLE = "22.typedarray.js";
 

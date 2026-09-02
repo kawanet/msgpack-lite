@@ -6,7 +6,7 @@ var Int64Buffer = require("int64-buffer");
 var Uint64BE = Int64Buffer.Uint64BE;
 var Int64BE = Int64Buffer.Int64BE;
 
-var assert = require("assert");
+var assert = require("assert").strict;
 var msgpack = require("../index");
 var TITLE = "24.int64.js";
 

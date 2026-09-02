@@ -1,6 +1,6 @@
 #!/usr/bin/env mocha -R spec
 
-var assert = require("assert");
+var assert = require("assert").strict;
 var HAS_MAP = ("undefined" !== typeof Map);
 var msgpack = require("../index");
 var TITLE = "27.usemap.js";

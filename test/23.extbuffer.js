@@ -2,7 +2,7 @@
 
 /*jshint -W053 */
 
-var assert = require("assert");
+var assert = require("assert").strict;
 var msgpack = require("../index");
 var TITLE = "23.extbuffer.js";
 
@@ -63,10 +63,10 @@ describe(TITLE, function() {
     for (j = 0; j < 10; j++) {
       assert.equal(decoded[j].type, type);
       assert.equal(decoded[j].buffer.length, 2);
-      assert.deepEqual(decoded[j].buffer, content(j));
+      assert.deepEqual(toArray(decoded[j].buffer), toArray(content(j)));
     }
     var encoded = msgpack.encode(decoded);
-    assert.deepEqual(encoded, fullBuffer);
+    assert.deepEqual(toArray(encoded), toArray(fullBuffer));
   }
 
 });
