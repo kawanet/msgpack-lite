@@ -37,8 +37,10 @@ $(TEST_DST): $(TEST_SRC) Makefile
 	--plugin @rollup/plugin-commonjs \
 	--plugin @rollup/plugin-multi-entry \
 	--plugin @rollup/plugin-node-resolve \
-	--external 'assert,../index' |\
-	perl -pe 's#^}\)\(require.*\);#})(assert, msgpack)#' > $@
+	--external 'assert,../index' \
+	--globals 'assert:assert' \
+	--globals '../index:msgpack' \
+	--file $@
 
 $(BUFFER_DST): $(BUFFER_SRC) Makefile
 	mkdir -p $(dir $@)
