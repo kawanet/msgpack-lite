@@ -3,7 +3,6 @@
 SRC=./lib/browser.js
 LIB=./index.js ./lib/*.js
 TESTS=./test/*.js
-HINTS=$(LIB) $(TESTS) ./*.json ./test/*.json
 CLASS=msgpack
 DIST=./dist
 JSTEMP=./dist/msgpack.browserify.js
@@ -34,7 +33,7 @@ mocha:
 	./node_modules/.bin/mocha -R spec $(TESTS)
 
 jshint:
-	./node_modules/.bin/jshint $(HINTS)
+	./node_modules/.bin/jshint . --extra-ext .json
 
 # Requiring the library must stay silent. Deprecation warnings only
 # surface under --pending-deprecation, so ask for them explicitly.
