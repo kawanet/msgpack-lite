@@ -11,3 +11,5 @@ exports.createDecodeStream = require("./lib/decode-stream").createDecodeStream;
 
 exports.createCodec = require("./lib/ext").createCodec;
 exports.codec = require("./lib/codec").codec;
+
+exports.ExtBuffer = require("./lib/ext-buffer").ExtBuffer;
