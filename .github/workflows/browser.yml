@@ -1,9 +1,6 @@
 name: Browser CI
 
-on:
-  push:
-    branches: [main]
-  workflow_dispatch:
+on: [ push, pull_request ]
 
 permissions:
   contents: read
@@ -24,5 +21,6 @@ jobs:
         with:
           node-version: "24"
 
+      - run: npm install
       - run: make -C browser install
       - run: make -C browser test
