@@ -27,10 +27,8 @@ $(JSDEST): $(JSTEMP)
 	@ls -l $@
 	@test "$$(wc -c < $@)" -le $(MINJS_MAX_BYTES) || { echo "ERROR: $@ exceeds $(MINJS_MAX_BYTES) byte cap" >&2; exit 1; }
 
-test: jshint mocha test-dep smoke-minjs
-
-mocha:
-	./node_modules/.bin/mocha -R spec $(TESTS)
+test: jshint test-dep smoke-minjs
+	node --test $(TESTS)
 
 jshint:
 	./node_modules/.bin/jshint . --extra-ext .json
@@ -49,4 +47,4 @@ smoke-minjs: $(JSDEST)
 	(echo 'module = void 0; exports = void 0;' && cat $< && echo '; for (const k of process.argv.slice(2)) { if (typeof $(CLASS)[k] !== "undefined") { console.error("unexpected browser export:", k); process.exit(1); }}') | node - $(NODE_ONLY_EXPORTS)
 	node --input-type=commonjs -e 'const m = require("$(JSDEST)"); for (const k of process.argv.slice(1)) { if (typeof m[k] !== "function") { console.error("missing minjs CJS export:", k); process.exit(1); } console.log("minjs CJS export OK:", k); }' $(NAMED_EXPORTS)
 
-.PHONY: all clean test jshint mocha test-dep smoke-minjs
+.PHONY: all clean test jshint test-dep smoke-minjs

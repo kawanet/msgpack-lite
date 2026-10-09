@@ -1,6 +1,5 @@
-#!/usr/bin/env mocha -R spec
-
-var assert = require("assert").strict;
+var {describe, it} = require("node:test");
+var assert = require("node:assert").strict;
 var HAS_MAP = ("undefined" !== typeof Map);
 var msgpack = require("../index");
 var TITLE = "27.usemap.js";
@@ -45,8 +44,7 @@ describeSkip(TITLE, function() {
     });
   });
 
-  it("Map (large)", function() {
-    this.timeout(30000);
+  it("Map (large)", {timeout: 30000}, function () {
     pattern(65536, 65537).forEach(function(length) {
       var value = new Map();
       for (var i = 0; i < length; i++) {
