@@ -1,6 +1,5 @@
-#!/usr/bin/env mocha -R spec
-
-var assert = require("assert").strict;
+var {describe, it} = require("node:test");
+var assert = require("node:assert").strict;
 var Stream = require("stream");
 var concat = require("concat-stream");
 
@@ -27,7 +26,7 @@ var invalencoded = Buffer.from([0xc1]);
 
 describe(TITLE, function() {
 
-  it("msgpack.createEncodeStream()", function(done) {
+  it("msgpack.createEncodeStream()", () => new Promise(done => {
     var encoder = msgpack.createEncodeStream();
     encoder.pipe(concat(onEnd));
     encoder.write(src[0]);
@@ -39,9 +38,9 @@ describe(TITLE, function() {
       assert.deepEqual(data, encodeall);
       done();
     }
-  });
+  }));
 
-  it("msgpack.createDecodeStream()", function(done) {
+  it("msgpack.createDecodeStream()", () => new Promise(done => {
     var count = 0;
     var decoder = msgpack.createDecodeStream();
 
@@ -55,9 +54,9 @@ describe(TITLE, function() {
       assert.deepEqual(data, src[count++]);
       if (count === 3) done();
     }
-  });
+  }));
 
-  it("pipe(encoder).pipe(decoder)", function(done) {
+  it("pipe(encoder).pipe(decoder)", () => new Promise(done => {
     var count = 0;
     var inputStream = new Stream.PassThrough({objectMode: true});
     var encoder = msgpack.createEncodeStream();
@@ -76,9 +75,9 @@ describe(TITLE, function() {
       assert.deepEqual(data, src[count++]);
       if (count === 3) done();
     }
-  });
+  }));
 
-  it("pipe(decoder).pipe(encoder)", function(done) {
+  it("pipe(decoder).pipe(encoder)", () => new Promise(done => {
     var inputStream = new Stream.PassThrough();
     var decoder = msgpack.createDecodeStream();
     var passThrough = new Stream.PassThrough({objectMode: true});
@@ -94,9 +93,9 @@ describe(TITLE, function() {
       assert.deepEqual(data, encodeall);
       done();
     }
-  });
+  }));
 
-  it("write()", function(done) {
+  it("write()", () => new Promise(done => {
     var count = 0;
     var buf = msgpack.encode(example);
     var decoder = msgpack.createDecodeStream();
@@ -118,9 +117,9 @@ describe(TITLE, function() {
       assert.deepEqual(data, example);
       if (++count === 3) done();
     }
-  });
+  }));
 
-  it("msgpack.createDecodeStream().on('error',fn)", function(done) {
+  it("msgpack.createDecodeStream().on('error',fn)", () => new Promise(done => {
     var decoder = msgpack.createDecodeStream();
 
     decoder.on("error", function(e) {
@@ -135,9 +134,9 @@ describe(TITLE, function() {
     });
 
     decoder.end(invalencoded);
-  });
+  }));
 
-  it("msgpack.createEncodeStream().on('error',fn)", function(done) {
+  it("msgpack.createEncodeStream().on('error',fn)", () => new Promise(done => {
     var circular = [];
     circular.push(circular);
 
@@ -162,6 +161,6 @@ describe(TITLE, function() {
     encoder.resume();
 
     encoder.end(circular);
-  });
+  }));
 
 });

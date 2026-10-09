@@ -35,11 +35,9 @@
     "@rollup/plugin-commonjs": "^29.0.3",
     "@rollup/plugin-multi-entry": "^7.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
-    "assert": "^2.1.0",
     "browserify": "^17.0.1",
     "concat-stream": "^2.0.0",
     "jshint": "^2.13.6",
-    "mocha": "^11.8.0",
     "msgpack5": "^6.0.2",
     "msgpackr": "^2.1.0",
     "notepack.io": "^3.0.1",
@@ -64,14 +62,13 @@
   ],
   "homepage": "https://github.com/kawanet/msgpack-lite",
   "jshintConfig": {
-    "es3": true,
+    "esversion": 6,
     "globals": {
       "JSON": true,
       "Symbol": true,
       "Map": true,
       "window": true
     },
-    "mocha": true,
     "node": true,
     "undef": true
   },

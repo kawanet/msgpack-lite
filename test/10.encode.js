@@ -1,6 +1,5 @@
-#!/usr/bin/env mocha -R spec
-
-var assert = require("assert").strict;
+var {describe, it} = require("node:test");
+var assert = require("node:assert").strict;
 var msgpack = require("../index");
 var TITLE = "10.encode.js";
 
@@ -96,8 +95,7 @@ function run_tests(codecopt) {
   // bin 8 -- 0xc4
   // bin 16 -- 0xc5
   // bin 32 -- 0xc6
-  it("c4-c6: bin 8/16/32", function() {
-    this.timeout(30000);
+  it("c4-c6: bin 8/16/32", {timeout: 30000}, function () {
     var bin;
     bin = Buffer.alloc(1);
     bin.fill(0);
@@ -144,8 +142,7 @@ function run_tests(codecopt) {
   // str 8 -- 0xd9
   // str 16 -- 0xda
   // str 32 -- 0xdb
-  it("d9-db: str 8/16/32", function() {
-    this.timeout(30000);
+  it("d9-db: str 8/16/32", {timeout: 30000}, function () {
     var str, src = "a";
     for (var i = 0; i < 17; i++) src += src;
 
@@ -164,8 +161,7 @@ function run_tests(codecopt) {
 
   // array 16 -- 0xdc
   // array 32 -- 0xdd
-  it("dc-dd: array 16/32", function() {
-    this.timeout(30000);
+  it("dc-dd: array 16/32", {timeout: 30000}, function () {
     var i, exp;
     var src = new Array(256);
     for (i = 0; i < 256; i++) src[i] = i & 0x7F;
@@ -179,8 +175,7 @@ function run_tests(codecopt) {
 
   // map 16 -- 0xde
   // map 32 -- 0xdf
-  it("de-df: map 16/32", function() {
-    this.timeout(30000);
+  it("de-df: map 16/32", {timeout: 30000}, function () {
     var i, actual;
     var map = {};
     for (i = 0; i < 256; i++) map[i] = i;

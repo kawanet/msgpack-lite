@@ -1,6 +1,5 @@
-#!/usr/bin/env mocha -R spec
-
-var assert = require("assert").strict;
+var {describe, it} = require("node:test");
+var assert = require("node:assert").strict;
 var msgpack = require("../index");
 var TITLE = "20.roundtrip.js";
 
@@ -112,8 +111,7 @@ function run_tests(codecopt) {
     });
   });
 
-  it("string (ASCII)", function() {
-    this.timeout(30000);
+  it("string (ASCII)", {timeout: 30000}, function () {
     pattern(0, 65537).forEach(function(length) {
       var value = STRING_ASCII.substr(0, length);
       var encoded = msgpack.encode(value, options);
@@ -122,8 +120,7 @@ function run_tests(codecopt) {
     });
   });
 
-  it("string (GREEK)", function() {
-    this.timeout(30000);
+  it("string (GREEK)", {timeout: 30000}, function () {
     pattern(0, 65537).forEach(function(length) {
       var value = STRING_GREEK.substr(0, length);
       var encoded = msgpack.encode(value, options);
@@ -132,8 +129,7 @@ function run_tests(codecopt) {
     });
   });
 
-  it("string (ASIAN)", function() {
-    this.timeout(30000);
+  it("string (ASIAN)", {timeout: 30000}, function () {
     pattern(0, 65537).forEach(function(length) {
       var value = STRING_ASIAN.substr(0, length);
       var encoded = msgpack.encode(value, options);
@@ -157,8 +153,7 @@ function run_tests(codecopt) {
     });
   });
 
-  it("array (large)", function() {
-    this.timeout(30000);
+  it("array (large)", {timeout: 30000}, function () {
     pattern(0, 65537).forEach(function(length) {
       var value = new Array(length);
       assert.equal(value.length, length);
@@ -186,8 +181,7 @@ function run_tests(codecopt) {
     });
   });
 
-  it("object map (large)", function() {
-    this.timeout(30000);
+  it("object map (large)", {timeout: 30000}, function () {
     pattern(65536, 65537).forEach(function(length) {
       var value = {};
       for (var i = 0; i < length; i++) {
@@ -202,8 +196,7 @@ function run_tests(codecopt) {
     });
   });
 
-  it("buffer", function() {
-    this.timeout(30000);
+  it("buffer", {timeout: 30000}, function () {
     pattern(2, 65537).forEach(function(length, idx) {
       var value = Buffer.alloc(length);
       value.fill(idx);

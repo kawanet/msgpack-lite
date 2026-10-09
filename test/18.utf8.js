@@ -1,6 +1,5 @@
-#!/usr/bin/env mocha -R spec
-
-var assert = require("assert").strict;
+var {describe, it} = require("node:test");
+var assert = require("node:assert").strict;
 var msgpack = require("../index");
 var TITLE = "18.utf8.js";
 

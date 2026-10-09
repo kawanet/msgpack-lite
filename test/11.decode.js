@@ -1,6 +1,5 @@
-#!/usr/bin/env mocha -R spec
-
-var assert = require("assert").strict;
+var {describe, it} = require("node:test");
+var assert = require("node:assert").strict;
 var msgpack = require("../index");
 var TITLE = "11.decode.js";
 
@@ -79,13 +78,8 @@ function run_tests(BUFFER) {
   });
 
   // (never used) -- 0xc1
-  it("c1: (never used)", function(done) {
-    try {
-      msgpack.decode(BUFFER([0xc1]));
-      done("should throw");
-    } catch (e) {
-      done();
-    }
+  it("c1: (never used)", function() {
+    assert.throws(() => msgpack.decode(BUFFER([0xc1])));
   });
 
   // false -- 0xc2
@@ -98,8 +92,7 @@ function run_tests(BUFFER) {
   // bin 8 -- 0xc4
   // bin 16 -- 0xc5
   // bin 32 -- 0xc6
-  it("c4-c6: bin 8/16/32", function() {
-    this.timeout(30000);
+  it("c4-c6: bin 8/16/32", {timeout: 30000}, function () {
     var bin, buf, act;
 
     bin = BUFFER(1);
@@ -124,8 +117,7 @@ function run_tests(BUFFER) {
   // ext 8 -- 0xc7
   // ext 16 -- 0xc8
   // ext 32 -- 0xc9
-  it("c7-c9: ext 8/16/32", function() {
-    this.timeout(30000);
+  it("c7-c9: ext 8/16/32", {timeout: 30000}, function () {
     var ext, buf, act;
 
     ext = BUFFER(1);
@@ -245,8 +237,7 @@ function run_tests(BUFFER) {
   // str 8 -- 0xd9
   // str 16 -- 0xda
   // str 32 -- 0xdb
-  it("d9-db: str 8/16/32", function() {
-    this.timeout(30000);
+  it("d9-db: str 8/16/32", {timeout: 30000}, function () {
     var str, buf, src = "a";
     for (var i = 0; i < 17; i++) src += src;
 
@@ -269,8 +260,7 @@ function run_tests(BUFFER) {
 
   // array 16 -- 0xdc
   // array 32 -- 0xdd
-  it("dc-dd: array 16/32", function() {
-    this.timeout(30000);
+  it("dc-dd: array 16/32", {timeout: 30000}, function () {
     var i, src;
     var array = new Array(256);
     for (i = 0; i < 256; i++) array[i] = i & 0x7F;
@@ -284,8 +274,7 @@ function run_tests(BUFFER) {
 
   // map 16 -- 0xde
   // map 32 -- 0xdf
-  it("de-df: map 16/32", function() {
-    this.timeout(30000);
+  it("de-df: map 16/32", {timeout: 30000}, function () {
     var i, src, key;
     var map = {};
     var array = [];
