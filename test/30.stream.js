@@ -26,7 +26,8 @@ var invalencoded = Buffer.from([0xc1]);
 
 describe(TITLE, function() {
 
-  it("msgpack.createEncodeStream()", () => new Promise(done => {
+  it("msgpack.createEncodeStream()", () => new Promise((resolve, reject) => {
+    var done = (err) => (err ? reject(err) : resolve());
     var encoder = msgpack.createEncodeStream();
     encoder.pipe(concat(onEnd));
     encoder.write(src[0]);
@@ -40,7 +41,8 @@ describe(TITLE, function() {
     }
   }));
 
-  it("msgpack.createDecodeStream()", () => new Promise(done => {
+  it("msgpack.createDecodeStream()", () => new Promise((resolve, reject) => {
+    var done = (err) => (err ? reject(err) : resolve());
     var count = 0;
     var decoder = msgpack.createDecodeStream();
 
@@ -56,7 +58,8 @@ describe(TITLE, function() {
     }
   }));
 
-  it("pipe(encoder).pipe(decoder)", () => new Promise(done => {
+  it("pipe(encoder).pipe(decoder)", () => new Promise((resolve, reject) => {
+    var done = (err) => (err ? reject(err) : resolve());
     var count = 0;
     var inputStream = new Stream.PassThrough({objectMode: true});
     var encoder = msgpack.createEncodeStream();
@@ -77,7 +80,8 @@ describe(TITLE, function() {
     }
   }));
 
-  it("pipe(decoder).pipe(encoder)", () => new Promise(done => {
+  it("pipe(decoder).pipe(encoder)", () => new Promise((resolve, reject) => {
+    var done = (err) => (err ? reject(err) : resolve());
     var inputStream = new Stream.PassThrough();
     var decoder = msgpack.createDecodeStream();
     var passThrough = new Stream.PassThrough({objectMode: true});
@@ -95,7 +99,8 @@ describe(TITLE, function() {
     }
   }));
 
-  it("write()", () => new Promise(done => {
+  it("write()", () => new Promise((resolve, reject) => {
+    var done = (err) => (err ? reject(err) : resolve());
     var count = 0;
     var buf = msgpack.encode(example);
     var decoder = msgpack.createDecodeStream();
@@ -119,7 +124,8 @@ describe(TITLE, function() {
     }
   }));
 
-  it("msgpack.createDecodeStream().on('error',fn)", () => new Promise(done => {
+  it("msgpack.createDecodeStream().on('error',fn)", () => new Promise((resolve, reject) => {
+    var done = (err) => (err ? reject(err) : resolve());
     var decoder = msgpack.createDecodeStream();
 
     decoder.on("error", function(e) {
@@ -136,7 +142,8 @@ describe(TITLE, function() {
     decoder.end(invalencoded);
   }));
 
-  it("msgpack.createEncodeStream().on('error',fn)", () => new Promise(done => {
+  it("msgpack.createEncodeStream().on('error',fn)", () => new Promise((resolve, reject) => {
+    var done = (err) => (err ? reject(err) : resolve());
     var circular = [];
     circular.push(circular);
 

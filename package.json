@@ -57,6 +57,7 @@
     "LICENSE",
     "README.md",
     "bin/msgpack",
+    "browser/import.mjs",
     "dist/msgpack.min.js",
     "global.js",
     "index.js",
