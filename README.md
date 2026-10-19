@@ -252,12 +252,26 @@ const codec = msgpack.createCodec({binarraybuffer: true, preset: true});
 const codec = msgpack.createCodec({uint8array: true});
 ```
 
-`usemap`: Uses the global JavaScript Map type, if available, to unpack
-MessagePack map elements.
+`usemap`: Uses the global JavaScript Map type, if available, to pack Map
+instances and unpack MessagePack map elements.
 
 ```js
 const codec = msgpack.createCodec({usemap: true});
 ```
+
+To combine Maps with built-in extension types such as `Uint8Array`, also enable
+`preset`. Custom codecs do not inherit the default codec's extension handlers:
+`usemap` alone does not preserve typed arrays. Pass the codec to both encoding
+and decoding to preserve both types.
+
+```js
+const codec = msgpack.createCodec({usemap: true, preset: true});
+const value = new Map([["bytes", new Uint8Array([1, 2, 3])]]);
+const encoded = msgpack.encode(value, {codec});
+const decoded = msgpack.decode(encoded, {codec});
+// decoded is a Map; decoded.get("bytes") is Uint8Array [1, 2, 3].
+```
+
 
 ### Compatibility Mode
 
