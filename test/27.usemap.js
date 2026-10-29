@@ -25,6 +25,16 @@ var describeSkip = HAS_MAP ? describe : describe.skip;
 
 describeSkip(TITLE, function() {
 
+  it("Map with preset typed arrays", function() {
+    var codec = msgpack.createCodec({usemap: true, preset: true});
+    var value = new Map([["bytes", new Uint8Array([1, 2, 3])]]);
+    var encoded = msgpack.encode(value, {codec: codec});
+    var decoded = msgpack.decode(encoded, {codec: codec});
+    assert.equal(true, decoded instanceof Map);
+    assert.equal(true, decoded.get("bytes") instanceof Uint8Array);
+    assert.deepEqual(decoded.get("bytes"), value.get("bytes"));
+  });
+
   it("Map (small)", function() {
     pattern(0, 257).forEach(function(length) {
       var value = new Map();
