@@ -1,6 +1,10 @@
 name: Browser CI
 
-on: [ push, pull_request ]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -14,6 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
+    # browser/Makefile attaches to the Chrome on this port instead of installing one.
+    env:
+      CDP_PORT: 9222
+
     steps:
       - uses: actions/checkout@v7
 
@@ -22,5 +30,9 @@ jobs:
           node-version: "24"
 
       - run: npm install
-      - run: make -C browser install
+
+      # The runner image ships Google Chrome. Attaching to it needs no apt packages.
+      - run: dbus-run-session -- google-chrome --headless --remote-debugging-port=$CDP_PORT about:blank &
+      - run: curl -fsS --retry 10 --retry-connrefused http://127.0.0.1:$CDP_PORT/json/version
+
       - run: make -C browser test
