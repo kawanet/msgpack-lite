@@ -25,7 +25,12 @@ jobs:
         with:
           node-version: "24"
 
-      - run: sudo apt-get update --error-on=any
       - run: npm install
-      - run: make -C browser install
+
+      # The runner image ships Google Chrome. Attaching to it needs no apt packages.
+      - run: google-chrome --headless --remote-debugging-port=9222 about:blank &
+      - run: curl -fsS --retry 10 --retry-connrefused http://127.0.0.1:9222/json/version
+
       - run: make -C browser test
+        env:
+          PLAYWRIGHT_CONFIG: node_modules/playwright-js-cli/playwright-config/connect-over-cdp.json

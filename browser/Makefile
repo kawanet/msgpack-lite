@@ -9,6 +9,9 @@ BUFFER_DST := tests/buffer.shim.js
 
 ALL := $(TEST_DST) $(BUFFER_DST)
 
+# A playwright-js-cli config file. CI sets it to attach to a running Chrome over CDP.
+PLAYWRIGHT_CONFIG ?=
+
 all: dist $(ALL)
 
 bundled: all
@@ -21,6 +24,7 @@ dist:
 
 test: all
 	cd .. && node ./node_modules/.bin/chromium-js \
+	$(if $(PLAYWRIGHT_CONFIG),--playwright-config $(PLAYWRIGHT_CONFIG)) \
 	--script browser/tests/buffer.shim.js \
 	--script dist/msgpack.min.js \
 	--alias msgpack-lite=browser/import.mjs \
