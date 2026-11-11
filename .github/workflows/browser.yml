@@ -25,6 +25,7 @@ jobs:
         with:
           node-version: "24"
 
+      - run: sudo apt-get update --error-on=any
       - run: npm install
       - run: make -C browser install
       - run: make -C browser test
