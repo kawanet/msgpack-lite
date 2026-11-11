@@ -7,28 +7,38 @@ TEST_DST := tests/bundled.mjs
 BUFFER_SRC := ../node_modules/buffer/index.js
 BUFFER_DST := tests/buffer.shim.js
 
-ALL := $(TEST_DST) $(BUFFER_DST)
+# CI sets CDP_PORT to attach to a running Chrome over CDP instead of installing one.
+PLAYWRIGHT_CONFIG := tests/playwright-config.json
 
-# A playwright-js-cli config file. CI sets it to attach to a running Chrome over CDP.
-PLAYWRIGHT_CONFIG ?=
+ALL := $(TEST_DST) $(BUFFER_DST) $(PLAYWRIGHT_CONFIG)
 
 all: dist $(ALL)
 
 bundled: all
 
 install:
-	cd .. && node ./node_modules/.bin/playwright install chromium --only-shell --with-deps
+	if [ -z "$(CDP_PORT)" ]; then \
+		cd .. && node ./node_modules/.bin/playwright install chromium --only-shell --with-deps; \
+	fi
 
 dist:
 	$(MAKE) -C .. dist/msgpack.min.js
 
-test: all
+test: all install
 	cd .. && node ./node_modules/.bin/chromium-js \
-	$(if $(PLAYWRIGHT_CONFIG),--playwright-config $(PLAYWRIGHT_CONFIG)) \
+	--playwright-config browser/$(PLAYWRIGHT_CONFIG) \
 	--script browser/tests/buffer.shim.js \
 	--script dist/msgpack.min.js \
 	--alias msgpack-lite=browser/import.mjs \
 	--test browser/tests/bundled.mjs
+
+$(PLAYWRIGHT_CONFIG): Makefile
+	mkdir -p $(dir $@)
+	if [ -n "$(CDP_PORT)" ]; then \
+		echo '{"connectOverCDP": "http://127.0.0.1:$(CDP_PORT)"}' > $@; \
+	else \
+		echo '{}' > $@; \
+	fi
 
 $(TEST_DST): $(TEST_SRC) Makefile
 	mkdir -p $(dir $@)
