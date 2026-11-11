@@ -1,6 +1,10 @@
 name: Browser CI
 
-on: [ push, pull_request ]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
