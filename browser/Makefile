@@ -60,6 +60,6 @@ $(BUFFER_DST): $(BUFFER_SRC) Makefile
 	--file $@
 
 clean:
-	/bin/rm -fr $(ALL)
+	/bin/rm -fr tests $(ALL)
 
 .PHONY: all bundled dist install test clean
