@@ -33,6 +33,6 @@ jobs:
 
       # The runner image ships Google Chrome. Attaching to it needs no apt packages.
       - run: dbus-run-session -- google-chrome --headless --remote-debugging-port=$CDP_PORT about:blank &
-      - run: curl -fsS --retry 10 --retry-connrefused http://127.0.0.1:$CDP_PORT/json/version
+      - run: curl -fsS --retry 5 --retry-connrefused http://127.0.0.1:$CDP_PORT/json/version
 
       - run: make -C browser test
