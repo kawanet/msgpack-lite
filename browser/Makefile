@@ -8,7 +8,7 @@ BUFFER_SRC := ../node_modules/buffer/index.js
 BUFFER_DST := tests/buffer.shim.js
 
 # CI sets CDP_PORT to attach to a running Chrome over CDP instead of installing one.
-PLAYWRIGHT_CONFIG := tests/playwright-config.json
+PLAYWRIGHT_CONFIG := tests/playwright-config-$(or $(CDP_PORT),default).json
 
 ALL := $(TEST_DST) $(BUFFER_DST) $(PLAYWRIGHT_CONFIG)
 
@@ -60,6 +60,6 @@ $(BUFFER_DST): $(BUFFER_SRC) Makefile
 	--file $@
 
 clean:
-	/bin/rm -fr $(ALL)
+	/bin/rm -fr tests $(ALL)
 
 .PHONY: all bundled dist install test clean
