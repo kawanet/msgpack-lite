@@ -206,6 +206,39 @@ You can also pass the `codec` option to `msgpack.Decoder(options)`, `msgpack.Enc
 
 If you wish to modify the default built-in codec, you can access it at `msgpack.codec.preset`.
 
+#### Preserving JavaScript Sets
+
+`Set` has no built-in extension handler. Register one with an unused
+application-specific type number, encode its members as an array, and rebuild
+the Set when decoding:
+
+```js
+const msgpack = require("msgpack-lite");
+const SET_TYPE = 0x20; // choose a number not used by your other extensions
+const codec = msgpack.createCodec({preset: true});
+const options = {codec};
+
+codec.addExtPacker(SET_TYPE, Set, value =>
+  msgpack.encode(Array.from(value), options));
+codec.addExtUnpacker(SET_TYPE, bytes =>
+  new Set(msgpack.decode(bytes, options)));
+
+const input = new Set(["hello", 42, new Set(["nested"])]);
+const encoded = msgpack.encode(input, options);
+const decoded = msgpack.decode(encoded, options);
+// decoded and its nested Set are Set instances.
+```
+
+Pass the same codec to the outer calls and the extension callbacks so nested
+Sets use the same handlers. `preset: true` also retains built-in handlers for
+members such as Dates and typed arrays. An empty Set becomes an empty array
+inside the extension payload and decodes back to an empty Set.
+
+Both endpoints must agree on the type number and payload format; this is an
+application convention, not a standard MessagePack Set type. Members follow
+their normal MessagePack conversions, and this recipe does not support cyclic
+Sets or preserve shared object identity.
+
 ### Custom Codec Options
 
 `msgpack.createCodec()` function accepts some options.
