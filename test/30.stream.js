@@ -170,4 +170,66 @@ describe(TITLE, function() {
     encoder.end(circular);
   }));
 
+  it("wrap preserves top-level nil followed by false", () => new Promise((resolve, reject) => {
+    var decoder = msgpack.createDecodeStream({wrap: true});
+    var values = [];
+    decoder.on("data", value => values.push(value));
+    decoder.on("error", reject);
+    decoder.on("end", () => resolve(values));
+    decoder.end(Buffer.from([0xc0, 0xc2]));
+  }).then(values => assert.deepEqual(values, [{value: null}, {value: false}])));
+
+  it("wrap handles fragmented input and nested nulls", () => new Promise((resolve, reject) => {
+    var decoder = msgpack.createDecodeStream({wrap: true});
+    var expected = [null, {value: null}, [null], false, null];
+    var input = Buffer.concat(expected.map(value => msgpack.encode(value)));
+    var values = [];
+    decoder.on("data", value => values.push(value));
+    decoder.on("error", reject);
+    decoder.on("end", () => resolve({values: values, expected: expected}));
+    input.forEach(value => decoder.write(Buffer.from([value])));
+    decoder.end();
+  }).then(result => assert.deepEqual(result.values, result.expected.map(value => ({value: value})))));
+
+  it("wrap encodes envelopes without adding them to the wire format", () => new Promise((resolve, reject) => {
+    var encoder = msgpack.createEncodeStream({wrap: true});
+    var values = [null, false, {value: null}, [null], 0, "", undefined];
+    var chunks = [];
+    encoder.on("data", chunk => chunks.push(chunk));
+    encoder.on("error", reject);
+    encoder.on("end", () => resolve({actual: Buffer.concat(chunks), values: values}));
+    values.forEach(value => encoder.write({value: value}));
+    encoder.end();
+  }).then(result => assert.deepEqual(result.actual, Buffer.concat(result.values.map(value => msgpack.encode(value))))));
+
+  it("wrap round trips nulls and codec values through a pipeline", () => new Promise((resolve, reject) => {
+    var codec = msgpack.createCodec({preset: true});
+    var expected = [null, new Date(123456789), false];
+    var source = Stream.Readable.from(expected.map(value => ({value: value})));
+    var values = [];
+    var sink = new Stream.Writable({
+      objectMode: true,
+      write: function(value, encoding, callback) {
+        values.push(value);
+        callback();
+      }
+    });
+    Stream.pipeline(source, msgpack.createEncodeStream({wrap: true, codec: codec}),
+      msgpack.createDecodeStream({wrap: true, codec: codec}), sink, function(error) {
+        if (error) return reject(error);
+        resolve({values: values, expected: expected});
+      });
+  }).then(result => assert.deepEqual(result.values, result.expected.map(value => ({value: value})))));
+
+  it("wrap rejects an envelope without its own value property", () => new Promise((resolve, reject) => {
+    var encoder = msgpack.createEncodeStream({wrap: true});
+    encoder.on("error", resolve);
+    encoder.on("finish", () => reject(new Error("invalid envelope was accepted")));
+    encoder.resume();
+    encoder.end({missing: null});
+  }).then(error => {
+    assert.ok(error instanceof TypeError);
+    assert.match(error.message, /value property/);
+  }));
+
 });

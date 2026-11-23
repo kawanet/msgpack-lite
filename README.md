@@ -53,6 +53,33 @@ const decodeStream = msgpack.createDecodeStream();
 readStream.pipe(decodeStream).on("data", console.warn);
 ```
 
+#### Streaming top-level null values
+
+Node streams reserve a bare `null` chunk for end-of-stream, so the default
+object-stream interface cannot carry top-level MessagePack nil values. Use
+`wrap: true` when your data may contain them:
+
+```js
+const encodeStream = msgpack.createEncodeStream({wrap: true});
+const decodeStream = msgpack.createDecodeStream({wrap: true});
+encodeStream.pipe(decodeStream);
+decodeStream.on("data", record => console.log(record.value));
+
+encodeStream.write({value: null});
+encodeStream.end({value: false}); // logs null, then false
+```
+
+The wrapped decoder emits `{value: decodedValue}` for every value, including
+nil (`0xc0`). The wrapped encoder requires an object with its own `value`
+property and encodes only that property. The envelope is not part of the
+MessagePack bytes, so a wrapped decoder also accepts ordinary MessagePack
+input from other encoders. Both options default to `false`.
+
+Nested nulls, such as `{item: null}` or `[null]`, already work without wrapping.
+Wrapping is needed to distinguish a top-level null value from the Node stream's
+end marker; it does not change the behavior of `msgpack.encode` or
+`msgpack.decode`.
+
 ### Decoding MessagePack Bytes Array
 
 ```js
@@ -133,7 +160,7 @@ Map|map format family|Map (if `usemap=true`)
 Object (plain object)|map format family|Object (or Map if `usemap=true`)
 Object (see below)|ext format family|Object (see below)
 
-Note that both `null` and `undefined` are mapped to nil `0xC1` type.
+Note that both `null` and `undefined` are mapped to nil `0xC0` type.
 This means `undefined` value will be *upgraded* to `null` in other words.
 
 ### Extension Types
