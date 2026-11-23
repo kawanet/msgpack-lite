@@ -26,6 +26,40 @@ var invalencoded = Buffer.from([0xc1]);
 
 describe(TITLE, function() {
 
+  it("autoflush sends small messages before the encode stream ends", function() {
+    var encoder = msgpack.createEncodeStream({autoflush: true});
+    ["hi", false, {sequence: 2}].forEach(function(value) {
+      encoder.write(value);
+      assert.deepEqual(encoder.read(), msgpack.encode(value));
+      assert.equal(encoder.writableEnded, false);
+    });
+    encoder.end();
+    assert.equal(encoder.read(), null, "end must not duplicate flushed data");
+  });
+
+  it("buffers small messages by default", function() {
+    var encoder = msgpack.createEncodeStream();
+    encoder.write("hi");
+    assert.equal(encoder.read(), null);
+    encoder.end();
+    assert.deepEqual(encoder.read(), msgpack.encode("hi"));
+  });
+
+  it("autoflush preserves large values that span output chunks", function() {
+    var encoder = msgpack.createEncodeStream({autoflush: true});
+    var value = ["x".repeat(10000), 42];
+    encoder.write(value);
+    var chunks = [];
+    var chunk;
+    while ((chunk = encoder.read()) !== null) chunks.push(chunk);
+    var actual = Buffer.concat(chunks);
+    var expected = msgpack.encode(value);
+    assert.equal(actual.length, expected.length);
+    assert.deepEqual(actual, expected);
+    encoder.end();
+    assert.equal(encoder.read(), null);
+  });
+
   it("msgpack.createEncodeStream()", () => new Promise((resolve, reject) => {
     var done = (err) => (err ? reject(err) : resolve());
     var encoder = msgpack.createEncodeStream();

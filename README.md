@@ -40,6 +40,20 @@ encodeStream.write({baz: "qux"});
 encodeStream.end();
 ```
 
+For a long-lived stream, such as a TCP connection, enable `autoflush` to send
+pending encoded bytes after each input value instead of waiting for the internal
+buffer to fill or the stream to end:
+
+```js
+const encodeStream = msgpack.createEncodeStream({autoflush: true});
+encodeStream.pipe(socket);
+encodeStream.write({message: "hi"}); // available to the socket before end()
+```
+
+The default is `false`, which keeps the existing buffering behavior for bulk
+writes. A value may still span multiple output chunks, and a transport can join
+or split chunks; use a decoder to recover MessagePack value boundaries.
+
 ### Reading from MessagePack Stream
 
 ```js
