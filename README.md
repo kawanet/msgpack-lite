@@ -68,6 +68,18 @@ msgpack.decode([0x81, 0xA3, 0x66, 0x6F, 0x6F, 0xA3, 0x62, 0x61, 0x72]);
 msgpack.decode(new Uint8Array([0x81, 0xA3, 0x66, 0x6F, 0x6F, 0xA3, 0x62, 0x61, 0x72]));
 ```
 
+#### Incomplete input errors
+
+Decoding an empty or truncated value throws an Error with
+`code === "BUFFER_SHORTAGE"` and a message explaining that the input buffer is
+too short to decode a complete MessagePack value. This means bytes are missing
+from the input, not that the decoder failed to allocate memory. Check that the
+encoder produced data and that the entire value reached the decoder.
+
+Use the error's `code` to identify this condition instead of comparing the full
+message text. Streaming decoders handle incomplete chunks by waiting for more
+bytes, since a transport chunk need not contain a complete value.
+
 ### Command Line Interface
 
 A CLI tool bin/msgpack converts data stream from JSON to MessagePack and vice versa.
