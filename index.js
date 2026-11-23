@@ -2,6 +2,7 @@
 
 exports.encode = require("./lib/encode").encode;
 exports.decode = require("./lib/decode").decode;
+exports.decodeWithOffset = require("./lib/decode").decodeWithOffset;
 
 exports.Encoder = require("./lib/encoder").Encoder;
 exports.Decoder = require("./lib/decoder").Decoder;
