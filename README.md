@@ -222,6 +222,25 @@ const codec = msgpack.createCodec();
 const codec = msgpack.createCodec({preset: true});
 ```
 
+`timestamp`: Encode JavaScript `Date` values using the standard MessagePack
+timestamp extension (type -1), choosing the 32-, 64- or 96-bit form as needed.
+This includes dates before the Unix epoch. The same option enables decoding
+all three standard forms. The default preset retains the legacy Date extension
+(0x0D), so existing consumers keep their wire format and custom type-255 handling.
+Custom codecs can enable standard timestamps independently of the other presets:
+
+```javascript
+const codec = msgpack.createCodec({timestamp: true});
+const bytes = msgpack.encode(new Date(), {codec});
+const date = msgpack.decode(bytes, {codec});
+```
+
+Combine `timestamp: true` with `preset: true` to retain the other built-in
+extensions and legacy Date decoding. JavaScript Dates have millisecond
+precision; decoding finer timestamps follows the Date constructor's precision.
+Invalid dates, invalid timestamp lengths/nanoseconds, and timestamps outside
+the Date range throw `RangeError`.
+
 `safe`: It runs a validation of the value before writing it into buffer. This is the default behavior for some old browsers which do not support `ArrayBuffer` object.
 
 ```js
