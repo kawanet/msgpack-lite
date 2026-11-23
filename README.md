@@ -42,17 +42,6 @@ encodeStream.end();
 
 ### Reading from MessagePack Stream
 
-```js
-const fs = require("fs");
-const msgpack = require("msgpack-lite");
-
-const readStream = fs.createReadStream("test.msp");
-const decodeStream = msgpack.createDecodeStream();
-
-// show multiple objects decoded from stream
-readStream.pipe(decodeStream).on("data", console.warn);
-```
-
 #### Transport chunks and complete values
 
 A decode stream emits complete top-level MessagePack values. One input chunk
@@ -78,6 +67,19 @@ event still includes decoding that whole object. Splitting the transport into
 smaller chunks does not make that object's parsing incremental and can cause
 repeated work. If your protocol permits it, send a sequence of smaller
 top-level MessagePack values to make complete records available earlier.
+
+For a file containing successive MessagePack values:
+
+```js
+const fs = require("fs");
+const msgpack = require("msgpack-lite");
+
+const readStream = fs.createReadStream("test.msp");
+const decodeStream = msgpack.createDecodeStream();
+
+// show multiple objects decoded from stream
+readStream.pipe(decodeStream).on("data", console.warn);
+```
 
 ### Decoding MessagePack Bytes Array
 
