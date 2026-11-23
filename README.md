@@ -158,8 +158,8 @@ Type|Object|Type|Object
 0x0B|Boolean|0x1B|Buffer
 0x0C|String|0x1C|
 0x0D|Date|0x1D|DataView
-0x0E|Error|0x1E|
-0x0F|Number|0x1F|
+0x0E|Error|0x1E|BigInt64Array
+0x0F|Number|0x1F|BigUint64Array
 
 Other extension types are mapped to built-in ExtBuffer object.
 
@@ -239,6 +239,30 @@ const codec = msgpack.createCodec({useraw: true});
 ```js
 const codec = msgpack.createCodec({int64: true});
 ```
+
+`bigint`: Decode MessagePack `int64` / `uint64` values as native `BigInt`.
+Smaller integer tags still decode as `Number`. This option takes precedence
+over `int64` when both are enabled, and requires a runtime with native BigInt.
+
+```js
+const codec = msgpack.createCodec({bigint: true});
+const value = BigInt("9007199254740993");
+const encoded = msgpack.encode(value); // BigInt encoding is enabled by default
+const decoded = msgpack.decode(encoded, {codec}); // exact BigInt value
+```
+
+BigInt primitives are always encoded with a 64-bit integer tag, including
+small values. The supported range is `-9223372036854775808` through
+`18446744073709551615`; values outside it throw `RangeError`. Without
+`bigint` or `int64`, decoding retains the existing Number behavior, which can
+lose precision for large integers.
+
+The preset codec also round-trips `BigInt64Array` and `BigUint64Array`, using
+extension types `0x1E` and `0x1F`. As with the other typed-array extensions,
+their payload is the view's bytes in native byte order. Custom codecs need
+`preset: true` to use these handlers; the scalar `bigint` option is independent.
+The library still loads in runtimes without BigInt; requesting `bigint: true`
+there raises an explicit error.
 
 `binarraybuffer`: It ties msgpack's `bin` format with `ArrayBuffer` object, instead of `Buffer` object.
 
