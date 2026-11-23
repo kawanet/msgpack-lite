@@ -22,6 +22,30 @@ const data = msgpack.decode(buffer); // => {"foo": "bar"}
 // if encode/decode receives an invalid argument an error is thrown
 ```
 
+### Finding the End of a Decoded Value
+
+`decodeWithOffset(input, options)` decodes the first value and returns
+`{value, bytesRead}`. It accepts the same Buffer, Array and Uint8Array inputs and
+codec options as `decode`:
+
+```js
+const first = msgpack.encode({header: "example"});
+const second = msgpack.encode([1, 2, 3]);
+const input = Buffer.concat([first, second]);
+
+const {value, bytesRead} = msgpack.decodeWithOffset(input);
+// value is {header: "example"}; bytesRead is first.length.
+const remainder = input.subarray(bytesRead);
+const nextValue = msgpack.decode(remainder); // [1, 2, 3]
+```
+
+`bytesRead` counts encoded bytes from the start of the supplied input view,
+including type and length headers. It is not a character count or an offset
+into the view's underlying ArrayBuffer. Trailing bytes are left untouched and
+need not be MessagePack data. Empty, incomplete or invalid first values throw
+just as they do with `decode`; a complete nil value returns
+`{value: null, bytesRead: 1}`. `decode` continues to return only the value.
+
 ### Writing to MessagePack Stream
 
 ```js

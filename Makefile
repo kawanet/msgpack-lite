@@ -8,7 +8,7 @@ DIST=./dist
 JSTEMP=./dist/msgpack.browserify.js
 JSDEST=./dist/msgpack.min.js
 MINJS_MAX_BYTES := 60000
-NAMED_EXPORTS := encode decode Encoder Decoder createCodec
+NAMED_EXPORTS := encode decode decodeWithOffset Encoder Decoder createCodec
 NODE_ONLY_EXPORTS := createEncodeStream createDecodeStream
 
 all: $(JSDEST)
