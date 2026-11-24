@@ -25,6 +25,30 @@ var describeSkip = HAS_MAP ? describe : describe.skip;
 
 describeSkip(TITLE, function() {
 
+  ["add", "delete", "clear"].forEach(function(action) {
+    it("keeps map framing when a value getter performs " + action, function() {
+      var map = new Map();
+      var value = {};
+      Object.defineProperty(value, "value", {
+        enumerable: true,
+        get: function() {
+          if (action === "add") map.set("added", 3);
+          if (action === "delete") map.delete("second");
+          if (action === "clear") map.clear();
+          return 1;
+        }
+      });
+      map.set("first", value);
+      map.set("second", 2);
+      var options = {codec: msgpack.createCodec({usemap: true})};
+      var encoded = msgpack.encode([map, 42], options);
+      var decoded = msgpack.decode(encoded, options);
+      assert.deepEqual(decoded, [new Map([
+        ["first", new Map([["value", 1]])], ["second", 2]
+      ]), 42]);
+    });
+  });
+
   it("Map with preset typed arrays", function() {
     var codec = msgpack.createCodec({usemap: true, preset: true});
     var value = new Map([["bytes", new Uint8Array([1, 2, 3])]]);
