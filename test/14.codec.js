@@ -74,6 +74,82 @@ describe(TITLE, function() {
   });
 });
 
+[
+  ["source", msgpack],
+  ["bundle", require("../dist/msgpack.min")]
+].forEach(function(variant) {
+  var api = variant[1];
+  describe("extension constructor identity (" + variant[0] + ")", function() {
+    it("keeps different constructors with the same name independent", function() {
+      var First = messageConstructor();
+      var Second = messageConstructor();
+      var codec = api.createCodec();
+      registerMessage(codec, 0x40, First);
+      registerMessage(codec, 0x41, Second);
+
+      assertMessageRoundTrip(api, codec, First, 0x40, 17);
+      assertMessageRoundTrip(api, codec, Second, 0x41, 23);
+    });
+
+    it("replaces only the re-registered constructor's packer", function() {
+      var First = messageConstructor();
+      var Second = messageConstructor();
+      var codec = api.createCodec();
+      registerMessage(codec, 0x40, First);
+      registerMessage(codec, 0x41, Second);
+      registerMessage(codec, 0x42, First);
+
+      assertMessageRoundTrip(api, codec, First, 0x42, 31);
+      assertMessageRoundTrip(api, codec, Second, 0x41, 37);
+
+      registerMessage(codec, 0x43, Second);
+      assertMessageRoundTrip(api, codec, First, 0x42, 41);
+      assertMessageRoundTrip(api, codec, Second, 0x43, 43);
+    });
+
+    it("keeps a preset constructor when a custom constructor has the same name", function() {
+      var CustomDate = function Date(value) { this.value = value; };
+      var codec = api.createCodec({preset: true});
+      registerMessage(codec, 0x40, CustomDate);
+
+      var options = {codec: codec};
+      var decoded = api.decode(api.encode(new Date(12345), options), options);
+      assert.ok(decoded instanceof Date);
+      assert.equal(Number(decoded), 12345);
+      assertMessageRoundTrip(api, codec, CustomDate, 0x40, 47);
+    });
+
+    ["", "Object"].forEach(function(name) {
+      it("supports a fallback constructor named " + JSON.stringify(name), function() {
+        var Class = messageConstructor();
+        Object.defineProperty(Class, "name", {value: name});
+        var codec = api.createCodec();
+        registerMessage(codec, 0x40, Class);
+        assertMessageRoundTrip(api, codec, Class, 0x40, 53);
+      });
+    });
+
+  });
+});
+
+function messageConstructor() {
+  return function Message(value) { this.value = value; };
+}
+
+function registerMessage(codec, type, Class) {
+  codec.addExtPacker(type, Class, function(value) { return Buffer.from([value.value]); });
+  codec.addExtUnpacker(type, function(buffer) { return new Class(buffer[0]); });
+}
+
+function assertMessageRoundTrip(api, codec, Class, type, value) {
+  var options = {codec: codec};
+  var encoded = api.encode(new Class(value), options);
+  assert.deepEqual(toArray(encoded), [0xD4, type, value]);
+  var decoded = api.decode(encoded, options);
+  assert.ok(decoded instanceof Class);
+  assert.equal(decoded.value, value);
+}
+
 function MyClass(value) {
   this.value = value & 0xFF;
 }
