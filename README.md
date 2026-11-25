@@ -80,6 +80,9 @@ $ echo '{"foo": "bar"}' | ./bin/msgpack -Jm | ./bin/msgpack -Mj
 {"foo":"bar"}
 ```
 
+Use `-` for a standard input or output filename, for example `./bin/msgpack -Jm - output.msp`
+to read JSON from standard input and write MessagePack to a file.
+
 ### Installation
 
 ```sh
