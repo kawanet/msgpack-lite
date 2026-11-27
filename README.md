@@ -68,6 +68,9 @@ smaller chunks does not make that object's parsing incremental and can cause
 repeated work. If your protocol permits it, send a sequence of smaller
 top-level MessagePack values to make complete records available earlier.
 
+Note that a top-level `null` value ends the decode stream early, because
+Node.js streams treat `null` as EOF.
+
 For a file containing successive MessagePack values:
 
 ```js
