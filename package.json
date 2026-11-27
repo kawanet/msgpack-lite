@@ -29,8 +29,7 @@
   "dependencies": {
     "event-lite": "^1.0.1",
     "ieee754": "^1.2.1",
-    "int64-buffer": "^1.1.2",
-    "isarray": "^2.0.5"
+    "int64-buffer": "^1.1.2"
   },
   "devDependencies": {
     "@msgpack/msgpack": "^3.1.3",
