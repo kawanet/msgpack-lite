@@ -42,6 +42,34 @@ encodeStream.end();
 
 ### Reading from MessagePack Stream
 
+#### Transport chunks and complete values
+
+A decode stream emits complete top-level MessagePack values. One input chunk
+can contain several values, and a value can span several chunks. Chunk
+boundaries do not mark MessagePack value boundaries:
+
+```js
+const decoder = msgpack.createDecodeStream();
+decoder.on("data", value => console.log(value));
+
+const encoded = msgpack.encode({items: [1, 2]});
+decoder.write(encoded.subarray(0, encoded.length - 1)); // no value emitted yet
+decoder.end(encoded.subarray(encoded.length - 1)); // emits {items: [1, 2]}
+```
+
+The decoder attempts to read values when chunks arrive. If the next value is
+incomplete, it retains those bytes and retries that value from its start when
+more input arrives. It does not retain a partially decoded object's properties
+or emit individual elements of an incomplete array.
+
+Consequently, timing from the final byte of one large object to its `data`
+event still includes decoding that whole object. Splitting the transport into
+smaller chunks does not make that object's parsing incremental and can cause
+repeated work. If your protocol permits it, send a sequence of smaller
+top-level MessagePack values to make complete records available earlier.
+
+For a file containing successive MessagePack values:
+
 ```js
 const fs = require("fs");
 const msgpack = require("msgpack-lite");
